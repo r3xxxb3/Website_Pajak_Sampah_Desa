@@ -10,6 +10,9 @@ use App\Desa;
 use App\Jadwal;
 use App\StandarRetribusi;
 use App\JenisSampah;
+use App\JenisJasa;
+use Auth;
+
 
 class MasterDataController extends Controller
 {
@@ -351,17 +354,104 @@ class MasterDataController extends Controller
     
     public function editJenisSampah ($id)
     {
-
+        $jenis = JenisSampah::where('id', $id)->first();
+        if($jenis != []){
+            return view('admin.master-data.jenis-sampah.edit', compact('jenis'));
+        }else{
+            return redirect()->back()->with('error','Data Jenis Sampah Tidak Ditemukan !');
+        }
     }
 
-    public function updateJenisSampah (Request $request)
+    public function updateJenisSampah ($id, Request $request)
     {
+        $messages = [
+            'required' => 'Kolom :attribute Wajib Diisi!',
+            'unique' => 'Kolom :attribute Tidak Boleh Sama!',
+		];
 
+        $this->validate($request, [
+            'jenis' => 'required',
+        ],$messages);
+
+        $jenis = JenisSampah::where('id', $id)->first();
+        if($jenis != []){
+            $jenis->jenis_sampah = $request->jenis;
+            $jenis->deskripsi = $request->deskripsi;
+            $jenis->save();
+            return redirect()->route('masterdata-jenis-index')->with('success','Berhasil Menambah Data Jenis Sampah !');
+        }else{
+            return redirect()->back()->with('error', 'Data Jenis Sampah Tidak Ditemukan !');
+        }
+        
     }
 
     public function deleteJenisSampah ($id)
     {
 
+    }
+
+    public function indexJenisJasa(){
+        $index = JenisJasa::all();
+        return view('admin.master-data.jenis-jasa.index', compact('index'));
+    }
+
+    public function createJenisJasa(){
+        return view('admin.master-data.jenis-jasa.create');
+    }
+
+    public function storeJenisJasa(Request $request){
+        $messages = [
+            'required' => 'Kolom :attribute Wajib Diisi!',
+            'unique' => 'Kolom :attribute Tidak Boleh Sama!',
+		];
+
+        $this->validate($request, [
+            'jenis' => 'required',
+        ],$messages);
+
+        $jenis = new JenisJasa;
+        $jenis->jenis_jasa = $request->jenis;
+        $jenis->deskripsi = $request->deskripsi;
+        if($jenis->save()){
+            return redirect()->route('masterdata-jenisjasa-index')->with('success','Berhasil Menambah Data Jenis Jasa !');    
+        }else{
+            return redirect()->route('masterdata-jenisjasa-index')->with('error','Proses Penambahan Data Jenis Jasa Tidak Berhasil !');
+        }
+        
+        
+    }
+
+    public function editJenisJasa($id){
+        $jenis = JenisJasa::where('id', $id)->first();
+        return view('admin.master-data.jenis-jasa.edit', compact('jenis'));
+    }
+
+    public function updateJenisJasa($id, Request $request){
+        $messages = [
+            'required' => 'Kolom :attribute Wajib Diisi!',
+            'unique' => 'Kolom :attribute Tidak Boleh Sama!',
+		];
+
+        $this->validate($request, [
+            'jenis' => 'required',
+        ],$messages);
+
+        $jenis = JenisJasa::where('id', $id)->first();
+        if($jenis != []){
+            $jenis->jenis_jasa = $request->jenis;
+            $jenis->deskripsi = $request->deskripsi;
+            $jenis->save();
+            return redirect()->route('masterdata-jenisjasa-index')->with('success', 'Berhasil Mengubah Data Jenis Jasa !');
+        }else{
+            return redirect()->route('masterdata-jenisjasa-index')->with('error', 'Data Jenis Jasa Tidak Ditemukan !');
+        }
+        
+    }
+
+    public function deleteJenisJasa($id){
+        $jenis = JenisJasa::where('id', $id)->first();
+        $jenis->delete();
+        return redirect()->route('masterdata-jenisjasa-index')->with('success', 'Berhasil Menghapus Data Jenis Jasa !');
     }
     
 

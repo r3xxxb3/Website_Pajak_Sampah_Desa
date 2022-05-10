@@ -5,11 +5,13 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class Pengguna extends Authenticatable
 {
     use Notifiable;
+    use SoftDeletes;
     //
     protected $table = 'tb_pengguna';
     protected $primaryKey = 'id';
@@ -22,5 +24,9 @@ class Pengguna extends Authenticatable
 
     public function pegawai(){
         return $this->hasMany(Pegawai::class, 'id_pengguna', 'id');
+    }
+
+    public function banjar(){
+        return $this->belongsTo(Banjar::class, 'id_banjar', 'id');
     }
 }

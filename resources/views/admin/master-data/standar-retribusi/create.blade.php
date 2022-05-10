@@ -43,23 +43,22 @@ Create Standar Retribusi
                     <div class="row">
                         <div class='col mb-2'>
                             <label for="standar" class="font-weight-bold text-dark">Nominal Standar</label>
-                            <input type="text" class="form-control" id="standar" name="standar" placeholder="Masukan Nominal Standar Retribusi">
-                            <small style="color: red">
+                            <input type="text" class="form-control @error('standar') is-invalid @enderror" id="standar" name="standar" placeholder="Masukan Nominal Standar Retribusi">
                                 @error('standar')
-                                    {{$message}}
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
                                 @enderror
-                            </small>
                         </div>
                         <div class="col mb-2">
                             <label for="durasi" class="font-weight-bold text-dark">Durasi</label>
-                            <input type="text" class="form-control" id="durasi" name="durasi" placeholder="Durasi Pembayaran (Bulan)">
-                            <small style="color: red">
+                            <input type="text" class="form-control @error('durasi') is-invalid @enderror" id="durasi" name="durasi" placeholder="Durasi Pembayaran (Bulan)">
                                 @error('durasi')
-                                    {{$message}}
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>    
                                 @enderror
-                            </small>
                         </div>
-                        
                     </div>
                     <div class="row">
                         <div class="col">

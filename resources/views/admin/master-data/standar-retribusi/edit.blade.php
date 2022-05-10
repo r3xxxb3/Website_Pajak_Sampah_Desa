@@ -43,26 +43,26 @@ Edit Standar Retribusi
                     <div class="row mb-3">
                         <div class="col">
                             <label for="standar" class="font-weight-bold text-dark">Nominal Standar</label>
-                            <input type="text" class="form-control" id="standar" name="standar" placeholder="Masukan Nominal Standar Retribusi" value="{{$retribusi->nominal_retribusi}}">
-                            <small style="color: red">
+                            <input type="text" class="form-control @error('standar') is-invalid @enderror" id="standar" name="standar" placeholder="Masukan Nominal Standar Retribusi" value="{{$retribusi->nominal_retribusi}}">
                                 @error('standar')
-                                    {{$message}}
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>  
                                 @enderror
-                            </small>
                         </div>
                         <div class="col">
                         <label for="durasi" class="font-weight-bold text-dark">Durasi</label>
-                            <input type="text" class="form-control" id="durasi" name="durasi" placeholder="Masukan Durasi Retribusi (Per-N Bulan)" value="{{$retribusi->durasi}}">
-                            <small style="color: red">
+                            <input type="text" class="form-control @error('durasi') is-invalid @enderror" id="durasi" name="durasi" placeholder="Masukan Durasi Retribusi (Per-N Bulan)" value="{{$retribusi->durasi}}">
                                 @error('durasi')
-                                    {{$message}}
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>  
                                 @enderror
-                            </small>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda Yakin Ingin Mengupdate Data?')"><i class="fas fa-save"></i> Update</button>
+                            <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda Yakin Ingin Mengubah Data?')"><i class="fas fa-save"></i> Update</button>
                             <a href="{{route('masterdata-retribusi-index')}}" class="btn btn-danger"><i class="fas fa-times"></i> Cancel</a>
                         </div>
                     </div>
@@ -70,6 +70,5 @@ Edit Standar Retribusi
             </div>
             </form>
         </div>
-    </div>
-</section>
+    </divgit
 @endsection

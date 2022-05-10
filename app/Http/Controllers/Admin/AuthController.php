@@ -20,7 +20,7 @@ class AuthController extends Controller
 
     public function __construct()
     {
-        $this->middleware('guest:admin')->except('Login','auth');
+        $this->middleware('guest:admin')->only('Login','auth');
     }
     //
     public function Login(Request $request){
@@ -58,6 +58,7 @@ class AuthController extends Controller
     public function Logout(Request $request){
         auth()->guard('admin')->logout();
         session()->flush();
+        // dd(auth()->guard('admin'));
 
         return redirect()->route('admin-login');
     }

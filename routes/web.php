@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,7 +22,7 @@ Route::get('/admin/login', 'Admin\AuthController@Login')->name('admin-login');
 Route::get('/admin/logout', 'Admin\AuthController@Logout')->name('admin-logout');
 Route::post('/admin/auth', 'Admin\AuthController@Auth')->name('admin-authenticate');
 
-Route::prefix('admin')->group(function(){
+Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::get('/dashboard', 'Admin\DashboardController@index')->name('admin-dashboard');
     
     //master data kota
@@ -57,20 +58,14 @@ Route::prefix('admin')->group(function(){
     Route::get('/masterdata/jadwal/delete/{id}', 'Admin\MasterDataController@deletejadwal')->name('masterdata-jadwal-delete');
 
     //manajemen data pegawai
-    Route::get('/Pegawai', 'Admin\MasterDataController@indexPegawai')->name('pegawai-index');
-    Route::get('/pegawai/create', 'Admin\MasterDataController@createPegawai')->name('pegawai-create');
-    Route::post('/pegawai/store', 'Admin\MasterDataController@storePegawai')->name('pegawai-store');
-    Route::get('/pegawai/edit/{id}', 'Admin\MasterDataController@editPegawai')->name('pegawai-edit');
-    Route::post('/pegawai/update', 'Admin\MasterDataController@updatePegawai')->name('pegawai-update');
-    Route::get('/pegawai/delete/{id}', 'Admin\MasterDataController@deletePegawai')->name('pegawai-delete');
+    Route::get('/pegawai', 'Admin\PegawaiController@indexPegawai')->name('pegawai-index');
+    Route::get('/pegawai/create', 'Admin\PegawaiController@createPegawai')->name('pegawai-create');
+    Route::post('/pegawai/store', 'Admin\PegawaiController@storePegawai')->name('pegawai-store');
+    Route::post('/pegawai/store-new', 'Admin\PegawaiController@storePegawaiNew')->name('pegawai-store-new');
+    Route::get('/pegawai/edit/{id}', 'Admin\PegawaiController@editPegawai')->name('pegawai-edit');
+    Route::post('/pegawai/update', 'Admin\PegawaiController@updatePegawai')->name('pegawai-update');
+    Route::get('/pegawai/delete/{id}', 'Admin\PegawaiController@deletePegawai')->name('pegawai-delete');
 
-    //manajemen nik dan penduduk
-    Route::get('/nik', 'Admin\MasterDataController@indexPegawai')->name('nik-index');
-    Route::get('/nik/create', 'Admin\MasterDataController@createPegawai')->name('nik-create');
-    Route::post('/nik/store', 'Admin\MasterDataController@storePegawai')->name('nik-store');
-    Route::get('/nik/edit/{id}', 'Admin\MasterDataController@editPegawai')->name('nik-edit');
-    Route::post('/nik/update', 'Admin\MasterDataController@updatePegawai')->name('nik-update');
-    Route::get('/nik/delete/{id}', 'Admin\MasterDataController@deletePegawai')->name('nik-delete');
 
     //Manajemen Standar Retribusi
     Route::get('/masterdata/retribusi', 'Admin\MasterDataController@indexRetribusi')->name('masterdata-retribusi-index');
@@ -80,15 +75,43 @@ Route::prefix('admin')->group(function(){
     Route::post('/masterdata/retribusi/update/{id}', 'Admin\MasterDataController@updateRetribusi')->name('masterdata-retribusi-update');
     Route::get('/masterdata/retribusi/delete/{id}', 'Admin\MasterDataController@deleteRetribusi')->name('masterdata-retribusi-delete');
 
+    //Manajemen Jenis Jasa Retribusi
+    Route::get('/masterdata/jenis-jasa', 'Admin\MasterDataController@indexJenisJasa')->name('masterdata-jenisjasa-index');
+    Route::get('/masterdata/jenis-jasa/create', 'Admin\MasterDataController@createJenisJasa')->name('masterdata-jenisjasa-create');
+    Route::post('/masterdata/jenis-jasa/store', 'Admin\MasterDataController@storeJenisJasa')->name('masterdata-jenisjasa-store');
+    Route::get('/masterdata/jenis-jasa/edit/{id}', 'Admin\MasterDataController@editJenisJasa')->name('masterdata-jenisjasa-edit');
+    Route::post('/masterdata/jenis-jasa/update/{id}', 'Admin\MasterDataController@updateJenisJasa')->name('masterdata-jenisjasa-update');
+    Route::get('/masterdata/jenis-jasa/delete/{id}', 'Admin\MasterDataController@deleteJenisJasa')->name('masterdata-jenisjasa-delete');
+
     //Manajemen Jenis Sampah
     Route::get('/masterdata/jenis-sampah', 'Admin\MasterDataController@indexJenisSampah')->name('masterdata-jenis-index');
     Route::get('/masterdata/jenis-sampah/create', 'Admin\MasterDataController@createJenisSampah')->name('masterdata-jenis-create');
     Route::post('/masterdata/jenis-sampah/store', 'Admin\MasterDataController@storeJenisSampah')->name('masterdata-jenis-store');
     Route::get('/masterdata/jenis-sampah/edit/{id}', 'Admin\MasterDataController@editJenisSampah')->name('masterdata-jenis-edit');
-    Route::post('/masterdata/jenis-sampah/update', 'Admin\MasterDataController@updateJenisSampah')->name('masterdata-jenis-update');
+    Route::post('/masterdata/jenis-sampah/update/{id}', 'Admin\MasterDataController@updateJenisSampah')->name('masterdata-jenis-update');
     Route::get('/masterdata/jenis-sampah/delete/{id}', 'Admin\MasterDataController@deleteJenisSampah')->name('masterdata-jenis-delete');
 
     //Manajemen Banjar
+
+
+    //Manajemen Pengguna
+    Route::get('/pengguna', 'Admin\PenggunaController@index')->name('pengguna-index');
+    Route::get('/pengguna/create', 'Admin\PenggunaController@create')->name('pengguna-create');
+    Route::post('/pengguna/store', 'Admin\PenggunaController@store')->name('pengguna-store');
+    Route::get('/pengguna/edit/{id}', 'Admin\PenggunaController@edit')->name('pengguna-edit');
+    Route::post('/pengguna/update/{id}', 'Admin\PenggunaController@update')->name('pengguna-update');
+    Route::get('/pengguna/delete/{id}', 'Admin\PenggunaController@delete')->name('pengguna-delete');
+
+    //Manajemen Pegawai
+
+
+    //Manajemen Retribusi
+
+
+    //Manajemen Request
+
+
+    //Manajemen Pembayaran
     
 
 });
