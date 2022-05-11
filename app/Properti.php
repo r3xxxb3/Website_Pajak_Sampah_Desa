@@ -15,4 +15,8 @@ class Properti extends Model
     public function pengguna(){
         return $this->belongsTo(Pengguna::class, 'id', 'id_pengguna');
     }
+
+    public function jasa(){
+        return $this->belongsTo(JenisJasa::class, 'id_jenis', 'id');
+    }
 }

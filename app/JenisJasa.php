@@ -11,6 +11,6 @@ class JenisJasa extends Model
     protected $fillable = ['jenis_jasa', 'deskripsi'];
 
     public function standar(){
-        return $this->hasMany(StandarRetribusi::class, 'id', 'id_jenis_jasa');
+        return $this->hasMany(StandarRetribusi::class, 'id_jenis_jasa', 'id');
     }
 }

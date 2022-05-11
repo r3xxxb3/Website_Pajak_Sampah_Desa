@@ -20,11 +20,11 @@ class AuthController extends Controller
 
     public function __construct()
     {
-        $this->middleware('guest:admin')->only('Login','auth');
+        $this->middleware('guest:admin')->only('Login','Auth');
     }
     //
     public function Login(Request $request){
-        // dd('tai');
+        // dd('test');
             return view('admin.auth');
     }
 

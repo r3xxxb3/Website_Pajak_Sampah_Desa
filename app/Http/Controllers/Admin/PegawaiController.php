@@ -87,15 +87,56 @@ class PegawaiController extends Controller
     }
 
     public function editPegawai($id){
-        $pegawai = Pegawai::where('id', $id)->first();
+        $pegawai = Pegawai::where('id_pegawai', $id)->first();
+        $banjar = Banjar::all();
         if($pegawai != null){
-            return view('admin.pegawai.edit', compact('pegawai'));
+            // dd($pegawai);
+            return view('admin.pegawai.edit', compact('banjar', 'pegawai'));
         }else{
             return redirect()->route('pegawai-index')->with('error', 'Data Pegawai Tidak Ditemukan !');
         }
     }
 
     public function updatePegawai($id, Request $request){
+        $messages = [
+            'required' => 'Kolom :attribute Wajib Diisi!',
+            'unique' => 'Kolom :attribute Tidak Boleh Sama!',
+		];
+
+        $this->validate($request, [
+            'nik' => 'required|unique:tb_pengguna',
+            'nama' => 'required',
+            'no' => 'required',
+        ],$messages);
+
+        // dd($request);
+
+        $banjar = Banjar::where('nama_banjar_dinas', 'LIKE' , $request->banjar)->first();
+        // $kota = Kota::where('name', 'LIKE', $request->tempat)->first();
+
+        $pegawai = Pegawai::where('id_pengguna', $id)->first();
+        if($pegawai != null && $pegawai->id_pengguna != null){
+            $pengguna = Pengguna::where('id', $pegawai->id_pengguna)->first();
+            // dd($pengguna);
+            if($banjar!=null){
+                $pengguna->id_banjar = $banjar->id;
+            }
+    
+            // dd($request->alamat.' '.$request->nama );
+            $pengguna->alamat = $request->alamat;
+            $pengguna->nik = $request->nik ;
+            $pengguna->nama_pengguna = $request->nama;
+            $pengguna->tgl_lahir = $request->tanggal ;
+            $pengguna->no_telp = $request->no ;
+            $pengguna->jenis_kelamin = $request->jenis ;
+            $pengguna->update();
+
+            // $pegawai->username = $request->no;
+            // $pegawai->password = Hash::make($request->no);
+            $pegawai->update();
+
+            return redirect()->route('pegawai-index')->with('success','Berhasil Mengubah Data Pegawai !');
+        }
         
     }
 

@@ -24,4 +24,8 @@ class Pegawai extends Authenticatable
     public function pengguna(){
         return $this->belongsTo(Pengguna::class, 'id_pengguna', 'id');
     }
+
+    public function banjar(){
+        return $this->belongsTo(Banjar::class, 'id_banjar', 'id');
+    }
 }

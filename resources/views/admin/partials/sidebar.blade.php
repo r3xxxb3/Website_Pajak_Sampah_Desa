@@ -20,14 +20,14 @@
           <li  class ="text-dark collapse-show {{ Request::route()->getName() == 'masterdata-kecamatan-index' ? 'active' : '' }}"><a class="nav-link" href="{{route('masterdata-kecamatan-index')}}">Kecamatan</a></li>
           <li  class ="text-dark collapse-show {{ Request::route()->getName() == 'masterdata-desa-index' ? 'active' : '' }}"><a class="nav-link" href="{{route('masterdata-desa-index')}}">Desa</a></li> -->
           <li  class ="text-dark collapse-show {{ request()->segment(3) == 'jadwal' ? 'active' : '' }}"><a class="nav-link" href="{{route('masterdata-jadwal-index')}}">Jadwal Pengangkutan</a></li>
-          <li  class ="text-dark collapse-show {{ request()->segment(3) == 'retribusi' ? 'active' : '' }}"><a class="nav-link" href="{{route('masterdata-retribusi-index')}}">Standar Retribusi</a></li>
+          <!-- <li  class ="text-dark collapse-show {{ request()->segment(3) == 'retribusi' ? 'active' : '' }}"><a class="nav-link" href="{{route('masterdata-retribusi-index')}}">Standar Retribusi</a></li> -->
           <li  class ="text-dark collapse-show {{ request()->segment(3) == 'jenis-jasa' ? 'active' : '' }}"><a class="nav-link" href="{{route('masterdata-jenisjasa-index')}}">Jenis Jasa</a></li>
           <li  class ="text-dark collapse-show {{ request()->segment(3) == 'jenis-sampah' ? 'active' : '' }}"><a class="nav-link" href="{{route('masterdata-jenis-index')}}">Jenis Sampah</a></li>
         </div>
       </ul>
       
       <li class="{{ request()->segment(2) == 'pegawai' ? 'active' : '' }}"><a class="nav-link" href="{{ route('pegawai-index') }}"><i class="fa fa-briefcase"></i> <span>Manajemen Pegawai</span></a></li>
-      <li class="{{ Request::route()->getName() == 'pengguna-index' ? ' active' : '' }}"><a class="nav-link" href="{{ route('pengguna-index') }}"><i class="fa fa-id-card"></i> <span>Manajemen Pelanggan</span></a></li>
+      <li class="{{ request()->segment(2) == 'pengguna' ? 'active' : '' }}"><a class="nav-link" href="{{ route('pengguna-index') }}"><i class="fa fa-id-card"></i> <span>Manajemen Pelanggan</span></a></li>
       <li class=""><a class="nav-link" href=""><i class="fa fa-credit-card"></i> <span>Manajemen Retribusi</span></a></li>
       <li class=""><a class="nav-link" href=""><i class="fa fa-truck"></i> <span>Request Pengangkutan</span></a></li>
       <li class=""><a class="nav-link" href=""><i class="fa fa-pie-chart"></i> <span>Report</span></a></li>

@@ -271,9 +271,10 @@ class MasterDataController extends Controller
 
         $standar = new StandarRetribusi;
         $standar->nominal_retribusi = $request->standar;
+        $standar->id_jenis_jasa = $request->id;
         $standar->durasi = $request->durasi;
         $standar->save();
-        return redirect()->route('masterdata-retribusi-index')->with('success','Berhasil Menambah Data Standar Retribusi !');
+        return redirect()->back()->with('success','Berhasil Menambah Data Standar Retribusi !');
     }
     
     public function editRetribusi ($id)
@@ -300,13 +301,14 @@ class MasterDataController extends Controller
         ],$messages);
 
         $standar = StandarRetribusi::where('id', $id)->first();
-        if($standar == []){
+        // dd($standar);
+        if($standar != []){
             $standar->nominal_retribusi = $request->standar;
             $standar->durasi = $request->durasi;
             $standar->save();
-            return redirect()->route('masterdata-retribusi-index')->with('success','Berhasil Mengubah Data Standar Retribusi !');
+            return redirect()->back()->with('success-1','Berhasil Mengubah Data Standar Retribusi !');
         }else{
-            return redirect()->back()->with('error', 'Data Standar Retribusi Tidak DDitemukan !');
+            return redirect()->back()->with('error-1', 'Data Standar Retribusi Tidak Ditemukan !');
         }
         
     }
@@ -316,11 +318,31 @@ class MasterDataController extends Controller
         $retribusi = StandarRetribusi::where('id', $id)->first();
         if($retribusi != null){
             $retribusi->delete();
-            return redirect()->route('masterdata-retribusi-index')->with('success', 'Berhasil Menghapus Data Standar Retribusi !');
+            return redirect()->back()->with('success-1', 'Berhasil Menghapus Data Standar Retribusi !');
         }else{
-            return redirect()->route('masterdata-retribusi-index')->with('error', 'Berhasil Menghapus Data Standar Retribusi !');
+            return redirect()->back()->with('error-1', 'Berhasil Menghapus Data Standar Retribusi !');
         }
     }
+
+    public function statusRetribusi ($id, $status){
+        $statusRetribusi = StandarRetribusi::where('id', $id)->first();
+        $stats = StandarRetribusi::where('id_jenis_jasa', $statusRetribusi->id_jenis_jasa)->get();
+        // dd($stats);
+        if(isset($stats)){
+            foreach($stats as $s){
+                $s->active = '0';
+                $s->update();
+            }
+        }
+        if($status == 'active'){
+            $statusRetribusi->active = '1';
+        }elseif($status = 'not-active'){
+            $statusRetribusi->active = '0';
+        }
+        $statusRetribusi->update();
+        return response()->json(['sukses' => 'Status Standar Retribusi berhasil diganti']);
+    }
+
 
     public function indexJenisSampah ()
     {
@@ -391,7 +413,9 @@ class MasterDataController extends Controller
     }
 
     public function indexJenisJasa(){
-        $index = JenisJasa::all();
+        $index = JenisJasa::with(['standar' => function($query){
+            $query->where('active', '1')->first();
+        }])->get();
         return view('admin.master-data.jenis-jasa.index', compact('index'));
     }
 
@@ -422,8 +446,9 @@ class MasterDataController extends Controller
     }
 
     public function editJenisJasa($id){
+        $index = StandarRetribusi::where('id_jenis_jasa', $id)->get();
         $jenis = JenisJasa::where('id', $id)->first();
-        return view('admin.master-data.jenis-jasa.edit', compact('jenis'));
+        return view('admin.master-data.jenis-jasa.edit', compact('jenis', 'index'));
     }
 
     public function updateJenisJasa($id, Request $request){

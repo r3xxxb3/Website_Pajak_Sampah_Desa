@@ -94,7 +94,7 @@ Create Data Pelanggan
                         </div>
                         <div class="col mb-2">
                             <label for="alamat" class="font-weight-bold text-dark">Alamat</label>
-                            <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="nama" name="nama" placeholder="Masukan Alamat Tinggal">
+                            <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" placeholder="Masukan Alamat Tinggal">
                                 
                                 @error('alamat')
                                 <span class="invalid-feedback" role="alert">

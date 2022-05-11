@@ -8,7 +8,7 @@ Index Data Pengguna
 <script>
     function setPengguna( id ){
             $('#idpeng').val(id);
-            console.log(id);
+            // console.log(id);
     };
 </script>
 @endsection

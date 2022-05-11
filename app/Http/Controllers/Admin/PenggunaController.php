@@ -11,6 +11,7 @@ use App\Kecamatan;
 use App\Banjar;
 use App\KartuK;
 use App\Provinsi;
+use Illuminate\Support\Facades\Hash;
 
 
 class PenggunaController extends Controller
@@ -36,7 +37,7 @@ class PenggunaController extends Controller
         $this->validate($request, [
             'nik' => 'required|unique:tb_pengguna',
             'nama' => 'required',
-            'banjar' => 'required',
+            'alamat' => 'required',
             'no' => 'required',
         ],$messages);
 
@@ -57,6 +58,7 @@ class PenggunaController extends Controller
         $pengguna->nama_pengguna = $request->nama;
         $pengguna->tgl_lahir = $request->tanggal ;
         $pengguna->no_telp = $request->no ;
+        $pengguna->password = Hash::make($request->no);
         $pengguna->jenis_kelamin = $request->jenis ;
         $pengguna->save();
         return redirect()->route('pengguna-index')->with('success','Berhasil Menambah Data Pelanggan !');

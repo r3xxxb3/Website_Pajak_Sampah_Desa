@@ -60,6 +60,7 @@ Index Jenis Jasa
                         <th class="col-2">Action</th>
                         <th>Jenis Jasa</th>
                         <th>Deskripsi</th>
+                        <th>Nominal</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,7 +74,13 @@ Index Jenis Jasa
                             {{$jenis->jenis_jasa}}
                         </td>
                         <td>
-                            {{$jenis->jenis_jasa}}
+                            {{$jenis->deskripsi}}
+                        </td>
+                        <td>
+                            <!-- @if($loop->first)
+                            <?php echo $jenis->standar->map->nominal_retribusi ?>
+                            @endif -->
+                            {{isset($jenis->standar) ? ($jenis->standar->map->range_nominal != "[null]" ? $jenis->standar->map->range_nominal." - ".$jenis->standar->map->nominal_retribusi : $jenis->standar->map->nominal_retribusi ) : ''}}
                         </td>
                     </tr>
                 @endforeach

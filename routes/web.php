@@ -63,7 +63,7 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::post('/pegawai/store', 'Admin\PegawaiController@storePegawai')->name('pegawai-store');
     Route::post('/pegawai/store-new', 'Admin\PegawaiController@storePegawaiNew')->name('pegawai-store-new');
     Route::get('/pegawai/edit/{id}', 'Admin\PegawaiController@editPegawai')->name('pegawai-edit');
-    Route::post('/pegawai/update', 'Admin\PegawaiController@updatePegawai')->name('pegawai-update');
+    Route::post('/pegawai/update/{id}', 'Admin\PegawaiController@updatePegawai')->name('pegawai-update');
     Route::get('/pegawai/delete/{id}', 'Admin\PegawaiController@deletePegawai')->name('pegawai-delete');
 
 
@@ -74,6 +74,7 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::get('/masterdata/retribusi/edit/{id}', 'Admin\MasterDataController@editRetribusi')->name('masterdata-retribusi-edit');
     Route::post('/masterdata/retribusi/update/{id}', 'Admin\MasterDataController@updateRetribusi')->name('masterdata-retribusi-update');
     Route::get('/masterdata/retribusi/delete/{id}', 'Admin\MasterDataController@deleteRetribusi')->name('masterdata-retribusi-delete');
+    Route::get('/masterdata/retribusi/{id}/{status}', 'Admin\MasterDataController@statusRetribusi')->name('masterdata-retribusi-status');
 
     //Manajemen Jenis Jasa Retribusi
     Route::get('/masterdata/jenis-jasa', 'Admin\MasterDataController@indexJenisJasa')->name('masterdata-jenisjasa-index');
@@ -120,6 +121,15 @@ Route::name('js.')->group(function() {
     Route::get('dynamic.js', 'JsController@dynamic')->name('dynamic');
 });
 
-Auth::routes();
+// Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+//Authentication routes for user/pelanggan
+
+Route::get('/loginPage', 'Auth\AuthController@loginPage')->name('login-page');
+Route::post('/login', 'Auth\AuthController@login')->name('login');
+Route::get('/registerPage', 'Auth\AuthController@registerPage')->name('register-page');
+Route::post('/register', 'Auth\AuthController@register')->name('register');
+Route::get('/password', 'Auth\PasswordController@requestPass')->name('password.request');
+Route::get('/logout', 'Auth\AuthController@logout')->name('logout');
+
+Route::get('/home', 'HomeController@landing')->name('home');
