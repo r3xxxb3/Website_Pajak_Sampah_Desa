@@ -23,10 +23,10 @@
     <div class="main-wrapper">
       <div class="navbar-bg"></div>
       <nav class="navbar navbar-expand-lg main-navbar">
-        @include('admin.partials.topnav')
+        @include('user.partials.topnav')
       </nav>
       <div class="main-sidebar">
-        @include('admin.partials.sidebar')
+        @include('user.partials.sidebar')
       </div>
 
       <!-- Main Content -->
@@ -34,7 +34,7 @@
         @yield('content')
       </div>
       <footer class="main-footer">
-        @include('admin.partials.footer')
+        @include('user.partials.footer')
       </footer>
     </div>
   </div>

@@ -77,10 +77,23 @@ Index Jenis Jasa
                             {{$jenis->deskripsi}}
                         </td>
                         <td>
+                            <?php 
+                                $standarHarga = $jenis->standar->first(); 
+
+                                $hargaAtas = 0;
+
+                                if (isset($standarHarga)) {
+                                    $hargaAtas = $standarHarga->nominal_retribusi;
+                                    $hargaBawah = $standarHarga->range_nominal;
+                                }
+                            ?>
                             <!-- @if($loop->first)
                             <?php echo $jenis->standar->map->nominal_retribusi ?>
                             @endif -->
-                            {{isset($jenis->standar) ? ($jenis->standar->map->range_nominal != "[null]" ? $jenis->standar->map->range_nominal." - ".$jenis->standar->map->nominal_retribusi : $jenis->standar->map->nominal_retribusi ) : ''}}
+
+                            Rp. {{ $hargaAtas == 0 ? '-' : (isset($hargaBawah) ? number_format($hargaBawah).' - '.number_format($hargaAtas) : number_format($hargaAtas)) }}
+
+                            <!-- {{isset($jenis->standar) ? ($jenis->standar->map->range_nominal != "[null]" ? $jenis->standar->map->range_nominal." - ".$jenis->standar->map->nominal_retribusi : $jenis->standar->map->nominal_retribusi ) : ''}} -->
                         </td>
                     </tr>
                 @endforeach

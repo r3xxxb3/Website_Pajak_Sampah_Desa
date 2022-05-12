@@ -301,7 +301,7 @@
             </li>
             @if(auth()->guard('web')->check())
             <li class="nav-item">
-              <a class="nav-link" href="#">Dashboard</a>
+              <a class="nav-link" href="{{Route('user-dashboard')}}">Dashboard</a>
             </li>
             @endif
           </ul>

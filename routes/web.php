@@ -132,4 +132,16 @@ Route::post('/register', 'Auth\AuthController@register')->name('register');
 Route::get('/password', 'Auth\PasswordController@requestPass')->name('password.request');
 Route::get('/logout', 'Auth\AuthController@logout')->name('logout');
 
+Route::group(['middleware' => ['auth'], 'prefix' => 'user'] , function(){
+    Route::get('/dashboard', 'User\DashboardController@dashboard')->name('user-dashboard');
+
+    //properti
+    Route::get('/properti', 'User\UserController@properti')->name('properti-index');
+    Route::get('/properti/create', 'User\UserController@propertiCreate')->name('properti-create');
+    Route::post('/properti/store', 'User\UserController@propertiStore')->name('properti-store');
+    Route::get('/properti/edit/{id}', 'User\UserController@propertiEdit')->name('properti-edit');
+    Route::post('/properti/update/{id}', 'User\UserController@propertiUpdate')->name('properti-update');
+    Route::get('/properti/delete/{id}', 'User\UserController@propertiDelete')->name('properti-delete');
+});
+
 Route::get('/home', 'HomeController@landing')->name('home');

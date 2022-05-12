@@ -98,14 +98,14 @@ Edit Jenis Jasa
               url: "/admin/masterdata/retribusi/"+id+"/active",
               type: "GET",
               success: function(result){
-                $(".statVal").each(function(){
-                    if(this.id == "status_"+id){
-                //         continue;
-                        // alert(this.id);
-                    }else{
-                        $(this).prop('checked', false);
-                    }
-                });
+                // $(".statVal").each(function(){
+                //     if(this.id == "status_"+id){
+                // //         continue;
+                //         // alert(this.id);
+                //     }else{
+                //         $(this).prop('checked', false);
+                //     }
+                // });
               }
           });
         }else{
@@ -123,14 +123,14 @@ Edit Jenis Jasa
               url: "/admin/masterdata/retribusi/"+id+"/not-active",
               type: "GET",
               success: function(result){
-                $(".statVal").each(function(){
-                    if(this.id == "status_"+id){
-                //         continue;
-                    // alert(this.id);
-                    }else{
-                        $(this).prop('checked', false);
-                    }
-                });
+                // $(".statVal").each(function(){
+                //     if(this.id == "status_"+id){
+                // //         continue;
+                //     // alert(this.id);
+                //     }else{
+                //         $(this).prop('checked', false);
+                //     }
+                // });
               }
           });
         }else{
