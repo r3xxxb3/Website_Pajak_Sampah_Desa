@@ -103,7 +103,11 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::post('/pengguna/update/{id}', 'Admin\PenggunaController@update')->name('pengguna-update');
     Route::get('/pengguna/delete/{id}', 'Admin\PenggunaController@delete')->name('pengguna-delete');
 
-    //Manajemen Pegawai
+    //Manajemen properti pengguna
+    Route::post('/properti/store', 'Admin\PenggunaController@propertiStore' )->name('admin-properti-store');
+    Route::post('/properti/update/{id}', 'Admin\PenggunaController@propertiUpdate')->name('admin-properti-update');
+    Route::get('/properti/cancel/{id}', 'Admin\PenggunaController@propertiCancel')->name('admin-properti-cancel');
+    Route::get('/properti/delete/{id}', 'Admin\PenggunaController@propertiDelete')->name('admin-properti-delete');
 
 
     //Manajemen Retribusi

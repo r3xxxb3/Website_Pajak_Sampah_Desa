@@ -41,6 +41,9 @@
     <!-- <div class="d-sm-none d-lg-inline-block">Hi, {{ Auth::guard('web')->user()}}</div></a> -->
     <div class="dropdown-menu dropdown-menu-right">
       <!-- <div class="dropdown-title">Welcome, {{ Auth::guard('web')->user() }}</div> -->
+      <a href="{{route('home')}}" class="dropdown-item has-icon">
+        <i class="fa fa-arrow-right"></i> Back To Landing Page
+      </a>
       <a href="" class="dropdown-item has-icon">
         <i class="far fa-user"></i> Profile Settings
       </a>

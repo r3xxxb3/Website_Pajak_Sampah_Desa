@@ -321,16 +321,16 @@
           <!-- Left Column -->
           <div
             class="left-column d-flex flex-lg-grow-1 flex-column align-items-lg-start text-lg-start align-items-center text-center">
-            <p class="text-caption">FREE 30 DAY TRIAL</p>
+            <p class="text-caption">Simple Note</p>
             <h1 class="title-text-big">
-              The best way<br class="d-lg-block d-none" />
-              to organize your online learning
+              Head Line<br class="d-lg-block d-none" />
+              masih Akan diubah
             </h1>
             <div class="d-flex flex-sm-row flex-column align-items-center mx-lg-0 mx-auto justify-content-center gap-3">
-              <button class="btn d-inline-flex mb-md-0 btn-try text-white">
-                Try it free
-              </button>
-              <button class="btn btn-outline">
+              <a href="{{route('register')}}" class="btn d-inline-flex mb-md-0 btn-try text-white">
+                Daftar Sekarang
+              </a>
+              <!-- <button class="btn btn-outline">
                 <div class="d-flex align-items-center">
                   <svg class="me-2" width="13" height="12" viewBox="0 0 13 13" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
@@ -340,7 +340,7 @@
                   </svg>
                   Watch the video
                 </div>
-              </button>
+              </button> -->
             </div>
           </div>
           <!-- Right Column -->
@@ -449,8 +449,9 @@
 
         <!-- Right Column -->
         <div class="right-column d-flex flex-column align-items-lg-start align-items-center text-lg-start text-center">
-          <h2 class="title-text">3 Keys Benefit</h2>
+          <h2 class="title-text">Index informasi</h2>
           <ul style="padding: 0; margin: 0">
+          <!-- Kustomisasi cms untuk user` -->
             <li class="list-unstyled" style="margin-bottom: 2rem">
               <h4
                 class="title-caption d-flex flex-lg-row flex-column align-items-center justify-content-lg-start justify-content-center">

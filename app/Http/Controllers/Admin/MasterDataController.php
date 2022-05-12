@@ -272,6 +272,8 @@ class MasterDataController extends Controller
         $standar = new StandarRetribusi;
         $standar->nominal_retribusi = $request->standar;
         $standar->id_jenis_jasa = $request->id;
+        $standar->tanggal_berlaku = $request->mulai;
+        $standar->tanggal_selesai = $request->selesai;
         $standar->durasi = $request->durasi;
         $standar->save();
         return redirect()->back()->with('success','Berhasil Menambah Data Standar Retribusi !');
@@ -305,7 +307,9 @@ class MasterDataController extends Controller
         if($standar != []){
             $standar->nominal_retribusi = $request->standar;
             $standar->durasi = $request->durasi;
-            $standar->save();
+            $standar->tanggal_berlaku = $request->mulai;
+            $standar->tanggal_selesai = $request->selesai;
+            $standar->update();
             return redirect()->back()->with('success-1','Berhasil Mengubah Data Standar Retribusi !');
         }else{
             return redirect()->back()->with('error-1', 'Data Standar Retribusi Tidak Ditemukan !');

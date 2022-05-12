@@ -332,6 +332,26 @@ Edit Jenis Jasa
                                         @enderror
                                 </div>
                             </div>
+                            <div class="row mb-2">
+                                <div class='col mb-2'>
+                                    <label for="mulai" class="font-weight-bold text-dark">Tanggal Berlaku</label>
+                                    <input type="date" class="form-control @error('mulai') is-invalid @enderror" id="mulai" name="mulai" placeholder="Masukan Nominal Standar Retribusi">
+                                        @error('mulai')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                </div>
+                                <div class="col mb-2">
+                                    <label for="selesai" class="font-weight-bold text-dark">Tanggal Selesai</label>
+                                    <input type="date" class="form-control @error('selesai') is-invalid @enderror" id="selesai" name="selesai" placeholder="Durasi Pembayaran (Bulan)">
+                                        @error('selesai')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>    
+                                        @enderror
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col">
                                     <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda Yakin Ingin Menambah Data?')"><i class="fas fa-save"></i> Simpan</button>
@@ -373,6 +393,26 @@ Edit Jenis Jasa
                                     <label for="durasi" class="font-weight-bold text-dark">Durasi</label>
                                     <input type="text" class="form-control @error('durasi') is-invalid @enderror" id="durasi" name="durasi" placeholder="Durasi Pembayaran (Bulan)" value="{{$retri->durasi}}">
                                         @error('durasi')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>    
+                                        @enderror
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class='col mb-2'>
+                                    <label for="mulai" class="font-weight-bold text-dark">Tanggal Berlaku</label>
+                                    <input type="date" class="form-control @error('mulai') is-invalid @enderror" id="mulai" name="mulai" placeholder="Masukan Nominal Standar Retribusi" value="{{$retri->tanggal_berlaku}}">
+                                        @error('mulai')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                </div>
+                                <div class="col mb-2">
+                                    <label for="selesai" class="font-weight-bold text-dark">Tanggal Selesai</label>
+                                    <input type="date" class="form-control @error('selesai') is-invalid @enderror" id="selesai" name="selesai" placeholder="Durasi Pembayaran (Bulan)" value="{{$retri->tanggal_selesai}}">
+                                        @error('selesai')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>    

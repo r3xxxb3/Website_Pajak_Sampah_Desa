@@ -9,7 +9,9 @@ use App\Desa;
 use App\Kota;
 use App\Kecamatan;
 use App\Banjar;
+use App\JenisJasa;
 use App\KartuK;
+use App\Properti;
 use App\Provinsi;
 use Illuminate\Support\Facades\Hash;
 
@@ -68,9 +70,11 @@ class PenggunaController extends Controller
         $kota = Kota::all();
         $banjar = Banjar::all();
         $pengguna = Pengguna::where('id', $id)->first();
+        $jenis = JenisJasa::all();
+        $index = Properti::where('id_pengguna', $pengguna->id)->get();
         if($pengguna != null){
             // dd($pengguna);
-            return view('admin.pengguna.edit', compact('pengguna','banjar', 'kota'));
+            return view('admin.pengguna.edit', compact('pengguna','banjar', 'kota', 'index', 'jenis'));
         }else{
             return redirect()->route('pengguna-index')->with('error', 'Data Pelanggan Tidak Ditemukan !');
         }
@@ -107,6 +111,51 @@ class PenggunaController extends Controller
             return redirect()->route('pengguna-index')->with('success', 'Berhasil Menghapus Data Pengguna !');
         }else{
             return  redirect()->route('pengguna-index')->with('error', 'Data Pengguna Tidak Ditemukan !');
+        }
+    }
+
+    public function propertiStore(){
+
+    }
+
+    public function propertiUpdate($id, Request $request){
+        $properti = Properti::where('id', $id)->first();
+        if(isset($properti)){
+            if($properti->id_jenis != $request->jenis){
+                $jenis = JenisJasa::where('id', $request->jenis)->first();
+                $properti->id_jenis = $request->jenis;
+                $properti->note = "Admin Mengubah Jenis properti menjadi ".$jenis->jenis_jasa;
+                $properti->status = "Verified";
+                $properti->update();
+                return redirect()->back()->with('success', 'verifikasi Properti berhasil !');
+            }else{
+                $properti->status = "Verified";
+                $properti->update();
+                return redirect()->back()->with('success', 'verifikasi Properti berhasil !');
+            }
+        }
+        return redirect()->back()->with('error-1', 'Data Properti Tidak ditemukan !');
+    }
+
+    public function propertiCancel($id){
+        $properti = Properti::where('id', $id)->first();
+        if(isset($properti)){
+            $properti->status =  "Cancelled";
+            $properti->update();
+            return redirect()->back()->with('success-1', 'Pembatalan Properti berhasil !');
+        }else{
+            return redirect()->back()->with('error-1', 'Data Properti Tidak Ditemukan !');
+        }
+        
+    }
+
+    public function propertiDelete($id){
+        $properti = Properti::where('id', $id)->first();
+        if(isset($properti)){
+            $properti->delete();
+            return redirect()->back()->with('success-1', 'Penghapusan Properti berhasil !');
+        }else{
+            return redirect()->back()->with('error-1', 'Data Properti Tidak Ditemukan !');
         }
     }
 
