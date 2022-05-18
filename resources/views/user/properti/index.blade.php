@@ -73,6 +73,7 @@ Manajemen Properti User
                 @foreach ($index as $properti)
                     <tr>
                         <td align="center">
+                            <a href="/user/properti/cancel/{{$properti->id}}" class="btn btn-warning btn-sm" ><i class="fas fa-ban"></i></a>
                             <a href="/user/properti/edit/{{$properti->id}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
                             <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/user/properti/delete/{{$properti->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
                         </td>
@@ -80,7 +81,7 @@ Manajemen Properti User
                             {{$properti->nama_properti}}
                         </td>
                         <td>
-                            {{isset($properti->jasa)? $properti->jasa->first()->jenis_jasa : ''}}
+                            {{isset($properti->jasa)? $properti->jasa->jenis_jasa : ''}}
                         </td>
                         <td>
                             {{$properti->alamat}}

@@ -270,7 +270,7 @@ Edit Jenis Jasa
                                 <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/masterdata/retribusi/delete/{{$retri->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
                             </td>
                             <td>
-                                {{"RP"." ".$retri->nominal_retribusi}}
+                                {{"Rp."." ".number_format($retri->nominal_retribusi)}}
                             </td>
                             <td>
                                 {{$retri->durasi." "."Bulan"}}

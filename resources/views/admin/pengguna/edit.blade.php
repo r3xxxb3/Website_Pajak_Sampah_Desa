@@ -209,7 +209,7 @@ Edit Data Pelanggan
                                 {{$properti->nama_properti}}
                             </td>
                             <td>
-                                {{isset($properti->jasa)? $properti->jasa->first()->jenis_jasa : ''}}
+                                {{isset($properti->jasa) ? $properti->jasa->jenis_jasa : ''}}
                             </td>
                             <td>
                                 {{$properti->alamat}}

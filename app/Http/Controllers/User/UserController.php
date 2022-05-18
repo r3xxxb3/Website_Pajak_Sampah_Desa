@@ -8,10 +8,43 @@ use Illuminate\Http\Request;
 use App\Properti;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use App\Pengguna;
+use App\Banjar;
+use App\Pegawai;
+use App\Notifications\PropertiNotif;
 
 class UserController extends Controller
 {
     //
+
+    public function dataIndex(){
+        $pengguna = Pengguna::where('id', Auth()->guard('web')->user()->id)->first();
+        return view('user.data-diri.index', compact('pengguna'));
+    }
+
+    public function dataUpdate(Request $request){
+        $pengguna = Pengguna::where('id', Auth()->guard('web')->user()->id)->first();
+
+        if($pengguna!= null){
+            $banjar = Banjar::where('nama_banjar_dinas', 'LIKE' , $request->banjar)->first();
+            
+            if($banjar!=null){
+                $pengguna->id_banjar = $banjar->id;
+            }
+
+            $pengguna->alamat = $request->alamat;
+            $pengguna->nik = $request->nik ;
+            $pengguna->nama_pengguna = $request->nama ;
+            $pengguna->tgl_lahir = $request->tanggal ;
+            $pengguna->no_telp = $request->no ;
+            $pengguna->jenis_kelamin = $request->jenis ;
+            $pengguna->update();
+            return redirect()->route('data-index')->with('success', 'Berhasil Mengubah Data Diri !');
+        }else{
+            return redirect()->route('data-index')->with('error', 'Data Pengguna Tidak Ditemukan !');
+        }
+    }
+
     public function properti(){
         // dd(Auth::guard('web')->user()->id);
         $index = Properti::where('id_pengguna', Auth::guard('web')->user()->id)->get();
@@ -44,7 +77,15 @@ class UserController extends Controller
         $properti->jumlah_kamar = $request->kamar;
         $properti->file = $request->file;
 
+        
+        
         if($properti->save()){
+            $pegawai = Pegawai::all();
+            // dd($properti->id_jenis);
+            // $properti->toArray();
+            foreach($pegawai as $p){
+                $p->notify(new PropertiNotif($properti, "create"));
+            }
             return redirect()->route('properti-index')->with('success','Berhasil Menambah Properti, Properti akan segera diproses !');    
         }else{
             return redirect()->route('properti-index')->with('error','Proses Penambahan Properti Tidak Berhasil !');
@@ -77,9 +118,22 @@ class UserController extends Controller
             if($properti->id_jenis != $request->jenis){
                 $properti->id_jenis = $request->jenis;
                 $properti->status = "Pending";
-            }
-            
-            $properti->id_pengguna = Auth::guard('web')->user()->id;
+                
+                $properti->id_pengguna = Auth::guard('web')->user()->id;
+                $properti->jumlah_kamar = $request->kamar;
+                $properti->file = $request->file;
+
+                if($properti->update()){
+                    $pegawai = Pegawai::all();
+                    foreach($pegawai as $p){
+                        $p->notify(new PropertiNotif($properti, "update"));
+                    }
+                    return redirect()->route('properti-index')->with('success','Berhasil Mengubah Data Properti, Properti akan segera diproses !');    
+                }else{
+                    return redirect()->route('properti-index')->with('error','Proses Penngubahan Properti Tidak Berhasil !');
+                }
+            }else{
+                $properti->id_pengguna = Auth::guard('web')->user()->id;
             $properti->jumlah_kamar = $request->kamar;
             $properti->file = $request->file;
 
@@ -88,11 +142,16 @@ class UserController extends Controller
             }else{
                 return redirect()->route('properti-index')->with('error','Proses Penngubahan Properti Tidak Berhasil !');
             }
+            }
         }else{
             return redirect()->route('properti-index')->with('error','Data Properti Tidak Ditemukan !');
         }
         
     }
+
+    public function propertiCancel($id){
+
+    } 
 
     public function propertiDelete($id){
         $properti = Properti::where('id', $id)->where('id_pengguna', Auth::guard('web')->user()->id)->first();

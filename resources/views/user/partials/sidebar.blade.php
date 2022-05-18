@@ -8,9 +8,9 @@
   <ul class="sidebar-menu">
       <li class="menu-header">Dashboard</li>
       <li class="{{ request()->segment(2) == 'dashboard' ? ' active' : '' }}"><a class="nav-link" href="{{ route('user-dashboard') }}"><i class="fa fa-columns"></i> <span>Dashboard</span></a></li>
-      <li class=""><a class="nav-link" href=""><i class="fa fa-user"></i> <span>Data Diri</span></a></li>
+      <li class="{{ request()->segment(2) == 'data-diri' ? ' active' : '' }}"><a class="nav-link" href="{{route('data-index')}}"><i class="fa fa-user"></i> <span>Data Diri</span></a></li>
       <li class="{{ request()->segment(2) == 'properti' ? ' active' : '' }}"><a class="nav-link" href="{{ route('properti-index') }}"><i class="fa fa-home"></i> <span>Daftar Properti</span></a></li>
-      <li class=""><a class="nav-link" href=""><i class="fa fa-credit-card"></i> <span>Retribusi Sampah</span></a></li>
+      <li class="{{ request()->segment(2) == 'retribusi' ? ' active' : '' }}"><a class="nav-link" href="{{ route('retribusi-index') }}"><i class="fa fa-receipt"></i> <span>Retribusi Sampah</span></a></li>
       <li class=""><a class="nav-link" href=""><i class="fa fa-truck"></i> <span>Request Pengangkutan</span></a></li>
       
     </ul>

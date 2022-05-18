@@ -15,22 +15,28 @@
     <div class="dropdown-menu dropdown-list dropdown-menu-right">
       <div class="dropdown-header">Notifications
         <div class="float-right">
-          <a href="#">Mark All As Read</a>
+          <a href="#" >Mark All As Read</a>
         </div>
       </div>
       <div class="dropdown-list-content dropdown-list-icons">
       @if(Auth::guard('admin')->user()->unreadNotifications->count())
-        @for($i = 1; $i < 40; $i++)
-        <a href="#" class="dropdown-item dropdown-item-unread">
+        @foreach(Auth::guard('admin')->user()->unreadNotifications as $notif)
+        <a href="{{Route('pengguna-edit', $notif->data['user_id'])}}"  class="dropdown-item dropdown-item-unread">
           <div class="dropdown-item-icon bg-primary text-white">
-            <i class="fas fa-code"></i>
+            @if($notif->data['type']== "update")
+              <i class="fas fa-pen"></i>
+            @elseif($notif->data['type'] == "create")
+              <i class="fas fa-plus"></i>
+            @elseif($notif->data['type'] == "cancel")
+              <i class="fas fa-exclamation"></i>
+            @endif
           </div>
           <div class="dropdown-item-desc">
-            Template update is available now!
-            <div class="time text-primary">2 Min Ago</div>
+            {{$notif->data['message']}}
+            <div class="time text-primary">{{now()->diffInMinutes($notif->created_at)}} Min Ago</div>
           </div>
         </a>
-        @endfor
+        @endforeach
         @else
         <p class="text-muted p-2 text-center">No notifications found!</p>
         @endif
