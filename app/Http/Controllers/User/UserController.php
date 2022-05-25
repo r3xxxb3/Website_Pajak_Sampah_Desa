@@ -12,6 +12,7 @@ use App\Pengguna;
 use App\Banjar;
 use App\Pegawai;
 use App\Notifications\PropertiNotif;
+use File;
 
 class UserController extends Controller
 {
@@ -60,35 +61,37 @@ class UserController extends Controller
         $messages = [
             'required' => 'Kolom :attribute Wajib Diisi!',
             'unique' => 'Kolom :attribute Tidak Boleh Sama!',
+            'max' => 'Ukuran File tidak boleh melebihi 5 MB',
 		];
 
         $this->validate($request, [
             'jenis' => 'required',
             'nama' => 'required',
             'alamat' => 'required',
+            'file' => 'max:5120',
         ],$messages);
+        
+        $properti = new Properti;
 
         if($request->file('file')){
             //simpan file
             
             $file = $request->file('file');
-            $images = auth()->guard('web')->user()->nik."_".$request->nama."_";
-            $pegawai->foto = $images;
-
-            $foto_upload = 'img/properti';
+            $images = auth()->guard('web')->user()->nik."_".$request->nama."_".$file->getClientOriginalName();
+            // dd($images);
+            $properti->file = $images;
+            $foto_upload = 'assets/img/properti';
             $file->move($foto_upload,$images);
         }
 
-        $properti = new Properti;
         $properti->nama_properti = $request->nama;
         $properti->alamat = $request->alamat;
         $properti->id_jenis = $request->jenis;
+        $properti->lat = $request->lat;
+        $properti->lng = $request->lng;
         $properti->status = "Pending";
         $properti->id_pengguna = Auth::guard('web')->user()->id;
         $properti->jumlah_kamar = $request->kamar;
-        $properti->file = $request->file;
-
-        
         
         if($properti->save()){
             $pegawai = Pegawai::all();
@@ -114,16 +117,39 @@ class UserController extends Controller
         $messages = [
             'required' => 'Kolom :attribute Wajib Diisi!',
             'unique' => 'Kolom :attribute Tidak Boleh Sama!',
+            'max' => 'Ukuran File tidak boleh melebihi 5 MB',
 		];
 
         $this->validate($request, [
             'jenis' => 'required',
             'nama' => 'required',
             'alamat' => 'required',
+            'file' => 'max:5120',
         ],$messages);
 
         $properti = Properti::where('id', $id)->first();
         if(isset($properti)){
+
+            if($request->file('file')){
+                //simpan file
+                if(!is_null($properti->file)){
+                    $oldfile = public_path("assets/img/properti/".$properti->file);
+                    // dd(File::exists($oldfile));
+                    if (File::exists($oldfile)) {
+                        // dd($oldfile);
+                        File::delete($oldfile);
+                        // unlink($oldfile);
+                    }
+                }
+                $file = $request->file('file');
+                $images = auth()->guard('web')->user()->nik."_".$request->nama."_".$file->getClientOriginalName();
+                // dd($images);
+                $properti->file = $images;
+                $foto_upload = 'assets/img/properti';
+                $file->move($foto_upload,$images);
+            }
+            $properti->lat = $request->lat;
+            $properti->lng = $request->lng;
             $properti->nama_properti = $request->nama;
             $properti->alamat = $request->alamat;
             if($properti->id_jenis != $request->jenis){
@@ -132,7 +158,6 @@ class UserController extends Controller
                 
                 $properti->id_pengguna = Auth::guard('web')->user()->id;
                 $properti->jumlah_kamar = $request->kamar;
-                $properti->file = $request->file;
 
                 if($properti->update()){
                     $pegawai = Pegawai::all();
@@ -145,14 +170,13 @@ class UserController extends Controller
                 }
             }else{
                 $properti->id_pengguna = Auth::guard('web')->user()->id;
-            $properti->jumlah_kamar = $request->kamar;
-            $properti->file = $request->file;
+                $properti->jumlah_kamar = $request->kamar;
 
-            if($properti->update()){
-                return redirect()->route('properti-index')->with('success','Berhasil Mengubah Data Properti, Properti akan segera diproses !');    
-            }else{
-                return redirect()->route('properti-index')->with('error','Proses Penngubahan Properti Tidak Berhasil !');
-            }
+                if($properti->update()){
+                    return redirect()->route('properti-index')->with('success','Berhasil Mengubah Data Properti, Properti akan segera diproses !');    
+                }else{
+                    return redirect()->route('properti-index')->with('error','Proses Penngubahan Properti Tidak Berhasil !');
+                }
             }
         }else{
             return redirect()->route('properti-index')->with('error','Data Properti Tidak Ditemukan !');

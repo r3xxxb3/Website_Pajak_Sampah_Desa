@@ -4,6 +4,86 @@
 Edit Data Pelanggan
 @endsection
 
+@section('style')
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+                integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+                crossorigin=""/>
+    <style>
+        #map { height: 300px; }
+        @media (min-width: 768px) {
+            .modal-xl {
+                width: 90%;
+            max-width:1200px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
+@endsection
+
+@section('scripts')
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
+    <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
+
+<script>
+
+$(document).ready(function() {
+    var mymap = L.map('map').setView([-8.34321853375031, 115.08937012402842], 8);
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: '&copy; SIG Desa 2021',
+            maxZoom: 18,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1IjoicjN4eHhiMyIsImEiOiJja2xnOG8xdjM0MWh0MnBucmMzenE5MGU1In0.dz8KwmycIrK1uH2dmrdGOg'
+        }).addTo(mymap);
+
+    var markerGroup = L.layerGroup().addTo(mymap);
+
+    @if(isset($properti->lat) && isset($properti->lng))
+        const lat = <?php echo $properti->lat?>;
+        const lng = <?php echo $properti->lng?>;
+        
+        L.marker([
+            lat, lng
+        ]).addTo(markerGroup);
+    @endif
+
+    mymap.on('click', function(e) {
+        
+        markerGroup.clearLayers();
+    
+        $('#lat').val(e.latlng.lat);
+        $('#lng').val(e.latlng.lng);
+    
+        L.marker([
+            e.latlng.lat,e.latlng.lng
+        ]).addTo(markerGroup);
+    });
+})
+
+</script>
+
+<script>
+  function readURL(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    
+    reader.onload = function(e) {
+      $('#prop').attr('src', e.target.result);
+    }
+    
+    reader.readAsDataURL(input.files[0]); // convert to base64 string
+  }
+}
+
+$("#file").change(function() {
+  readURL(this);
+});
+</script>
+@endsection
+
 @section('content')
 <section class="section">
     <div class="section-header">
@@ -233,7 +313,7 @@ Edit Data Pelanggan
 </section>
 
 <div class="modal fade" id="modal-add">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-body">
                 <div id="myDIV" style="display: block">
@@ -243,7 +323,47 @@ Edit Data Pelanggan
                             </div>
                         </div>
                         <form method="POST" enctype="multipart/form-data" action="{{route('admin-properti-store')}}">
-                        @csrf   
+                        @csrf
+                            <div class="row">
+                                <div class="col mb-2">
+                                    <label for="map-add" class="font-weight-bold text-dark">Pilih Titik Koordinat</label>
+                                    <div class="" id="map-add"></div>
+                                    <div class="row mt-3">
+                                        <div class="col">
+                                            <input type="text" class="form-control @error('lat') is-invalid @enderror" id="lat" name="lat" placeholder="Latitude" value="{{isset($properti->lat) ? $properti->lat : old('lat')}}">
+                                            @error('lat')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>    
+                                            @enderror
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" class="form-control @error('lng') is-invalid @enderror" id="lng" name="lng" placeholder="Longitude" value="{{isset($properti->lng) ? $properti->lng : old('lng')}}">
+                                            @error('lng')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>    
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <label for="file" class="font-weight-bold text-dark">Upload Gambar Properti</label>
+                                    <div class="col-12 d-flex justify-content-center">
+                                        @if(!isset($properti->file))
+                                        <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
+                                        @else
+                                        <img src="{{asset('assets/img/properti/'.$properti->file)}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
+                                        @endif
+                                    </div>
+                                    <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" accept="image/png, image/jpeg, image/jpg" placeholder="Masukan file gambar properti" value="{{old('file')}}">
+                                        @error('file')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>    
+                                        @enderror
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class='col mb-2'>
                                     <label for="nama" class="font-weight-bold text-dark">Nama Properti</label>
@@ -297,15 +417,6 @@ Edit Data Pelanggan
                                         </span>    
                                         @enderror
                                 </div>
-                                <div class="col">
-                                    <label for="file" class="font-weight-bold text-dark">Upload Gambar Properti</label>
-                                    <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" placeholder="Masukan file gambar properti" value="{{old('file')}}">
-                                        @error('file')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>    
-                                        @enderror
-                                </div>
                             </div>
                             <div class="row mt-4">
                                 <div class="col">
@@ -322,7 +433,7 @@ Edit Data Pelanggan
 
 @foreach($index as $properti)
 <div class="modal fade" id="modal-{{$properti->id}}">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-body">
                 <div id="myDIV" style="display: block">
@@ -332,7 +443,47 @@ Edit Data Pelanggan
                             </div>
                         </div>
                         <form method="POST" enctype="multipart/form-data" action="{{route('admin-properti-update', $properti->id)}}">
-                        @csrf   
+                        @csrf
+                            <div class="row">
+                                <div class="col mb-2">
+                                    <label for="map" class="font-weight-bold text-dark">Pilih Titik Koordinat</label>
+                                    <div class="" id="map"></div>
+                                    <div class="row mt-3">
+                                        <div class="col">
+                                            <input type="text" class="form-control @error('lat') is-invalid @enderror" id="lat" name="lat" placeholder="Latitude" value="{{isset($properti->lat) ? $properti->lat : old('lat')}}">
+                                            @error('lat')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>    
+                                            @enderror
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" class="form-control @error('lng') is-invalid @enderror" id="lng" name="lng" placeholder="Longitude" value="{{isset($properti->lng) ? $properti->lng : old('lng')}}">
+                                            @error('lng')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>    
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <label for="file" class="font-weight-bold text-dark">Upload Gambar Properti</label>
+                                    <div class="col-12 d-flex justify-content-center">
+                                        @if(!isset($properti->file))
+                                        <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
+                                        @else
+                                        <img src="{{asset('assets/img/properti/'.$properti->file)}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
+                                        @endif
+                                    </div>
+                                    <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" accept="image/png, image/jpeg, image/jpg" placeholder="Masukan file gambar properti" value="{{old('file')}}">
+                                        @error('file')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>    
+                                        @enderror
+                                </div>
+                            </div>      
                             <div class="row">
                                 <div class='col mb-2'>
                                     <label for="nama" class="font-weight-bold text-dark">Nama Properti</label>
@@ -383,15 +534,6 @@ Edit Data Pelanggan
                                     <label for="alamat" class="font-weight-bold text-dark">Alamat Properti</label>
                                     <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" placeholder="Masukan Alamat Properti" value="{{isset($properti->alamat) ? $properti->alamat : old('alamat')}}" disabled>
                                         @error('alamat')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>    
-                                        @enderror
-                                </div>
-                                <div class="col">
-                                    <label for="file" class="font-weight-bold text-dark">Upload Gambar Properti</label>
-                                    <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" placeholder="Masukan file gambar properti" value="{{isset($properti->file) ? $properti->file : old('file')}}" disabled>
-                                        @error('file')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>    
