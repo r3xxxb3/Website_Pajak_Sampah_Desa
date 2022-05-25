@@ -50,7 +50,7 @@ class RetribusiCommand extends Command
             $standar = StandarRetribusi::where('id_jenis_jasa', $prop->id_jenis)->get();
             $stanres = $standar->where('tanggal_berlaku', '<=', now())->where('tanggal_selesai', '>=', now())->Where('active', 1)->first();
             if(!isset($retribusi)){
-                if(count($standar)){
+                if(isset($standar)){
                     $retribusi = new Retribusi;
                     $retribusi->id_pengguna = $prop->id_pengguna;
                     $retribusi->id_properti = $prop->id;
@@ -58,7 +58,7 @@ class RetribusiCommand extends Command
                     $retribusi->nominal = $stanres->nominal_retribusi;
                     $retribusi->save();
                 }else{
-                    return 0;
+                    continue;
                 }
             }elseif($retribusi->created_at->format('m') != now()->format('m')){
                 if(isset($standar)){
@@ -69,10 +69,10 @@ class RetribusiCommand extends Command
                     $retribusi->nominal = $stanres->nominal_retribusi;
                     $retribusi->save();
                 }else{
-                    return 0;
+                    continue;
                 }
             }else{
-                return 0;
+                continue;
             }
         }
         // Log::info("Testing Scheduler");

@@ -68,6 +68,17 @@ class UserController extends Controller
             'alamat' => 'required',
         ],$messages);
 
+        if($request->file('file')){
+            //simpan file
+            
+            $file = $request->file('file');
+            $images = auth()->guard('web')->user()->nik."_".$request->nama."_";
+            $pegawai->foto = $images;
+
+            $foto_upload = 'img/properti';
+            $file->move($foto_upload,$images);
+        }
+
         $properti = new Properti;
         $properti->nama_properti = $request->nama;
         $properti->alamat = $request->alamat;

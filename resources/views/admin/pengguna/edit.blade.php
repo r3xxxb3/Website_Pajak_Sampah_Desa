@@ -337,7 +337,7 @@ Edit Data Pelanggan
                                 <div class='col mb-2'>
                                     <label for="nama" class="font-weight-bold text-dark">Nama Properti</label>
                                     <input type="text" class="form-control @error('jenis') is-invalid @enderror" id="nama" name="nama" placeholder="Masukan Nama Properti (cth: rumah tinggal,.. etc)" value="{{isset($properti->nama_properti) ? $properti->nama_properti : old('nama')}}" disabled>
-                                        @error('jenis')
+                                        @error('nama')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>

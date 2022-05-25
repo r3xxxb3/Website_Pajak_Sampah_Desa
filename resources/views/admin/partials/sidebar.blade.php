@@ -28,8 +28,9 @@
       
       <li class="{{ request()->segment(2) == 'pegawai' ? 'active' : '' }}"><a class="nav-link" href="{{ route('pegawai-index') }}"><i class="fa fa-briefcase"></i> <span>Manajemen Pegawai</span></a></li>
       <li class="{{ request()->segment(2) == 'pengguna' ? 'active' : '' }}"><a class="nav-link" href="{{ route('pengguna-index') }}"><i class="fa fa-id-card"></i> <span>Manajemen Pelanggan</span></a></li>
-      <li class=""><a class="nav-link" href=""><i class="fa fa-credit-card"></i> <span>Manajemen Retribusi</span></a></li>
+      <li class="{{ request()->segment(2) == 'retribusi' ? 'active' : '' }}"><a class="nav-link" href="{{ route('admin-retribusi-index') }}"><i class="fa fa-credit-card"></i> <span>Manajemen Retribusi</span></a></li>
       <li class=""><a class="nav-link" href=""><i class="fa fa-truck"></i> <span>Request Pengangkutan</span></a></li>
-      <li class=""><a class="nav-link" href=""><i class="fa fa-pie-chart"></i> <span>Report</span></a></li>
+      <li class=""><a class="nav-link" href=""><i class="fa fa-money-bill-wave-alt"></i> <span>Manajemen Pembayaran</span></a></li>
+      <li class=""><a class="nav-link" href=""><i class="fa fa-file-chart-pie"></i> <span>Report</span></a></li>
     </ul>
 </aside>

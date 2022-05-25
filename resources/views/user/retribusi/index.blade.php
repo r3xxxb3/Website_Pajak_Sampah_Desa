@@ -57,7 +57,7 @@ Index Retribusi
                 </div>
                 @endif
             <div class="table-responsive">
-            <a class= "btn btn-success text-white mb-2" data-toggle="" data-target=""><i class="fas fa-cart-plus"></i> Bayar Tagihan Retribusi</a>
+            <a class= "btn btn-success text-white mb-2" data-toggle="modal" data-target="#modal-choose"><i class="fas fa-cash-register"></i> Pilih Tagihan Retribusi</a>
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
@@ -73,7 +73,11 @@ Index Retribusi
                 @foreach ($index as $retri)
                     <tr>
                         <td align="center">
-                            <a href="#" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
+                            @if($retri->status == 'pending')
+                                <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-{{$retri->id}}"><i class="fas fa-cart-plus"></i></a>
+                            @else
+                                <a href="#" class="btn btn-info btn-md" data-toggle="" data-target=""><i class="fas fa-exclamation"></i></a>
+                            @endif
                         </td>
                         <td>
                             {{isset($retri->properti) ? $retri->properti->nama_properti : ''}}
@@ -82,7 +86,7 @@ Index Retribusi
                             {{isset($retri->properti->jasa)? $retri->properti->jasa->jenis_jasa : ''}}
                         </td>
                         <td>
-                            {{$retri->nominal}}
+                            Rp. {{number_format($retri->nominal)}}
                         </td>
                         <td>
                             {{$retri->created_at->format('d M Y')}}
@@ -103,6 +107,181 @@ Index Retribusi
   </div>
 </section>
 
+<div class="modal fade" id="modal-choose">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div id="myDIV" style="display: block">
+                        <div class="row">
+                            <div class="col">
+                                <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-2">Action</th>
+                                            <th>Nama Properti</th>
+                                            <th>Jenis Properti</th>
+                                            <th>Nominal </th>
+                                            <th>Tanggal Retribusi </th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach ($index as $retri)
+                                        <tr>
+                                            <td align="center">
+                                                <input type="checkbox" name="id-{{$retri->id}}" id="id" value="{{$retri->id}}">
+                                                <!-- <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-{{$retri->id}}"><i class="fas fa-cart-plus"></i></a> -->
+                                            </td>
+                                            <td>
+                                                {{isset($retri->properti) ? $retri->properti->nama_properti : ''}}
+                                            </td>
+                                            <td>
+                                                {{isset($retri->properti->jasa)? $retri->properti->jasa->jenis_jasa : ''}}
+                                            </td>
+                                            <td>
+                                                Rp. {{number_format($retri->nominal)}}
+                                            </td>
+                                            <td>
+                                                {{$retri->created_at->format('d M Y')}}
+                                            </td>
+                                            <td>
+                                                {{$retri->status}}
+                                            </td>
+            
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-between mb-3">
+                            <div class="col">
+                                <h6 class="m-0 font-weight-bold text-primary"></h6>
+                            </div>
+                        </div>
+                        <form method="POST" enctype="multipart/form-data" action="{{route('pembayaran-store')}}">
+                        @csrf
+                                <div class='col mb-2' hidden>
+                                    <input type="text" class="form-control @error('id') is-invalid @enderror" id="id" name="id" placeholder="" value="{{is_null($retri->id) ? $retri->id : old('id')}}" >
+                                    <input type="text" class="form-control @error('type') is-invalid @enderror" id="type" name="type" placeholder="" value="retribusi" >
+                                </div>
+                            <div class="row">
+                                <div class='col mb-2'>
+                                    <label for="file" class="font-weight-bold text-dark">Bukti Pembayaran</label>
+                                    <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" placeholder="File/Foto Bukti bayar" value="{{is_null($retri->pembayaran) ? $retri->pembayaran->bukti_bayar : old('file')}}" >
+                                        @error('file')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col mb-2">
+                                <label for="media" class="font-weight-bold text-dark">Jenis Pembayaran</label>
+                                    <select class="form-control @error('media') is-invalid @enderror" id="media" name="media">
+                                    <option value="" selected>Pilih Jenis Pembayaran</option>
+                                        <option value="transfer" >transfer</option>
+                                        <option value="cash" >cash</option>
+                                    </select>
+                                    @error('media')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>    
+                                        @enderror
+                                </div>
+                                <div class="col mb-2">
+                                <label for="nominal" class="font-weight-bold text-dark">Konfirmasi Nominal Bayar</label>
+                                    <input type="number" class="form-control @error('nominal') is-invalid @enderror" id="nominal" name="nominal" placeholder="Konfirmasi Nominal Pembayaran" value="{{is_null($retri->pembayaran) ? $properti->pembayaran : old('nominal')}}" >
+                                        @error('nominal')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col">
+                                    <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Data Pembayaran Sudah Benar?')"><i class="fas fa-save"></i> Bayar</button>
+                                    <a data-dismiss="modal" class="btn btn-danger text-white"><i class="fas fa-times"></i> Close</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+
+@foreach($index as $retri)
+<div class="modal fade" id="modal-{{$retri->id}}">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div id="myDIV" style="display: block">
+                        <div class="row justify-content-between mb-3">
+                            <div class="col">
+                                <h6 class="m-0 font-weight-bold text-primary">Pembayaran Retribusi {{$retri->properti->nama_properti}}</h6>
+                            </div>
+                        </div>
+                        <form method="POST" enctype="multipart/form-data" action="{{route('pembayaran-store')}}">
+                        @csrf
+                                <div class='col mb-2' hidden>
+                                    <input type="text" class="form-control @error('id') is-invalid @enderror" id="id" name="id" placeholder="" value="{{is_null($retri->id) ? $retri->id : old('id')}}" >
+                                    <input type="text" class="form-control @error('type') is-invalid @enderror" id="type" name="type" placeholder="" value="retribusi" >
+                                </div>
+                            <div class="row">
+                                <div class='col mb-2'>
+                                    <label for="file" class="font-weight-bold text-dark">Bukti Pembayaran</label>
+                                    <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" placeholder="File/Foto Bukti bayar" value="{{is_null($retri->pembayaran) ? $retri->pembayaran->bukti_bayar : old('file')}}" >
+                                        @error('file')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col mb-2">
+                                <label for="media" class="font-weight-bold text-dark">Jenis Pembayaran</label>
+                                    <select class="form-control @error('media') is-invalid @enderror" id="media" name="media">
+                                    <option value="" selected>Pilih Jenis Pembayaran</option>
+                                        <option value="transfer" >transfer</option>
+                                        <option value="cash" >cash</option>
+                                    </select>
+                                    @error('media')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>    
+                                        @enderror
+                                </div>
+                                <div class="col mb-2">
+                                <label for="nominal" class="font-weight-bold text-dark">Konfirmasi Nominal Bayar</label>
+                                    <input type="number" class="form-control @error('nominal') is-invalid @enderror" id="nominal" name="nominal" placeholder="Konfirmasi Nominal Pembayaran" value="{{is_null($retri->pembayaran) ? $properti->pembayaran : old('nominal')}}" >
+                                        @error('nominal')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col">
+                                    <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Data Pembayaran Sudah Benar?')"><i class="fas fa-save"></i> Bayar</button>
+                                    <a data-dismiss="modal" class="btn btn-danger text-white"><i class="fas fa-times"></i> Close</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+@endforeach
 
 @endsection
 

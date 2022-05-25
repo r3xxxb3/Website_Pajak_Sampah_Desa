@@ -111,7 +111,10 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
 
 
     //Manajemen Retribusi
-
+    Route::get('/retribusi', 'Admin\RetribusiController@index')->name('admin-retribusi-index');
+    Route::post('/retribusi/verif-many', 'Admin\RetribusiController@verifMany')->name('admin-retribusi-verif-many');
+    Route::post('/retribusi/update/{id}', 'Admin\RetribusiController@update')->name('admin-retribusi-update');
+    Route::get('/retribusi/verif/{id}', 'Admin\RetribusiController@verif')->name('admin-retribusi-verif');
 
     //Manajemen Request
 
@@ -154,6 +157,11 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user'] , function(){
 
     //Retribusi
     Route::get('/retribusi', 'User\RetribusiController@index')->name('retribusi-index');
+
+    //Pembayaran
+    Route::post('/pembayaran/store', 'Admin\PembayaranController@store')->name('pembayaran-store');
 });
 
 Route::get('/home', 'HomeController@landing')->name('home');
+
+route::get('/test', 'TestingController@test')->name('test');

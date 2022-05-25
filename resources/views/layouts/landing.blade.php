@@ -272,6 +272,11 @@
                   <li class="nav-item">
                     <a class="nav-link" href="#">Contact</a>
                   </li>
+                  @if(auth()->guard('web')->check())
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{Route('user-dashboard')}}">Dashboard</a>
+                  </li>
+                  @endif
                 </ul>
               </div>
               <div class="modal-footer border-0 gap-3" style="padding: 2rem; padding-top: 0.75rem">
