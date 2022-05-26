@@ -75,7 +75,7 @@ Edit Data Pelanggan
     
         L.marker([
             e.latlng.lat,e.latlng.lng
-        ]).addTo(markerGroup);
+        ]).addTo(markerGroupEdit);
     });
 
 
