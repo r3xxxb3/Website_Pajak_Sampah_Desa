@@ -9,7 +9,7 @@ Edit Data Pelanggan
                 integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
                 crossorigin=""/>
     <style>
-        #map { height: 300px; }
+        #map-add, #map-edit { height: 300px; }
         @media (min-width: 768px) {
             .modal-xl {
                 width: 90%;
@@ -21,15 +21,15 @@ Edit Data Pelanggan
 @endsection
 
 @section('scripts')
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-            crossorigin=""></script>
-    <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+
+<script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
 
 <script>
 
-$(document).ready(function() {
-    var mymap = L.map('map').setView([-8.34321853375031, 115.08937012402842], 8);
+    var mymap = L.map('map-add').setView([-8.34321853375031, 115.08937012402842], 8);
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
             attribution: '&copy; SIG Desa 2021',
             maxZoom: 18,
@@ -38,30 +38,78 @@ $(document).ready(function() {
             zoomOffset: -1,
             accessToken: 'pk.eyJ1IjoicjN4eHhiMyIsImEiOiJja2xnOG8xdjM0MWh0MnBucmMzenE5MGU1In0.dz8KwmycIrK1uH2dmrdGOg'
         }).addTo(mymap);
-
-    var markerGroup = L.layerGroup().addTo(mymap);
-
-    @if(isset($properti->lat) && isset($properti->lng))
-        const lat = <?php echo $properti->lat?>;
-        const lng = <?php echo $properti->lng?>;
         
-        L.marker([
-            lat, lng
-        ]).addTo(markerGroup);
-    @endif
-
+    var map_edit = L.map('map-edit').setView([-8.34321853375031, 115.08937012402842], 8);
+            L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+                attribution: '&copy; SIG Desa 2021',
+                maxZoom: 18,
+                id: 'mapbox/streets-v11',
+                tileSize: 512,
+                zoomOffset: -1,
+                accessToken: 'pk.eyJ1IjoicjN4eHhiMyIsImEiOiJja2xnOG8xdjM0MWh0MnBucmMzenE5MGU1In0.dz8KwmycIrK1uH2dmrdGOg'
+            }).addTo(mymap);
+            
+    var markerGroup = L.layerGroup().addTo(mymap);
+        
+    var markerGroupEdit = L.layerGroup().addTo(map_edit);
+     
     mymap.on('click', function(e) {
         
         markerGroup.clearLayers();
-    
+        
         $('#lat').val(e.latlng.lat);
         $('#lng').val(e.latlng.lng);
+        
+        L.marker([
+            e.latlng.lat,e.latlng.lng
+        ]).addTo(markerGroup);
+          
+    });
+
+    map_edit.on('click', function(e) {
+        
+        markerGroupEdit.clearLayers();
+    
+        $('#lat-edit').val(e.latlng.lat);
+        $('#lng-edit').val(e.latlng.lng);
     
         L.marker([
             e.latlng.lat,e.latlng.lng
         ]).addTo(markerGroup);
     });
-})
+
+
+function catchProp(properti, jenis){
+    console.log(properti);
+    // console.log(pengguna);
+    console.log(jenis);
+
+    // var markerGroupEdit = L.layerGroup().addTo(map_edit);
+
+    markerGroupEdit.clearLayers();
+
+    if(properti.lat != null && properti.lng != null){
+        console.log("true");
+        
+
+        L.marker([
+            properti.lat, properti.lng
+        ]).addTo(markerGroupEdit);
+    }
+
+
+    $('#nama-edit').val(properti.nama_properti);
+    $('#alamat-edit').val(properti.alamat);
+    $('#lat-edit').val(properti.lat);
+    $('#lng-edit').val(properti.lng);
+    $('#banjar-edit').val(properti.banjar);
+    $('#jenis-edit').val(properti.id_jenis);
+    $('#lat-edit').val(properti.lat);
+    $('#lng-edit').val(properti.lng);
+    $('#file-edit').change(function(){
+        readURL(properti.file);
+    });
+}
 
 </script>
 
@@ -81,6 +129,10 @@ $(document).ready(function() {
 $("#file").change(function() {
   readURL(this);
 });
+</script>
+
+<script>
+
 </script>
 @endsection
 
@@ -281,8 +333,9 @@ $("#file").change(function() {
                     <tbody>
                     @foreach ($index as $properti)
                         <tr>
+                            
                             <td align="center">
-                                <a  data-toggle="modal" data-target="#modal-{{$properti->id}}" class="btn btn-info btn-sm text-white"><i class="fas fa-pencil-alt"></i></a>
+                                <a  data-toggle="modal" data-target="#modal-edit" class="btn btn-info btn-sm text-white" onClick="catchProp({{$properti}}, {{$properti->jasa}} )"><i class="fas fa-pencil-alt"></i></a>
                                 <a style="margin-right:7px" class="btn btn-danger btn-sm" href="{{Route('admin-properti-delete', $properti->id)}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
                             </td>
                             <td>
@@ -327,7 +380,7 @@ $("#file").change(function() {
                             <div class="row">
                                 <div class="col mb-2">
                                     <label for="map-add" class="font-weight-bold text-dark">Pilih Titik Koordinat</label>
-                                    <div class="" id="map-add"></div>
+                                    <div class="" id="map-add" stle="object-fit:cover"></div>
                                     <div class="row mt-3">
                                         <div class="col">
                                             <input type="text" class="form-control @error('lat') is-invalid @enderror" id="lat" name="lat" placeholder="Latitude" value="{{isset($properti->lat) ? $properti->lat : old('lat')}}">
@@ -377,7 +430,7 @@ $("#file").change(function() {
                                 <div class="col mb-2">
                                     <label for="JENIS" class="font-weight-bold text-dark">Jenis Properti</label>
                                     <select class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="jenis">
-                                        <option value="" selected>Pilih Jenis Properti</option>
+                                        <option value="" >Pilih Jenis Properti</option>
                                             @foreach($jenis as $j)
                                                 <option value="{{$j->id}}" {{old('jenis') == $j->id ? 'selected' : ''}}>{{$j->jenis_jasa}}</option>
                                             @endforeach
@@ -431,8 +484,7 @@ $("#file").change(function() {
     </div>
 </div>
 
-@foreach($index as $properti)
-<div class="modal fade" id="modal-{{$properti->id}}">
+<div class="modal fade" id="modal-edit">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-body">
@@ -442,24 +494,24 @@ $("#file").change(function() {
                                 <h6 class="m-0 font-weight-bold text-primary">Edit Properti Pelanggan</h6>
                             </div>
                         </div>
-                        <form method="POST" enctype="multipart/form-data" action="{{route('admin-properti-update', $properti->id)}}">
+                        <form method="POST" enctype="multipart/form-data" action="">
                         @csrf
                             <div class="row">
                                 <div class="col mb-2">
-                                    <label for="map" class="font-weight-bold text-dark">Pilih Titik Koordinat</label>
-                                    <div class="" id="map"></div>
+                                    <label for="map-edit" class="font-weight-bold text-dark">Pilih Titik Koordinat</label>
+                                    <div class="" id="map-edit"></div>
                                     <div class="row mt-3">
                                         <div class="col">
-                                            <input type="text" class="form-control @error('lat') is-invalid @enderror" id="lat" name="lat" placeholder="Latitude" value="{{isset($properti->lat) ? $properti->lat : old('lat')}}">
-                                            @error('lat')
+                                            <input type="text" class="form-control @error('lat') is-invalid @enderror" id="lat-edit" name="lat-edit" placeholder="Latitude" value="">
+                                            @error('lat-edit')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>    
                                             @enderror
                                         </div>
                                         <div class="col">
-                                            <input type="text" class="form-control @error('lng') is-invalid @enderror" id="lng" name="lng" placeholder="Longitude" value="{{isset($properti->lng) ? $properti->lng : old('lng')}}">
-                                            @error('lng')
+                                            <input type="text" class="form-control @error('lng') is-invalid @enderror" id="lng-edit" name="lng-edit" placeholder="Longitude" value="">
+                                            @error('lng-edit')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>    
@@ -468,16 +520,12 @@ $("#file").change(function() {
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <label for="file" class="font-weight-bold text-dark">Upload Gambar Properti</label>
+                                    <label for="file-edit" class="font-weight-bold text-dark">Upload Gambar Properti</label>
                                     <div class="col-12 d-flex justify-content-center">
-                                        @if(!isset($properti->file))
                                         <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
-                                        @else
-                                        <img src="{{asset('assets/img/properti/'.$properti->file)}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
-                                        @endif
                                     </div>
-                                    <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" accept="image/png, image/jpeg, image/jpg" placeholder="Masukan file gambar properti" value="{{old('file')}}">
-                                        @error('file')
+                                    <input type="file" class="form-control @error('file') is-invalid @enderror" id="file-edit" name="file-edit" accept="image/png, image/jpeg, image/jpg" placeholder="Masukan file gambar properti" value="{{old('file')}}">
+                                        @error('file-edit')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>    
@@ -486,23 +534,23 @@ $("#file").change(function() {
                             </div>      
                             <div class="row">
                                 <div class='col mb-2'>
-                                    <label for="nama" class="font-weight-bold text-dark">Nama Properti</label>
-                                    <input type="text" class="form-control @error('jenis') is-invalid @enderror" id="nama" name="nama" placeholder="Masukan Nama Properti (cth: rumah tinggal,.. etc)" value="{{isset($properti->nama_properti) ? $properti->nama_properti : old('nama')}}" disabled>
-                                        @error('nama')
+                                    <label for="nama-edit" class="font-weight-bold text-dark">Nama Properti</label>
+                                    <input type="text" class="form-control @error('jenis') is-invalid @enderror" id="nama-edit" name="nama-edit" placeholder="Masukan Nama Properti (cth: rumah tinggal,.. etc)" value="" disabled>
+                                        @error('nama-edit')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                         @enderror
                                 </div>
                                 <div class="col mb-2">
-                                    <label for="JENIS" class="font-weight-bold text-dark">Jenis Properti</label>
-                                    <select class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="jenis">
+                                    <label for="jenis-edit" class="font-weight-bold text-dark">Jenis Properti</label>
+                                    <select class="form-control @error('jenis') is-invalid @enderror" id="jenis-edit" name="jenis-edit">
                                         <option value="" selected>Pilih Jenis Properti</option>
                                             @foreach($jenis as $j)
-                                                <option value="{{$j->id}}" {{old('jenis') == $j->id || $properti->id_jenis == $j->id  ? 'selected' : ''}}>{{$j->jenis_jasa}}</option>
+                                                <option value="{{$j->id}}" >{{$j->jenis_jasa}}</option>
                                             @endforeach
                                     </select>
-                                        @error('deskripsi')
+                                        @error('jenis-edit')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>    
@@ -510,9 +558,9 @@ $("#file").change(function() {
                                 </div>
                                 @if($properti->jasa->jenis_jasa == "Kos-kosan")
                                 <div class="col mb-2" id="additional" >
-                                    <label for="kamar" class="font-weight-bold text-dark">Jumlah Kamar</label>
-                                    <input type="number" class="form-control @error('kamar') is-invalid @enderror" id="kamar" name="kamar" placeholder="Masukan Jumlah Kamar terisi (Kos)" value="{{isset($properti->jumlah_kamar) ? $properti->jumlah_kamar : old('kamar')}}" disabled>
-                                        @error('kamar')
+                                    <label for="kamar-edit" class="font-weight-bold text-dark">Jumlah Kamar</label>
+                                    <input type="number" class="form-control @error('kamar') is-invalid @enderror" id="kamar-edit" name="kamar-edit" placeholder="Masukan Jumlah Kamar terisi (Kos)" value="" disabled>
+                                        @error('kamar-edit')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>    
@@ -522,8 +570,8 @@ $("#file").change(function() {
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    <label for="banjar" class="font-weight-bold text-dark">Banjar</label>
-                                    <input type="text" class="form-control @error('banjar') is-invalid @enderror" id="banjar" name="banjar" placeholder="Masukan Banjar Properti (opsional)" value="{{isset($properti->id_banjar) ? $properti->banjar->first()->nama_banjar_dinas : old('banjar')}}" disabled>
+                                    <label for="banjar-edit" class="font-weight-bold text-dark">Banjar</label>
+                                    <input type="text" class="form-control @error('banjar') is-invalid @enderror" id="banjar-edit" name="banjar-edit" placeholder="Masukan Banjar Properti (opsional)" value="" disabled>
                                         @error('banjar')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -531,9 +579,9 @@ $("#file").change(function() {
                                         @enderror
                                 </div>
                                 <div class="col">
-                                    <label for="alamat" class="font-weight-bold text-dark">Alamat Properti</label>
-                                    <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" placeholder="Masukan Alamat Properti" value="{{isset($properti->alamat) ? $properti->alamat : old('alamat')}}" disabled>
-                                        @error('alamat')
+                                    <label for="alamat-edit" class="font-weight-bold text-dark">Alamat Properti</label>
+                                    <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat-edit" name="alamat-edit" placeholder="Masukan Alamat Properti" value="" disabled>
+                                        @error('alamat-edit')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>    
@@ -553,6 +601,6 @@ $("#file").change(function() {
         </div>
     </div>
 </div>
-@endforeach
+
 
 @endsection
