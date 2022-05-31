@@ -8,6 +8,7 @@
   <ul class="sidebar-menu">
       <li class="menu-header">Dashboard</li>
       <li class="{{ Request::route()->getName() == 'admin-dashboard' ? ' active' : '' }}"><a class="nav-link" href="{{ route('admin-dashboard') }}"><i class="fa fa-columns"></i> <span>Dashboard</span></a></li>
+      <li class="menu-header">Master Data</li>
       <li class=" {{ request()->segment(2) == 'masterdata' ? 'active' : '' }}">
           <a class="nav-link {{ Request::is('admin/masterdata*') ? '' : 'collapsed' }}" href="#" data-toggle="collapse" data-target="#collapseMaster" aria-expanded="true" aria-controls="collapseUtilities">
             <i class="fa fa-cogs"></i>
@@ -25,12 +26,15 @@
           <li  class ="text-dark collapse-show {{ request()->segment(3) == 'jenis-sampah' ? 'active' : '' }}"><a class="nav-link" href="{{route('masterdata-jenis-index')}}">Jenis Sampah</a></li>
         </div>
       </ul>
-      
+      <li class="menu-header">Manajemen Pengguna</li>
       <li class="{{ request()->segment(2) == 'pegawai' ? 'active' : '' }}"><a class="nav-link" href="{{ route('pegawai-index') }}"><i class="fa fa-briefcase"></i> <span>Manajemen Pegawai</span></a></li>
       <li class="{{ request()->segment(2) == 'pengguna' ? 'active' : '' }}"><a class="nav-link" href="{{ route('pengguna-index') }}"><i class="fa fa-id-card"></i> <span>Manajemen Pelanggan</span></a></li>
+      <li class="menu-header">Retribusi & Pengangkutan</li>
       <li class="{{ request()->segment(2) == 'retribusi' ? 'active' : '' }}"><a class="nav-link" href="{{ route('admin-retribusi-index') }}"><i class="fa fa-credit-card"></i> <span>Manajemen Retribusi</span></a></li>
       <li class=""><a class="nav-link" href=""><i class="fa fa-truck"></i> <span>Request Pengangkutan</span></a></li>
+      <li class="menu-header">Pembayaran</li>
       <li class=""><a class="nav-link" href=""><i class="fa fa-money-bill-wave-alt"></i> <span>Manajemen Pembayaran</span></a></li>
+      <li class="menu-header">Reporting</li>
       <li class=""><a class="nav-link" href=""><i class="fa fa-file-chart-pie"></i> <span>Report</span></a></li>
     </ul>
 </aside>

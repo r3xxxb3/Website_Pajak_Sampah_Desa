@@ -13,6 +13,7 @@ use App\JenisJasa;
 use App\KartuK;
 use App\Properti;
 use App\Provinsi;
+use App\Notifications\PropertiNotif;
 use Illuminate\Support\Facades\Hash;
 
 
@@ -114,21 +115,90 @@ class PenggunaController extends Controller
         }
     }
 
-    public function propertiStore(){
+    public function propertiStore(Request $request){
+        $messages = [
+            'required' => 'Kolom :attribute Wajib Diisi!',
+            'unique' => 'Kolom :attribute Tidak Boleh Sama!',
+            'max' => 'Ukuran File tidak boleh melebihi 5 MB',
+		];
 
+        $this->validate($request, [
+            'jenis' => 'required',
+            'nama' => 'required',
+            'alamat' => 'required',
+            'file' => 'max:5120',
+        ],$messages);
+        
+        $properti = new Properti;
+        $pelanggan = Pengguna::where('id', $request->pengguna)->first();
+        // dd($pelanggan);
+        if(!isset($pelanggan)){
+            return redirect()->back->with('error','Pengguna Tidak Terdeteksi, Kesalahan pada Kode !');
+        }
+
+        if($request->file('file')){
+            //simpan file
+            
+            $file = $request->file('file');
+            $images = $pelanggan->nik."_".$request->nama."_".$file->getClientOriginalName();
+            // dd($images);
+            $properti->file = $images;
+            $foto_upload = 'assets/img/properti';
+            $file->move($foto_upload,$images);
+        }
+
+        $properti->nama_properti = $request->nama;
+        $properti->alamat = $request->alamat;
+        $properti->id_jenis = $request->jenis;
+        $properti->lat = $request->lat;
+        $properti->lng = $request->lng;
+        $properti->status = "Pending";
+        $properti->id_pengguna = $pelanggan->id;
+        $properti->jumlah_kamar = $request->kamar;
+        
+        if($properti->save()){
+            $pelanggan->notify(new PropertiNotif($properti, "create"));
+            return redirect()->route('pengguna-edit', $request->pengguna)->with('success','Berhasil Menambah Properti, Properti akan segera diproses !');    
+        }else{
+            return redirect()->route('pengguna-edit', $request->pengguna)->with('error','Proses Penambahan Properti Tidak Berhasil !');
+        }
+        
     }
 
     public function propertiUpdate($id, Request $request){
         $properti = Properti::where('id', $id)->first();
         if(isset($properti)){
+            if($request->file('file')){
+                //simpan file
+                if(!is_null($properti->file)){
+                    $oldfile = public_path("assets/img/properti/".$properti->file);
+                    // dd(File::exists($oldfile));
+                    if (File::exists($oldfile)) {
+                        // dd($oldfile);
+                        File::delete($oldfile);
+                        // unlink($oldfile);
+                    }
+                }
+                $file = $request->file('file');
+                $images = $properti->pengguna->nik."_".$request->nama."_".$file->getClientOriginalName();
+                // dd($images);
+                $properti->file = $images;
+                $foto_upload = 'assets/img/properti';
+                $file->move($foto_upload,$images);
+            }
+
             if($properti->id_jenis != $request->jenis){
                 $jenis = JenisJasa::where('id', $request->jenis)->first();
+                $properti->lat = $request->lat;
+                $properti->lng = $request->lng;
                 $properti->id_jenis = $request->jenis;
                 $properti->note = "Admin Mengubah Jenis properti menjadi ".$jenis->jenis_jasa;
                 $properti->status = "Verified";
                 $properti->update();
                 return redirect()->back()->with('success', 'verifikasi Properti berhasil !');
             }else{
+                $properti->lat = $request->lat;
+                $properti->lng = $request->lng;
                 $properti->status = "Verified";
                 $properti->update();
                 return redirect()->back()->with('success', 'verifikasi Properti berhasil !');

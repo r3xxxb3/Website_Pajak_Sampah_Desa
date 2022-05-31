@@ -21,6 +21,6 @@ class Retribusi extends Model
     }
 
     public function pembayaran(){
-        return $this->hasMany(Pembayaran::class, 'id', 'id_retribusi');
+        return $this->belongsToMany(Pembayaran::class,'tb_detail_pembayaran' , 'id', 'id_retribusi');
     }
 }

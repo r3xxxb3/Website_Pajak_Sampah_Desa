@@ -142,7 +142,7 @@ class UserController extends Controller
                     }
                 }
                 $file = $request->file('file');
-                $images = auth()->guard('web')->user()->nik."_".$request->nama."_".$file->getClientOriginalName();
+                $images = $properti->pengguna->nik."_".$request->nama."_".$file->getClientOriginalName();
                 // dd($images);
                 $properti->file = $images;
                 $foto_upload = 'assets/img/properti';
