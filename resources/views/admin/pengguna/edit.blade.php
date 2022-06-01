@@ -9,6 +9,7 @@ Edit Data Pelanggan
                 integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
                 crossorigin=""/>
     <style>
+        #prop{height: 50px;}
         #map-add, #map-edit { height: 300px; }
         @media (min-width: 768px) {
             .modal-xl {
@@ -354,7 +355,12 @@ $("#file").change(function() {
                             <td>
                                 {{$properti->alamat}}
                             </td>
-                            <td class="col-5">
+                            <td class="">
+                                    @if(!isset($properti->file))
+                                    <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
+                                    @else
+                                    <img src="{{asset('assets/img/properti/'.$properti->file)}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
+                                    @endif
                                 <!-- {{$properti->file}} -->
                             </td>
                             <td>

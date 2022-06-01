@@ -20,7 +20,7 @@ class Retribusi extends Model
         return $this->belongsTo(Pengguna::class, 'id_pengguna', 'id');
     }
 
-    public function pembayaran(){
-        return $this->belongsToMany(Pembayaran::class,'tb_detail_pembayaran' , 'id', 'id_retribusi');
+    public function pembayaran() {
+        return $this->morphToMany(Pembayaran::class, 'model' ,'tb_detail_pembayaran' , 'model_id', 'id_pembayaran');
     }
 }

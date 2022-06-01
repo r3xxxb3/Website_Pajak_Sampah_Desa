@@ -159,7 +159,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user'] , function(){
     Route::get('/retribusi', 'User\RetribusiController@index')->name('retribusi-index');
 
     //Pembayaran
-    Route::post('/pembayaran/store', 'Admin\PembayaranController@store')->name('pembayaran-store');
+    Route::post('/pembayaran/store', 'User\PembayaranController@store')->name('pembayaran-store');
 });
 
 Route::get('/home', 'HomeController@landing')->name('home');
