@@ -137,7 +137,7 @@ $("#file-single").change(function() {
                 @foreach ($index as $retri)
                     <tr>
                         <td align="center">
-                            @if($retri->status == 'pending')
+                            @if(!isset($retri->pembayaran))
                                 <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-single" onClick="calculateNom_b({{$retri}})"><i class="fas fa-cart-plus"></i></a>
                             @else
                                 <a href="#" class="btn btn-info btn-md" data-toggle="" data-target=""><i class="fas fa-exclamation"></i></a>

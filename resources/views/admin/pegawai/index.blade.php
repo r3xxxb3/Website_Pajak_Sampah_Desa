@@ -4,6 +4,14 @@
 Index Data Pegawai
 @endsection
 
+@section('scripts')
+<script>
+    $(document).ready( function () {
+            $('#dataTable').DataTable();
+        } );
+</script>
+@endsection
+
 @section('content')
 <section class="section">
     <div class="section-header">

@@ -5,7 +5,11 @@ Index Retribusi
 @endsection
 
 @section('scripts')
-
+<script>
+    $(document).ready( function () {
+        $('#dataTable').DataTable();
+    } );
+</script>
 @endsection
 
 @section('content')
@@ -57,52 +61,56 @@ Index Retribusi
                 </div>
                 @endif
             <div class="table-responsive">
-            <form action="/admin/retribusi/verif-many" method="post">
-                @csrf
-                <a class= "btn btn-warning text-white mb-2"  ><i class="fas fa-history"></i> Lihat Histori Retribusi</a>
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th class="col-2 text-center">Action</th>
-                            <th>Nama Pelanggan</th>
-                            <th>Nama Properti</th>
-                            <th>Jenis Properti</th>
-                            <th>Nominal </th>
-                            <th>Tanggal Retribusi </th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @foreach ($index as $retri)
-                        <tr>
-                            <td align="center">
-                                <!-- <input type="checkbox" name="id[]" id="id" value="{{$retri->id}}"> -->
-                                <a href="#" data-toggle="modal" data-target="#modal-{{$retri->id}}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
-                            </td>
-                            <td>
-                                {{isset($retri->pengguna) ? $retri->pengguna->nama_pengguna : ''}}
-                            </td>
-                            <td>
-                                {{isset($retri->properti) ? $retri->properti->nama_properti : ''}}
-                            </td>
-                            <td>
-                                {{isset($retri->properti->jasa)? $retri->properti->jasa->jenis_jasa : ''}}
-                            </td>
-                            <td>
-                                {{$retri->nominal}}
-                            </td>
-                            <td>
-                                {{$retri->created_at->format('d M Y')}}
-                            </td>
-                            <td>
-                                {{$retri->status}}
-                            </td>
-    
-                        </tr>
-                    @endforeach
-                    </tbody>
-                    </table>
-            </form>
+                <form action="/admin/retribusi/verif-many" method="post">
+                    @csrf
+                    <a class= "btn btn-warning text-white mb-2"  ><i class="fas fa-history"></i> Lihat Histori Retribusi</a>
+                    <table class="table table-bordered " id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th class="col-2 text-center">Action</th>
+                                <th>Nama Pelanggan</th>
+                                <th>Nama Properti</th>
+                                <th>Jenis Properti</th>
+                                <th>Nominal </th>
+                                <th>Tanggal Retribusi </th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                        @foreach ($index as $retri)
+                            <tr>
+                                <td align="center">
+                                    <!-- <input type="checkbox" name="id[]" id="id" value="{{$retri->id}}"> -->
+                                    <a href="#" data-toggle="modal" data-target="#modal-{{$retri->id}}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
+                                </td>
+                                <td>
+                                    {{isset($retri->pengguna) ? $retri->pengguna->nama_pengguna : ''}}
+                                </td>
+                                <td>
+                                    {{isset($retri->properti) ? $retri->properti->nama_properti : ''}}
+                                </td>
+                                <td>
+                                    {{isset($retri->properti->jasa)? $retri->properti->jasa->jenis_jasa : ''}}
+                                </td>
+                                <td>
+                                    {{$retri->nominal}}
+                                </td>
+                                <td>
+                                    {{$retri->created_at->format('d M Y')}}
+                                </td>
+                                <td >
+                                    @if($retri->status = "pending")
+                                    <span class="badge badge-warning">{{$retri->status}}</span>
+                                    @else
+                                    <span class="badge badge-success">{{$retri->status}}</span>
+                                    @endif
+                                </td>
+        
+                            </tr>
+                        @endforeach
+                        </tbody>
+                        </table>
+                </form>
             </div>
             </div>
         </div>
@@ -121,23 +129,30 @@ Index Retribusi
                 <div id="myDIV" style="display: block">
                         <div class="row justify-content-between mb-3">
                             <div class="col">
-                                <h6 class="m-0 font-weight-bold text-primary">Detail Retribusi</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Detail Retribusi {{$retri->created_at->format('M Y')}}
+                                    <span class="badge badge-warning">{{$retri->status}}</span>
+                                </h6>
                             </div>
                         </div>
                         <form method="POST" enctype="multipart/form-data" action="{{route('admin-retribusi-update', $retri->id)}}">
-                        @csrf   
+                        @csrf
                             <div class="row">
-                                <div class="col mb-2">
+                                <div class="col mb-2 d-flex justify-content-center">
                                     <!-- Properti -->
-                                    <label for="file" class="font-weight-bold text-dark">Properti</label>
-                                    <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" placeholder="Masukan File Bukti Bayar" value="{{isset($retri->properti) ? $retri->properti->file : old('file')}}" disabled>
-                                        @error('file')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>    
-                                        @enderror
+                                    @if(!isset($retri->properti->file))
+                                    <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
+                                    @else
+                                    <img src="{{asset('assets/img/properti/'.$properti->file)}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
+                                    @endif
+                                    @error('file')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>    
+                                    @enderror
                                 </div>
 
+                            </div>   
+                            <div class="row">
                                 <div class='col mb-2'>
                                     <label for="nama" class="font-weight-bold text-dark">Nama Properti</label>
                                     <input type="text" class="form-control @error('jenis') is-invalid @enderror" id="nama" name="nama" placeholder="" value="{{isset($retri->properti) ? $retri->properti->nama_properti : old('nama')}}" disabled>

@@ -1,21 +1,22 @@
 @extends('layouts.admin-master')
 
 @section('title')
-Index Data Pelanggan
+Pembayaran
 @endsection
 
 @section('scripts')
-<script>
-    $(document).ready( function () {
-            $('#dataTable').DataTable();
-        } );
-</script>
+
+@endsection
+
+@section('style')
+
 @endsection
 
 @section('content')
+
 <section class="section">
     <div class="section-header">
-        <h1>Manajemen Data Pelanggan</h1>
+        <h1>Manajemen Data Pembayaran</h1>
     </div>
 
   <div class="section-body">
@@ -25,7 +26,7 @@ Index Data Pelanggan
         <!-- Copy drisini -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">List Pelanggan</h6>
+            <h6 class="m-0 font-weight-bold text-primary">List Pembayaran</h6>
             </div>
             <div class="card-body">
             @if (Session::has('error'))
@@ -61,39 +62,31 @@ Index Data Pelanggan
                 </div>
                 @endif
             <div class="table-responsive">
-            <a class= "btn btn-success text-white mb-2" href="{{route('pengguna-create')}}"><i class="fas fa-plus"></i> Tambah Pelanggan</a>
+            <a class= "btn btn-success text-white mb-2" href="{{route('masterdata-jenisjasa-create')}}"><i class="fas fa-plus"></i> Tambah Data Pembayaran </a>
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="col-2">Action</th>
-                        <!-- <th>No Kartu Keluarga</th> -->
-                        <th>NIK</th>
-                        <th>Nama Lengkap</th>
-                        <th>Jenis Kelamin</th>
-                        <th>No Telp</th>
+                        <th></th>
+                        <th></th>
+                        <th>Nominal</th>
                     </tr>
                 </thead>
                 <tbody>
-                @foreach ($index as $pengguna)
+                @foreach ($index as $pembayaran)
                     <tr>
                         <td align="center">
-                            <a href="/admin/pengguna/edit/{{$pengguna->id}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
-                            <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/pengguna/delete/{{$pengguna->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
-                        </td>
-                        <!-- <td>
-                            {{$pengguna->no_kk}}
-                        </td> -->
-                        <td>
-                            {{$pengguna->nik}}
+                            <a href="/admin/pembayaran/edit/{{$pembayaran->id}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
+                            <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/pembayaran/delete/{{$pembayaran->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
                         </td>
                         <td>
-                            {{$pengguna->nama_pengguna}}
+                            
                         </td>
                         <td>
-                            {{$pengguna->jenis_kelamin}}
+                            
                         </td>
                         <td>
-                            {{$pengguna->no_telp}}
+        
                         </td>
                     </tr>
                 @endforeach

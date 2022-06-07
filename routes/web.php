@@ -120,7 +120,11 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
 
 
     //Manajemen Pembayaran
-    
+    Route::get('/pembayaran', 'Admin\PembayaranController@index')->name('admin-pembayaran-index');
+    Route::post('/pembayaran/create', 'Admin\PembayaranController@create')->name('admin-pembayaran-verif');
+    Route::post('/pembayaran/verif/{id}', 'Admin\PembayaranController@verif')->name('admin-pembayaran-create');
+    Route::post('/pembayaran/update/{id}', 'Admin\PembayaranController@update')->name('admin-pembayaran-update');
+    Route::get('/retribusi/delete/{id}', 'Admin\PembayaranController@delete')->name('admin-pembayaran-delete');
 
 });
 

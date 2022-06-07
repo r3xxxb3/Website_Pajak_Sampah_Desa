@@ -14,8 +14,8 @@
       <li class="menu-header">Retribusi & Pengangkutan</li>
       <li class="{{ request()->segment(2) == 'retribusi' ? ' active' : '' }}"><a class="nav-link" href="{{ route('retribusi-index') }}"><i class="fa fa-receipt"></i> <span>Retribusi Sampah</span></a></li>
       <li class=""><a class="nav-link" href=""><i class="fa fa-truck"></i> <span>Request Pengangkutan</span></a></li>
-      <li class="menu-header">Pembayaran</li>
+      <li class="menu-header">Histori Pembayaran</li>
+      <li class=""><a class="nav-link" href=""><i class="fa fa-credit-card"></i> <span>Histori Pembayaran</span></a></li>
 
-      
     </ul>
 </aside>
