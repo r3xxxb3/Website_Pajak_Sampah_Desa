@@ -7,8 +7,24 @@ Index Data Pelanggan
 @section('scripts')
 <script>
     $(document).ready( function () {
-            $('#dataTable').DataTable();
-        } );
+        $('#dataTable').DataTable({
+            "oLanguage":{
+                "sSearch": "Cari:",
+                "sZeroRecords": "Data tidak ditemukan",
+                "sSearchPlaceholder": "Cari pelanggan...",
+                "infoEmpty": "Menampilkan 0 data",
+                "infoFiltered": "(dari _MAX_ data)",
+                "sLengthMenu": "Tampilkan _MENU_ data",
+            },
+            "language":{
+                "paginate": {
+                        "previous": 'Sebelumnya',
+                        "next": 'Berikutnya'
+                    },
+                "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
+            },
+        });
+    });
 </script>
 @endsection
 
@@ -64,7 +80,7 @@ Index Data Pelanggan
             <a class= "btn btn-success text-white mb-2" href="{{route('pengguna-create')}}"><i class="fas fa-plus"></i> Tambah Pelanggan</a>
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
-                    <tr>
+                    <tr class="table-primary">
                         <th class="col-2">Action</th>
                         <!-- <th>No Kartu Keluarga</th> -->
                         <th>NIK</th>
@@ -84,16 +100,16 @@ Index Data Pelanggan
                             {{$pengguna->no_kk}}
                         </td> -->
                         <td>
-                            {{$pengguna->nik}}
+                            {{isset($pengguna->kependudukan) ? $pengguna->kependudukan->nik : 'Null'}}
                         </td>
                         <td>
-                            {{$pengguna->nama_pengguna}}
+                            {{isset($pengguna->kependudukan) ? $pengguna->kependudukan->nama : 'Null'}}
                         </td>
                         <td>
-                            {{$pengguna->jenis_kelamin}}
+                            {{isset($pengguna->kependudukan) ? $pengguna->kependudukan->jenis_kelamin : 'Null'}}
                         </td>
                         <td>
-                            {{$pengguna->no_telp}}
+                            {{isset($pengguna->kependudukan) ? $pengguna->kependudukan->telepon : 'Null'}}
                         </td>
                     </tr>
                 @endforeach

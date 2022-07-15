@@ -8,6 +8,8 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Pengguna;
 use App\Banjar;
+use App\Desa;
+use App\Kependudukan;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -31,26 +33,34 @@ class AuthController extends Controller
 
     public function login(Request $request){
         $this->validate($request, [
-            'no_telp' => 'required',
+            'username' => 'required',
             'password' => 'required|min:8'
         ]);
         // dd(auth()->guard('web')->attempt($request->only(['no_telp', 'password'])));
-        if(auth()->guard('web')->attempt($request->only(['no_telp', 'password']))) {
-            $request->session()->regenerate();
-            $user = Pengguna::where('no_telp', $request->no_telp)->first();
-            
-            // dd(Auth::guard('web')->login($user));
-            // dd($user);
-            // dd(session());  
-            $this->clearLoginAttempts($request);
-            // dd(Auth::guard('admin')->user()->nama); 
-            return redirect()->route('home');
+        $checkus = Pengguna::where('username', $request->username)->first();
+        if(!is_null($checkus)){
+            if(auth()->guard('web')->attempt($request->only(['username', 'password']))) {
+                $request->session()->regenerate();
+                // $user = Pengguna::where('no_telp', $request->no_telp)->first();
+                
+                // dd(Auth::guard('web')->login($user));
+                // dd($user);
+                // dd(session());  
+                $this->clearLoginAttempts($request);
+                // dd(Auth::guard('admin')->user()->nama); 
+                return redirect()->route('home');
+            }else{
+                $this->incrementLoginAttempts($request);
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->withErrors(["password" => "Data login pengguna salah !"], 'login');
+            }
         }else{
-            $this->incrementLoginAttempts($request);
             return redirect()
-                ->back()
-                ->withInput()
-                ->withErrors(["Incorrect user login details!"]);
+                    ->back()
+                    ->withInput()
+                    ->withErrors([ "username" => "Username pengguna tidak ditemukan !"], 'login');
         }
     }
 
@@ -63,33 +73,36 @@ class AuthController extends Controller
     }
 
     public function registerPage(){
-        $banjar = Banjar::all();
-        return view('auth.register', compact('banjar'));
+        $desa = Desa::all();
+        return view('auth.register', compact('desa'));
     }
 
     public function register(Request $request){
         $messages = [
             'required' => 'Kolom :attribute Wajib Diisi!',
             'unique' => 'Kolom :attribute Tidak Boleh Sama!',
+            'min' => ':attribute Harus Lebih Dari 8 Karakter',
+            'same' => 'Konfirmasi Password Berbeda dengan Password !',
 		];
 
         $this->validate($request, [
-            'nik' => 'required|unique:tb_pengguna',
+            'nik' => 'required',
             'nama' => 'required',
             'alamat' => 'required',
-            'no' => 'required',
+            'password' => 'required|min:8',
+            'passcheck' => 'required|same:password'
         ],$messages);
 
         // dd($request);
 
-        $banjar = Banjar::where('nama_banjar_dinas', 'LIKE' , $request->banjar)->first();
+        $desa = Desa::where('name', 'LIKE' , $request->desa)->first();
         // $kota = Kota::where('name', 'LIKE', $request->tempat)->first();
 
         $pengguna = new Pengguna;
         
 
-        if($banjar!=null){
-            $pengguna->id_banjar = $banjar->id;
+        if($desa!=null){
+            $pengguna->id_desa = $desa->id;
         }
 
         $pengguna->alamat = $request->alamat;
@@ -103,4 +116,25 @@ class AuthController extends Controller
         return redirect()->route('login-page')->with('success','Berhasil Mendaftarkan Data Pelanggan !');
     }
     
+    public function registerSearch(Request $request){
+        $cpelanggan = Kependudukan::where('nik', $request->nik)->first();
+        if(!is_null($cpelanggan)){
+            $desa = Desa::where('id', $cpelanggan->desa_id)->first();
+            if(!is_null($desa)){
+                $data['desa'] = $desa->name;
+            }
+            $data['nama'] = $cpelanggan->nama;
+            $data['tanggal_lahir'] = $cpelanggan->tanggal_lahir ;
+            $data['jenis_kelamin'] = $cpelanggan->jenis_kelamin ;
+            $data['alamat'] = $cpelanggan->alamat ;
+            $data['telepon'] = $cpelanggan->telepon ;
+
+            return response()->json($data, 200);
+        }else{
+            $data['error'] = "Data Penduduk Tidak Ditemukan"; 
+
+            return response()->json($data, 200);
+        }
+    }
+
 }

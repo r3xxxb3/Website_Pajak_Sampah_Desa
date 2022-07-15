@@ -1,5 +1,29 @@
 @extends('layouts.admin-master')
 
+@section('scripts')
+<script>
+    $(document).ready( function () {
+        $('#dataTable').DataTable({
+            "oLanguage":{
+                "sSearch": "Cari:",
+                "sZeroRecords": "Data tidak ditemukan",
+                "sSearchPlaceholder": "Cari pembayaran...",
+                "infoEmpty": "Menampilkan 0 data",
+                "infoFiltered": "(dari _MAX_ data)",
+                "sLengthMenu": "Tampilkan _MENU_ data",
+            },
+            "language":{
+                "paginate": {
+                        "previous": 'Sebelumnya',
+                        "next": 'Berikutnya'
+                    },
+                "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
+            },
+        });
+    } );
+</script>
+@endsection
+
 @section('title')
 Index Jenis Sampah
 @endsection
@@ -56,7 +80,7 @@ Index Jenis Sampah
             <a class= "btn btn-success text-white mb-2" href="{{route('masterdata-jenis-create')}}"><i class="fas fa-plus"></i> Tambah Jenis Sampah</a>
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
-                    <tr>
+                    <tr class="table-primary">
                         <th class="col-2">Action</th>
                         <th>Jenis Sampah</th>
                         <th>Deskripsi</th>

@@ -13,6 +13,7 @@ use App\JenisJasa;
 use App\KartuK;
 use App\Properti;
 use App\Provinsi;
+use App\Kependudukan;
 use App\Notifications\PropertiNotif;
 use Illuminate\Support\Facades\Hash;
 
@@ -22,60 +23,87 @@ class PenggunaController extends Controller
     //
     public function index(){
         $index = Pengguna::all();
+        
         return view('admin.pengguna.index',compact('index'));
     }
 
     public function create(){
+        $index = Kependudukan::where('desa_id', auth()->guard('admin')->user()->kependudukan->desa_id)->get();
         $kota = Kota::all();
         $banjar = Banjar::all();
-        return view('admin.pengguna.create', compact('banjar', 'kota'));
+        return view('admin.pengguna.create', compact('banjar', 'kota', 'index'));
     }
 
-    public function store(Request $request){
-        $messages = [
-            'required' => 'Kolom :attribute Wajib Diisi!',
-            'unique' => 'Kolom :attribute Tidak Boleh Sama!',
-		];
+    // public function storeOld(Request $request){
+    //     $messages = [
+    //         'required' => 'Kolom :attribute Wajib Diisi!',
+    //         'unique' => 'Kolom :attribute Tidak Boleh Sama!',
+	// 	];
 
-        $this->validate($request, [
-            'nik' => 'required|unique:tb_pengguna',
-            'nama' => 'required',
-            'alamat' => 'required',
-            'no' => 'required',
-        ],$messages);
+    //     $this->validate($request, [
+    //         'nik' => 'required|unique:tb_pengguna',
+    //         'nama' => 'required',
+    //         'alamat' => 'required',
+    //         'no' => 'required',
+    //     ],$messages);
 
-        // dd($request);
+    //     // dd($request);
 
-        $banjar = Banjar::where('nama_banjar_dinas', 'LIKE' , $request->banjar)->first();
-        // $kota = Kota::where('name', 'LIKE', $request->tempat)->first();
+    //     $banjar = Banjar::where('nama_banjar_dinas', 'LIKE' , $request->banjar)->first();
+    //     // $kota = Kota::where('name', 'LIKE', $request->tempat)->first();
 
-        $pengguna = new Pengguna;
+    //     $pengguna = new Pengguna;
         
 
-        if($banjar!=null){
-            $pengguna->id_banjar = $banjar->id;
-        }
+    //     if($banjar!=null){
+    //         $pengguna->id_banjar = $banjar->id;
+    //     }
 
-        $pengguna->alamat = $request->alamat;
-        $pengguna->nik = $request->nik ;
-        $pengguna->nama_pengguna = $request->nama;
-        $pengguna->tgl_lahir = $request->tanggal ;
-        $pengguna->no_telp = $request->no ;
-        $pengguna->password = Hash::make($request->no);
-        $pengguna->jenis_kelamin = $request->jenis ;
-        $pengguna->save();
-        return redirect()->route('pengguna-index')->with('success','Berhasil Menambah Data Pelanggan !');
+    //     $pengguna->alamat = $request->alamat;
+    //     $pengguna->nik = $request->nik ;
+    //     $pengguna->nama_pengguna = $request->nama;
+    //     $pengguna->tgl_lahir = $request->tanggal ;
+    //     $pengguna->no_telp = $request->no ;
+    //     $pengguna->password = Hash::make($request->no);
+    //     $pengguna->jenis_kelamin = $request->jenis ;
+    //     $pengguna->save();
+    //     return redirect()->route('pengguna-index')->with('success','Berhasil Menambah Data Pelanggan !');
+    // }
+
+    public function store($id){
+        $penduduk = Kependudukan::where('id', $id)->first();
+        if(isset($penduduk)){
+            $check = Pengguna::where('id_penduduk', $penduduk->id)->first();
+            if(!isset($check)){
+                $pengguna = new Pengguna;
+                $pengguna->id_penduduk = $penduduk->id;
+                if($penduduk->telepon != null){
+                    $pengguna->username = $penduduk->telepon;
+                    $pengguna->password = Hash::make($penduduk->telepon);
+                    $pengguna->save();
+                }else{
+                    $pengguna->username = $penduduk->nik;
+                    $pengguna->password = Hash::make($penduduk->nik);
+                    $pengguna->save();
+                }
+                return response()->json(['status'=> 'success','info' => 'Berhasil menambahkan data pelanggan !']);
+            }else{
+                return response()->json(['status'=> 'error','info' => 'Penduduk sudah terdaftar sebagai pelanggan !']);
+            }
+        }else{
+            return response()->json(['status'=> 'error','info' => 'Data penduduk tidak ditemukan !']);
+        }
     }
 
     public function edit($id){
         $kota = Kota::all();
-        $banjar = Banjar::all();
+        $desa = Desa::all();
         $pengguna = Pengguna::where('id', $id)->first();
         $jenis = JenisJasa::all();
         $index = Properti::where('id_pengguna', $pengguna->id)->get();
         if($pengguna != null){
             // dd($pengguna);
-            return view('admin.pengguna.edit', compact('pengguna','banjar', 'kota', 'index', 'jenis'));
+            return view('admin.pengguna.edit', compact('pengguna','desa', 'kota', 'index', 'jenis'));
         }else{
             return redirect()->route('pengguna-index')->with('error', 'Data Pelanggan Tidak Ditemukan !');
         }
@@ -86,18 +114,18 @@ class PenggunaController extends Controller
         $pengguna = Pengguna::where('id', $id)->first();
 
         if($pengguna!= null){
-            $banjar = Banjar::where('nama_banjar_dinas', 'LIKE' , $request->banjar)->first();
+            $desa = Desa::where('name', 'LIKE' , $request->desa)->first();
             
-            if($banjar!=null){
-                $pengguna->id_banjar = $banjar->id;
+            if($desa!=null){
+                $pengguna->id_desa = $desa->id;
             }
 
-            $pengguna->alamat = $request->alamat;
-            $pengguna->nik = $request->nik ;
-            $pengguna->nama_pengguna = $request->nama;
-            $pengguna->tgl_lahir = $request->tanggal ;
-            $pengguna->no_telp = $request->no ;
-            $pengguna->jenis_kelamin = $request->jenis ;
+            $pengguna->kependudukan->alamat = $request->alamat;
+            $pengguna->kependudukan->nik = $request->nik ;
+            $pengguna->kependudukan->nama_pengguna = $request->nama;
+            $pengguna->kependudukan->tanggal_lahir = $request->tanggal ;
+            $pengguna->kependudukan->telepon = $request->no ;
+            $pengguna->kependudukan->jenis_kelamin = $request->jenis ;
             $pengguna->update();
             return redirect()->route('pengguna-index')->with('success', 'Berhasil Mengubah Data Pengguna !');
         }else{
@@ -226,6 +254,90 @@ class PenggunaController extends Controller
             return redirect()->back()->with('success-1', 'Penghapusan Properti berhasil !');
         }else{
             return redirect()->back()->with('error-1', 'Data Properti Tidak Ditemukan !');
+        }
+    }
+
+    public function indexPenduduk(){
+        $index = Kependudukan::all();
+        return view('admin.penduduk.index',compact('index'));
+    }
+
+    public function createPenduduk(){
+        $kota = Kota::all();
+        $banjar = Banjar::all();
+        return view('admin.penduduk.create', compact('banjar', 'kota'));
+    }
+
+    public function storePenduduk(Request $request){
+        $messages = [
+            'required' => 'Kolom :attribute Wajib Diisi!',
+            'unique' => 'Kolom :attribute Tidak Boleh Sama!',
+		];
+
+        $this->validate($request, [
+            'nik' => 'required|unique:tb_pengguna',
+            'nama' => 'required',
+            'alamat' => 'required',
+            'no' => 'required',
+        ],$messages);
+
+        // dd($request);
+
+        // $banjar = Banjar::where('nama_banjar_dinas', 'LIKE' , $request->banjar)->first();
+        // $kota = Kota::where('name', 'LIKE', $request->tempat)->first();
+
+        $penduduk = new Kependudukan;
+        
+
+        // if($banjar!=null){
+        //     $pengguna->id_banjar = $banjar->id;
+        // }
+
+        $penduduk->alamat = $request->alamat;
+        $penduduk->nik = $request->nik ;
+        $penduduk->nama = $request->nama;
+        $penduduk->tanggal_lahir = $request->tanggal ;
+        $penduduk->telepon = $request->no ;
+        $penduduk->jenis_kelamin = $request->jenis ;
+        $penduduk->save();
+        return redirect()->route('penduduk-index')->with('success','Berhasil Menambah Data Penduduk !');
+    }
+
+    public function editPenduduk($id){
+        $kota = Kota::all();
+        $desa = Desa::all();
+        $penduduk = Kependudukan::where('id', $id)->first();
+        $jenis = JenisJasa::all();
+        $index = Properti::where('id_pengguna', $penduduk->pelanggan->id)->get();
+        if($penduduk != null){
+            // dd($penduduk);
+            return view('admin.penduduk.edit', compact('penduduk','desa', 'kota', 'index', 'jenis'));
+        }else{
+            return redirect()->route('penduduk-index')->with('error', 'Data Penduduk Tidak Ditemukan !');
+        }
+        
+    }
+
+    public function updatePendudukan($id, Request $request){
+        $pengguna = Pengguna::where('id', $id)->first();
+
+        if($pengguna!= null){
+            $banjar = Banjar::where('nama_banjar_dinas', 'LIKE' , $request->banjar)->first();
+            
+            if($banjar!=null){
+                $pengguna->id_banjar = $banjar->id;
+            }
+
+            $pengguna->alamat = $request->alamat;
+            $pengguna->nik = $request->nik ;
+            $pengguna->nama_pengguna = $request->nama;
+            $pengguna->tgl_lahir = $request->tanggal ;
+            $pengguna->no_telp = $request->no ;
+            $pengguna->jenis_kelamin = $request->jenis ;
+            $pengguna->update();
+            return redirect()->route('pengguna-index')->with('success', 'Berhasil Mengubah Data Pengguna !');
+        }else{
+            return redirect()->route('pengguna-index')->with('error', 'Data Pengguna Tidak Ditemukan !');
         }
     }
 

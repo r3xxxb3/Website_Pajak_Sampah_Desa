@@ -5,7 +5,27 @@ Pembayaran
 @endsection
 
 @section('scripts')
-
+<script>
+    $(document).ready( function () {
+        $('#dataTable').DataTable({
+            "oLanguage":{
+                "sSearch": "Cari:",
+                "sZeroRecords": "Data tidak ditemukan",
+                "sSearchPlaceholder": "Cari pembayaran...",
+                "infoEmpty": "Menampilkan 0 data",
+                "infoFiltered": "(dari _MAX_ data)",
+                "sLengthMenu": "Tampilkan _MENU_ data",
+            },
+            "language":{
+                "paginate": {
+                        "previous": 'Sebelumnya',
+                        "next": 'Berikutnya'
+                    },
+                "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
+            },
+        });
+    } );
+</script>
 @endsection
 
 @section('style')
@@ -26,16 +46,16 @@ Pembayaran
         <!-- Copy drisini -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">List Pembayaran</h6>
+                <h6 class="m-0 font-weight-bold text-primary">List Pembayaran</h6>
             </div>
             <div class="card-body">
             @if (Session::has('error'))
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="fa fa-times"></i> 
-                    {{ Session::get('error') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <i class="fa fa-times"></i> 
+                        {{ Session::get('error') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                 </div>
                 @endif
                 @if (isset($errors) && $errors->any())
@@ -61,38 +81,65 @@ Pembayaran
                         </button>
                 </div>
                 @endif
-            <div class="table-responsive">
-            <a class= "btn btn-success text-white mb-2" href="{{route('masterdata-jenisjasa-create')}}"><i class="fas fa-plus"></i> Tambah Data Pembayaran </a>
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th class="col-2">Action</th>
-                        <th></th>
-                        <th></th>
-                        <th>Nominal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach ($index as $pembayaran)
-                    <tr>
-                        <td align="center">
-                            <a href="/admin/pembayaran/edit/{{$pembayaran->id}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
-                            <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/pembayaran/delete/{{$pembayaran->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
-                        </td>
-                        <td>
-                            
-                        </td>
-                        <td>
-                            
-                        </td>
-                        <td>
-        
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
-                </table>
-            </div>
+                <div class="table-responsive">
+                    <a class= "btn btn-success text-white mb-2" href="{{route('admin-pembayaran-create')}}"><i class="fas fa-plus"></i> Tambah Data Pembayaran </a>
+                    <table class="table table-hover table-bordered  " id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr class="table-primary">
+                                <th class="col-2">Action</th>
+                                <th>Properti</th>
+                                <th>Bukti Bayar</th>
+                                <th>Metode Pembayaran</th>
+                                <th>Nominal</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($index as $pembayaran)
+                            <tr>
+                                <td align="center">
+                                <a href="/admin/pembayaran/confirm/{{$pembayaran->id_pembayaran}}" class="btn btn-success btn-sm"><i class="fas fa-check"></i></a>
+                                    <a href="/admin/pembayaran/edit/{{$pembayaran->id_pembayaran}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
+                                    <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/pembayaran/delete/{{$pembayaran->id_pembayaran}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
+                                </td>
+                                <td>
+                                    @if(isset($pembayaran->retribusi))
+                                        @if(count($pembayaran->retribusi) > 0)
+                                            @foreach($pembayaran->retribusi as $retri)
+                                                {{$retri->properti->nama_properti.", "}}
+                                            @endforeach
+                                        @else
+                                            {{$pembayaran->retribusi->properti->nama_properti}}
+                                        @endif
+                                    @else
+                                        Error pada Hubungan Retribusi dan Pembayaran !
+                                    @endif
+                                </td>
+                                <td>
+                                    @if(isset($pembayaran->bukti_bayar))
+                                        <img src="{{asset('assets/img/bukti_bayar/'.$pembayaran->bukti_bayar)}}"  height="100px" style="object-fit:cover" class="mb-3" id="prop">
+                                    @else
+                                        Tidak Terdapat Foto Bukti Bayar
+                                    @endif
+                                </td>
+                                <td>
+                                    {{$pembayaran->media}}
+                                </td>
+                                <td>
+                                    {{"Rp. ".number_format($pembayaran->nominal ?? 0,0,',','.')}}
+                                </td>
+                                <td>
+                                    @if($pembayaran->status = "pending")
+                                        <span class="badge badge-warning">{{$pembayaran->status}}</span>
+                                    @else
+                                        <span class="badge badge-success">{{$pembayaran->status}}</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

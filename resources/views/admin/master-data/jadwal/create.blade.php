@@ -42,7 +42,7 @@ Create Jadwal
                 <div class="form-group card-body">    
                     <div class="row">
                         <div class='col mb-2'>
-                            <label for="mulai" class="font-weight-bold text-dark">Jadwal Mulai</label>
+                            <label for="mulai" class="font-weight-bold text-dark">Jadwal Mulai<i class="text-danger text-sm text-bold">*</i></label>
                             <input type="time" class="form-control @error('mulai') is-invalid @enderror" id="mulai" name="mulai" placeholder="Masukan waktu mulai (Standar waktu 24 Jam)">
                                 @error('mulai')
                                 <span class="invalid-feedback" role="alert">
@@ -60,7 +60,7 @@ Create Jadwal
                                 @enderror
                         </div>
                         <div class="col mb-4">
-                            <label for="alamat" class="font-weight-bold text-dark">Hari</label>
+                            <label for="alamat" class="font-weight-bold text-dark">Hari<i class="text-danger text-sm text-bold">*</i></label>
                             <select class="form-control @error('hari') is-invalid @enderror" id="hari" name="hari">
                                 <option value="" selected>Pilih Hari</option>
                                     <option value="Senin">Senin</option>

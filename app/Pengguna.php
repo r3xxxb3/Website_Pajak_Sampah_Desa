@@ -16,17 +16,15 @@ class Pengguna extends Authenticatable
     protected $table = 'tb_pengguna';
     protected $primaryKey = 'id';
 
-    protected $fillable = ['no_kk', 'nik', 'nama_pengguna', 'tgl_lahir', 'tmpt_lahir', 'no_telp', 'jenis_kelamin', 'chat_id'];
+    protected $fillable = [ 'chat_id'];
+    protected $hidden = ['password'];
 
-    public function kk(){
-        return $this->belongsTo(KartuK::class, 'no_kk', 'no_kk');
-    }
-
-    public function pegawai(){
-        return $this->hasMany(Pegawai::class, 'id_pengguna', 'id');
-    }
 
     public function banjar(){
         return $this->belongsTo(Banjar::class, 'id_banjar', 'id');
+    }
+
+    public function kependudukan(){
+        return $this->belongsTo(Kependudukan::class, 'id_penduduk', 'id');
     }
 }

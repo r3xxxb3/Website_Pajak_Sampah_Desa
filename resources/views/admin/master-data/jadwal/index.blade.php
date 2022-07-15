@@ -4,6 +4,30 @@
 Index Jadwal
 @endsection
 
+@section('scripts')
+<script>
+    $(document).ready( function () {
+        $('#dataTable').DataTable({
+            "oLanguage":{
+                "sSearch": "Cari:",
+                "sZeroRecords": "Data tidak ditemukan",
+                "sSearchPlaceholder": "Cari jadwal...",
+                "infoEmpty": "Menampilkan 0 data",
+                "infoFiltered": "(dari _MAX_ data)",
+                "sLengthMenu": "Tampilkan _MENU_ data",
+            },
+            "language":{
+                "paginate": {
+                        "previous": 'Sebelumnya',
+                        "next": 'Berikutnya'
+                    },
+                "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
+            },
+        });
+    });
+</script>
+@endsection
+
 @section('content')
 <section class="section">
     <div class="section-header">
@@ -56,7 +80,7 @@ Index Jadwal
             <a class= "btn btn-success text-white mb-2" href="{{route('masterdata-jadwal-create')}}"><i class="fas fa-plus"></i> Tambah Jadwal Pengangkutan</a>
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
-                    <tr>
+                    <tr class="table-primary">
                         <th >Action</th>
                         <th>Hari</th>
                         <th>Mulai</th>

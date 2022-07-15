@@ -17,15 +17,19 @@ class Pegawai extends Authenticatable
 
     protected $guard = 'admin';
 
-    protected $fillable = ['id_banjar', 'username'];
+    protected $fillable = ['id_desa', 'username'];
     //
     protected $hidden = ['password'];
 
-    public function pengguna(){
-        return $this->belongsTo(Pengguna::class, 'id_pengguna', 'id');
+    public function kependudukan(){
+        return $this->belongsTo(Kependudukan::class, 'id_penduduk', 'id');
     }
 
-    public function banjar(){
-        return $this->belongsTo(Banjar::class, 'id_banjar', 'id');
+    public function desa(){
+        return $this->belongsTo(Desa::class, 'id_desa', 'id');
+    }
+
+    public function role(){
+        return $this->belongsToMany(Role::class, 'tb_role_pegawai', 'id_pegawai', 'id_role');
     }
 }

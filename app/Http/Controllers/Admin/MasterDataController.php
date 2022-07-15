@@ -418,8 +418,9 @@ class MasterDataController extends Controller
 
     public function indexJenisJasa(){
         $index = JenisJasa::with(['standar' => function($query){
-            $query->where('active', '1')->first();
+            $query->where('active', '1')->get();
         }])->get();
+        // dd($index);
         return view('admin.master-data.jenis-jasa.index', compact('index'));
     }
 
@@ -483,11 +484,28 @@ class MasterDataController extends Controller
         return redirect()->route('masterdata-jenisjasa-index')->with('success', 'Berhasil Menghapus Data Jenis Jasa !');
     }
     
+    public function indexRole(){
 
-    
+    }
 
-    
+    public function createRole(){
 
+    }
 
+    public function storeRole(Request $request){
+
+    }
+
+    public function editRole($id){
+
+    }
+
+    public function updateRole($id, Request $request){
+
+    }
+
+    public function deleteRole($id){
+
+    }
     //
 }

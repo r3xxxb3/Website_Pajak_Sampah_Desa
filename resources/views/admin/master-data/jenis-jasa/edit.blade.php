@@ -79,7 +79,28 @@ Edit Jenis Jasa
             $('#id').val(id);
             // console.log(id);
     };
+</script>
 
+<script>
+    $(document).ready( function () {
+        $('#dataTable').DataTable({
+            "oLanguage":{
+                "sSearch": "Cari:",
+                "sZeroRecords": "Data tidak ditemukan",
+                "sSearchPlaceholder": "Cari standar retribusi...",
+                "infoEmpty": "Menampilkan 0 data",
+                "infoFiltered": "(dari _MAX_ data)",
+                "sLengthMenu": "Tampilkan _MENU_ data",
+            },
+            "language":{
+                "paginate": {
+                        "previous": 'Sebelumnya',
+                        "next": 'Berikutnya'
+                    },
+                "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
+            },
+        });
+    } );
 </script>
 <script>
 //Switch Status Pengumuman
@@ -107,7 +128,7 @@ Edit Jenis Jasa
                 //     }
                 // });
               }
-          });
+            });
         }else{
             document.getElementById("status_"+id).checked = false;
         }
@@ -181,7 +202,7 @@ Edit Jenis Jasa
                 </div>
                 <div class="form-group card-body"> 
                     <div class="row mb-3">
-                        <div class="col">
+                        <div class="col-2">
                             <label for="jenis" class="font-weight-bold text-dark">Jenis Jasa</label>
                             <input type="text" class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="jenis" placeholder="Masukan Nama Jenis Jasa" value="{{$jenis->jenis_jasa}}">
                                 @error('jenis')
@@ -255,7 +276,7 @@ Edit Jenis Jasa
                 <a class= "btn btn-success text-white mb-2" data-toggle="modal" data-target="#modal-add" onclick="setJenis(<?php echo $jenis->id ?>)"><i class="fas fa-plus"></i> Tambah Standar Retribusi</a>
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
-                        <tr>
+                        <tr class="table-primary">
                             <th class="col-2">Action</th>
                             <th>Nominal</th>
                             <th>Durasi</th>
@@ -270,7 +291,7 @@ Edit Jenis Jasa
                                 <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/masterdata/retribusi/delete/{{$retri->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
                             </td>
                             <td>
-                                {{"Rp."." ".number_format($retri->nominal_retribusi)}}
+                                {{"Rp."." ".number_format($retri->nominal_retribusi ?? 0,0, ',', '.')}}
                             </td>
                             <td>
                                 {{$retri->durasi." "."Bulan"}}

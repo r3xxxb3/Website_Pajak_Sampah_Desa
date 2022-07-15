@@ -7,7 +7,25 @@ Index Retribusi
 @section('scripts')
 <script>
     $(document).ready( function () {
-        $('#dataTable').DataTable();
+        $(document).ready( function () {
+        $('#dataTable').DataTable({
+            "oLanguage":{
+                "sSearch": "Cari:",
+                "sZeroRecords": "Data tidak ditemukan",
+                "sSearchPlaceholder": "Cari retribusi...",
+                "infoEmpty": "Menampilkan 0 data",
+                "infoFiltered": "(dari _MAX_ data)",
+                "sLengthMenu": "Tampilkan _MENU_ data",
+            },
+            "language":{
+                "paginate": {
+                        "previous": 'Sebelumnya',
+                        "next": 'Berikutnya'
+                    },
+                "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
+            },
+        });
+    } );
     } );
 </script>
 @endsection
@@ -66,7 +84,7 @@ Index Retribusi
                     <a class= "btn btn-warning text-white mb-2"  ><i class="fas fa-history"></i> Lihat Histori Retribusi</a>
                     <table class="table table-bordered " id="dataTable" width="100%" cellspacing="0">
                         <thead>
-                            <tr>
+                            <tr class="table-primary">
                                 <th class="col-2 text-center">Action</th>
                                 <th>Nama Pelanggan</th>
                                 <th>Nama Properti</th>
@@ -84,7 +102,7 @@ Index Retribusi
                                     <a href="#" data-toggle="modal" data-target="#modal-{{$retri->id}}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
                                 </td>
                                 <td>
-                                    {{isset($retri->pengguna) ? $retri->pengguna->nama_pengguna : ''}}
+                                    {{isset($retri->pengguna->kependudukan) ? $retri->pengguna->kependudukan->nama : ''}}
                                 </td>
                                 <td>
                                     {{isset($retri->properti) ? $retri->properti->nama_properti : ''}}
@@ -93,7 +111,7 @@ Index Retribusi
                                     {{isset($retri->properti->jasa)? $retri->properti->jasa->jenis_jasa : ''}}
                                 </td>
                                 <td>
-                                    {{$retri->nominal}}
+                                    {{"Rp. ".number_format($retri->nominal ?? 0,0,',','.')}}
                                 </td>
                                 <td>
                                     {{$retri->created_at->format('d M Y')}}

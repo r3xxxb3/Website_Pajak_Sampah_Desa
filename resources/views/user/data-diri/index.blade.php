@@ -51,7 +51,7 @@ Data Diri
                                 @enderror
                         </div> -->
                         <div class="col mb-2">
-                            <label for="nik" class="font-weight-bold text-dark">NIK</label>
+                            <label for="nik" class="font-weight-bold text-dark">NIK<i class="text-danger text-sm text-bold">*</i></label>
                             <input type="text" class="form-control @error('nik') is-invalid @enderror" id="nik" name="nik" placeholder="Masukan No Induk Kependudukan" value="{{$pengguna->nik}}">
                                 @error('nik')
                                 <span class="invalid-feedback" role="alert">
@@ -60,7 +60,7 @@ Data Diri
                                 @enderror
                         </div>
                         <div class="col mb-2">
-                            <label for="nama" class="font-weight-bold text-dark">Nama Lengkap</label>
+                            <label for="nama" class="font-weight-bold text-dark">Nama Lengkap<i class="text-danger text-sm text-bold">*</i></label>
                             <input type="nama" class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama" placeholder="Masukan Nama Lengkap Pengguna" value="{{$pengguna->nama_pengguna}}">
                                 @error('nama')
                                 <span class="invalid-feedback" role="alert">
@@ -71,7 +71,7 @@ Data Diri
                     </div>
                     <div class="row">
                         <div class='col mb-2'>
-                            <label for="jenis" class="font-weight-bold text-dark">Jenis Kelamin</label>
+                            <label for="jenis" class="font-weight-bold text-dark">Jenis Kelamin<i class="text-danger text-sm text-bold">*</i></label>
                             <select class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="jenis">
                                 <option value="" selected>Pilih Jenis Kelamin</option>
                                     <option value="Pria" {{$pengguna->jenis_kelamin == 'Pria' ? 'selected' : ''}}>Pria</option>
@@ -139,7 +139,7 @@ Data Diri
                     <div class="row">
                         <div class="col">
                             <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda Yakin Ingin Menambah Data?')"><i class="fas fa-save"></i> Simpan</button>
-                            <a href="{{route('pengguna-index')}}" class="btn btn-danger"><i class="fas fa-times"></i> Cancel</a>
+                            <a href="{{route('user-dashboard')}}" class="btn btn-danger"><i class="fas fa-times"></i> Cancel</a>
                         </div>
                     </div>
                 </div>

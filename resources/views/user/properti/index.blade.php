@@ -5,7 +5,27 @@ Manajemen Properti User
 @endsection
 
 @section('scripts')
-
+<script>
+    $(document).ready( function () {
+        $('#dataTable').DataTable({
+            "oLanguage":{
+                "sSearch": "Cari:",
+                "sZeroRecords": "Data tidak ditemukan",
+                "sSearchPlaceholder": "Cari properti...",
+                "infoEmpty": "Menampilkan 0 data",
+                "infoFiltered": "(dari _MAX_ data)",
+                "sLengthMenu": "Tampilkan _MENU_ data",
+            },
+            "language":{
+                "paginate": {
+                        "previous": 'Sebelumnya',
+                        "next": 'Berikutnya'
+                    },
+                "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
+            },
+        });
+    });
+</script>
 @endsection
 
 @section('content')
@@ -60,7 +80,7 @@ Manajemen Properti User
             <a class= "btn btn-success text-white mb-2" href="{{route('properti-create')}}"><i class="fas fa-plus"></i> Tambah Properti</a>
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
-                    <tr>
+                    <tr class="table-primary">
                         <th class="col-2">Action</th>
                         <th>Nama Properti</th>
                         <th>Jenis Properti</th>
@@ -86,7 +106,12 @@ Manajemen Properti User
                         <td>
                             {{$properti->alamat}}
                         </td>
-                        <td class="col-5">
+                        <td class="">
+                            @if(!isset($properti->file))
+                            <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
+                            @else
+                            <img src="{{asset('assets/img/properti/'.$properti->file)}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
+                            @endif
                             <!-- {{$properti->file}} -->
                         </td>
                         <td>

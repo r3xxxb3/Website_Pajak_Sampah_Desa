@@ -8,10 +8,10 @@
     <form method="POST" action="{{ route('admin-authenticate') }}">
     @csrf
       <div class="form-group">
-        <label for="username">Username</label>
+        <label for="username">Username<i class="text-danger text-sm text-bold">*</i></label>
         <input  id="username" type="username" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" name="username" placeholder="Registered Username" tabindex="1" value="{{ old('username') }}" autofocus>
         <div class="invalid-feedback">
-          {{ $errors->first('username') }}
+          {{ $errors->login->first('username') }}
         </div>
         <!-- @if(App::environment('demo'))
         <small id="emailHelpBlock" class="form-text text-muted">
@@ -22,7 +22,7 @@
 
       <div class="form-group">
         <div class="d-block">
-            <label for="password" class="control-label">Password</label>
+            <label for="password" class="control-label">Password<i class="text-danger text-sm text-bold">*</i></label>
           <div class="float-right">
             <a href="{{ route('password.request') }}" class="text-small">
               Forgot Password?
@@ -31,7 +31,7 @@
         </div>
         <input aria-describedby="passwordHelpBlock" id="password" type="password" placeholder="Your account password" class="form-control{{ $errors->has('password') ? ' is-invalid': '' }}" name="password" tabindex="2">
         <div class="invalid-feedback">
-          {{ $errors->first('password') }}
+          {{ $errors->login->first('password') }}
         </div>
         @if(App::environment('demo'))
         <small id="passwordHelpBlock" class="form-text text-muted">

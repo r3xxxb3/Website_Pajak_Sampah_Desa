@@ -124,7 +124,7 @@ $("#file-single").change(function() {
             <a class= "btn btn-success text-white mb-2" data-toggle="modal" data-target="#modal-choose"><i class="fas fa-cash-register"></i> Pilih Tagihan Retribusi</a>
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
-                    <tr>
+                <tr  class="table-primary">
                         <th class="col-2">Action</th>
                         <th>Nama Properti</th>
                         <th>Jenis Properti</th>
@@ -316,7 +316,7 @@ $("#file-single").change(function() {
                             </div>
                             <div class="row">
                                 <div class="col mb-2">
-                                <label for="media" class="font-weight-bold text-dark">Jenis Pembayaran</label>
+                                <label for="media" class="font-weight-bold text-dark">Jenis Pembayaran<i class="text-danger text-sm text-bold">*</i></label>
                                     <select class="form-control @error('media') is-invalid @enderror" id="media" name="media">
                                     <option value="" selected>Pilih Jenis Pembayaran</option>
                                         <option value="transfer" >transfer</option>
@@ -329,7 +329,7 @@ $("#file-single").change(function() {
                                         @enderror
                                 </div>
                                 <div class="col mb-2">
-                                <label for="nominal" class="font-weight-bold text-dark">Konfirmasi Nominal Bayar</label>
+                                <label for="nominal" class="font-weight-bold text-dark">Konfirmasi Nominal Bayar<i class="text-danger text-sm text-bold">*</i></label>
                                     <input type="number" class="form-control @error('nominal') is-invalid @enderror" id="nominal" name="nominal" placeholder="Konfirmasi Nominal Pembayaran" value="{{is_null($retri->pembayaran) ? $properti->pembayaran : old('nominal')}}" >
                                         @error('nominal')
                                         <span class="invalid-feedback" role="alert">

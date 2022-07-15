@@ -4,6 +4,30 @@
 Index Jenis Jasa
 @endsection
 
+@section('scripts')
+<script>
+    $(document).ready( function () {
+        $('#dataTable').DataTable({
+            "oLanguage":{
+                "sSearch": "Cari:",
+                "sZeroRecords": "Data tidak ditemukan",
+                "sSearchPlaceholder": "Cari jenis jasa...",
+                "infoEmpty": "Menampilkan 0 data",
+                "infoFiltered": "(dari _MAX_ data)",
+                "sLengthMenu": "Tampilkan _MENU_ data",
+            },
+            "language":{
+                "paginate": {
+                        "previous": 'Sebelumnya',
+                        "next": 'Berikutnya'
+                    },
+                "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
+            },
+        });
+    });
+</script>
+@endsection
+
 @section('content')
 <section class="section">
     <div class="section-header">
@@ -56,7 +80,7 @@ Index Jenis Jasa
             <a class= "btn btn-success text-white mb-2" href="{{route('masterdata-jenisjasa-create')}}"><i class="fas fa-plus"></i> Tambah Jenis Jasa</a>
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
-                    <tr>
+                    <tr class="table-primary">
                         <th class="col-2">Action</th>
                         <th>Jenis Jasa</th>
                         <th>Deskripsi</th>
@@ -84,14 +108,13 @@ Index Jenis Jasa
 
                                 if (isset($standarHarga)) {
                                     $hargaAtas = $standarHarga->nominal_retribusi;
-                                    $hargaBawah = $standarHarga->range_nominal;
                                 }
                             ?>
                             <!-- @if($loop->first)
                             <?php echo $jenis->standar->map->nominal_retribusi ?>
                             @endif -->
 
-                            Rp. {{ $hargaAtas == 0 ? '-' : (isset($hargaBawah) ? number_format($hargaBawah).' - '.number_format($hargaAtas) : number_format($hargaAtas)) }}
+                            Rp. {{ $hargaAtas == 0 ? '-' : number_format($hargaAtas ?? 0,0,',','.') }}
 
                             <!-- {{isset($jenis->standar) ? ($jenis->standar->map->range_nominal != "[null]" ? $jenis->standar->map->range_nominal." - ".$jenis->standar->map->nominal_retribusi : $jenis->standar->map->nominal_retribusi ) : ''}} -->
                         </td>

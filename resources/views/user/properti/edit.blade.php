@@ -157,7 +157,7 @@ $("#file").change(function() {
                     </div>    
                     <div class="row">
                         <div class='col mb-2'>
-                            <label for="nama" class="font-weight-bold text-dark">Nama Properti</label>
+                            <label for="nama" class="font-weight-bold text-dark">Nama Properti<i class="text-danger text-sm text-bold">*</i></label>
                             <input type="text" class="form-control @error('jenis') is-invalid @enderror" id="nama" name="nama" placeholder="Masukan Nama Properti (cth: rumah tinggal,.. etc)" value="{{isset($properti->nama_properti) ? $properti->nama_properti : old('nama')}}" >
                                 @error('jenis')
                                 <span class="invalid-feedback" role="alert">
@@ -166,7 +166,7 @@ $("#file").change(function() {
                                 @enderror
                         </div>
                         <div class="col mb-2">
-                            <label for="JENIS" class="font-weight-bold text-dark">Jenis Properti</label>
+                            <label for="JENIS" class="font-weight-bold text-dark">Jenis Properti<i class="text-danger text-sm text-bold">*</i></label>
                             <select class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="jenis">
                                 <option value="" selected>Pilih Jenis Properti</option>
                                     @foreach($jenis as $j)
@@ -202,7 +202,7 @@ $("#file").change(function() {
                                 @enderror
                         </div>
                         <div class="col">
-                            <label for="alamat" class="font-weight-bold text-dark">Alamat Properti</label>
+                            <label for="alamat" class="font-weight-bold text-dark">Alamat Properti<i class="text-danger text-sm text-bold">*</i></label>
                             <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" placeholder="Masukan Alamat Properti" value="{{isset($properti->alamat) ? $properti->alamat : old('alamat')}}" >
                                 @error('alamat')
                                 <span class="invalid-feedback" role="alert">

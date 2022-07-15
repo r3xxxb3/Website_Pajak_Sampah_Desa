@@ -15,7 +15,7 @@ class PembayaranController extends Controller
 {
     //
     public function index(){
-        $index = Pembayaran::all();
+        $index = Pembayaran::orderByRaw("FIELD(status, 'pending', 'verified') DESC")->get();
         return view('admin.pembayaran.index', compact('index'));
     }
 

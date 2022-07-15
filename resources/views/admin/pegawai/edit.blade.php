@@ -4,6 +4,9 @@
 Edit Data Pegawai
 @endsection
 
+@section('scripts')
+@endsection
+
 @section('content')
 <section class="section">
     <div class="section-header">
@@ -55,8 +58,8 @@ Edit Data Pegawai
                             @enderror
                     </div> -->
                     <div class="col mb-2">
-                        <label for="nik" class="font-weight-bold text-dark">NIK</label>
-                        <input type="text" class="form-control @error('nik') is-invalid @enderror disabled" id="nik" name="nik" placeholder="Masukan No Induk Kependudukan" value="{{isset($pegawai->pengguna) ? $pegawai->pengguna->nik : ''}}">
+                        <label for="nik" class="font-weight-bold text-dark">NIK<i class="text-danger text-sm text-bold">*</i></label>
+                        <input type="text" class="form-control @error('nik') is-invalid @enderror disabled" id="nik" name="nik" placeholder="Masukan No Induk Kependudukan" value="{{isset($pegawai->kependudukan) ? $pegawai->kependudukan->nik : ''}}">
                             @error('nik')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -64,8 +67,8 @@ Edit Data Pegawai
                             @enderror
                     </div>
                     <div class="col mb-2">
-                        <label for="nama" class="font-weight-bold text-dark">Nama Lengkap</label>
-                        <input type="text" class="form-control @error('nama') is-invalid @enderror disabled" id="nama" name="nama" placeholder="Masukan Nama Lengkap Pegawai" value="{{isset($pegawai->pengguna) ? $pegawai->pengguna->nama_pengguna : ''}}">
+                        <label for="nama" class="font-weight-bold text-dark">Nama Lengkap<i class="text-danger text-sm text-bold">*</i></label>
+                        <input type="text" class="form-control @error('nama') is-invalid @enderror disabled" id="nama" name="nama" placeholder="Masukan Nama Lengkap Pegawai" value="{{isset($pegawai->kependudukan) ? $pegawai->kependudukan->nama : ''}}">
                             @error('nama')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -84,11 +87,11 @@ Edit Data Pegawai
                 </div>
                 <div class="row">
                     <div class='col mb-2'>
-                        <label for="jenis" class="font-weight-bold text-dark">Jenis Kelamin</label>
+                        <label for="jenis" class="font-weight-bold text-dark">Jenis Kelamin<i class="text-danger text-sm text-bold">*</i></label>
                         <select class="form-control @error('jenis') is-invalid @enderror disabled" id="jenis" name="jenis">
                             <option value="" selected>Pilih Jenis Kelamin</option>
-                                <option value="Pria" {{isset($pegawai->pengguna) ? ($pegawai->pengguna->jenis_kelamin == 'Pria' ? 'selected' : '') : ''}}>Pria</option>
-                                <option value="Wanita" {{isset($pegawai->pengguna) ? ($pegawai->pengguna->jenis_kelamin == 'Wanita' ? 'selected' : '') : ''}}>Wanita</option>
+                                <option value="Pria" {{isset($pegawai->kependudukan) ? ($pegawai->kependudukan->jenis_kelamin == 'Pria' ? 'selected' : '') : ''}}>Pria</option>
+                                <option value="Wanita" {{isset($pegawai->kependudukan) ? ($pegawai->kependudukan->jenis_kelamin == 'Wanita' ? 'selected' : '') : ''}}>Wanita</option>
                         </select>
                             @error('jenis')
                             <span class="invalid-feedback" role="alert">
@@ -98,27 +101,26 @@ Edit Data Pegawai
                     </div>
                     <div class="col mb-2">
                         <label for="tanggal" class="font-weight-bold text-dark">Tanggal Lahir</label>
-                        <input type="date" class="form-control @error('tanggal') is-invalid @enderror disabled" id="tanggal" name="tanggal" placeholder="Masukan Tanggal Lahir" value="{{isset($pegawai->pengguna) ? $pegawai->pengguna->tgl_lahir : ''}}">
+                        <input type="date" class="form-control @error('tanggal') is-invalid @enderror disabled" id="tanggal" name="tanggal" placeholder="Masukan Tanggal Lahir" value="{{isset($pegawai->kependudukan) ? $pegawai->kependudukan->tanggal_lahir : ''}}">
                             @error('tanggal')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>    
                             @enderror
                     </div>
-                    <div class="col mb-2">
-                        <label for="alamat" class="font-weight-bold text-dark">Alamat</label>
-                        <input type="text" class="form-control @error('alamat') is-invalid @enderror disabled" id="alamat" name="alamat" placeholder="Masukan Alamat Tinggal" value="{{isset($pegawai->pengguna) ? $pegawai->pengguna->alamat : ''}}">
-                            
-                            @error('alamat')
+                    <div class='col mb-2'>
+                        <label for="no" class="font-weight-bold text-dark">No Telpon</label>
+                        <input type="text" class="form-control @error('no') is-invalid @enderror" id="no" name="no" placeholder="Masukan No Telpon Aktif" value="{{isset($pegawai->kependudukan)? $pegawai->kependudukan->telepon : ''}}">
+                            @error('no')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
-                            </span>    
+                            </span>
                             @enderror
                     </div>
                 </div>
 
                 <div class="row mb-3 ">
-                    <div class='col mb-2'>
+                    <!-- <div class='col mb-2'>
                         <label for="banjar" class="font-weight-bold text-dark">Banjar</label>
                         <input type="text" class="form-control @error('banjar') is-invalid @enderror" list="banjardata" id="banjar" name="banjar" placeholder="Masukan Banjar (opsional)" value="{{isset($pegawai->banjar) ? $pegawai->banjar->nama_banjar_dinas : ''}}">
                             <datalist id="banjardata">
@@ -133,16 +135,18 @@ Edit Data Pegawai
                                 <strong>{{ $message }}</strong>
                             </span>
                             @enderror
-                    </div>
-                    <div class='col mb-2'>
-                        <label for="no" class="font-weight-bold text-dark">No Telpon</label>
-                        <input type="text" class="form-control @error('no') is-invalid @enderror" id="no" name="no" placeholder="Masukan No Telpon Aktif" value="{{isset($pegawai->pengguna)? $pegawai->pengguna->no_telp : ''}}">
-                            @error('no')
+                    </div> -->
+                    <div class="col mb-2">
+                        <label for="alamat" class="font-weight-bold text-dark">Alamat</label>
+                        <input type="text" class="form-control @error('alamat') is-invalid @enderror disabled" id="alamat" name="alamat" placeholder="Masukan Alamat Tinggal" value="{{isset($pegawai->kependudukan) ? $pegawai->kependudukan->alamat : ''}}">
+                            
+                            @error('alamat')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
-                            </span>
+                            </span>    
                             @enderror
                     </div>
+                    
                 </div>
 
                 <!-- <div class="row mb-3">

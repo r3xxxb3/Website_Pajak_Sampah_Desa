@@ -25,6 +25,14 @@ Route::post('/admin/auth', 'Admin\AuthController@Auth')->name('admin-authenticat
 Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::get('/dashboard', 'Admin\DashboardController@index')->name('admin-dashboard');
     
+    //Master data role
+    Route::get('/masterdata/role', 'Admin\MasterDataController@indexRole')->name('masterdata-role-index');
+    Route::get('/masterdata/role/create', 'Admin\MasterDataController@createRole')->name('masterdata-role-create');
+    Route::post('/masterdata/role/store', 'Admin\MasterDataController@storeRole')->name('masterdata-role-store');
+    Route::get('/masterdata/role/edit/{id}', 'Admin\MasterDataController@editRole')->name('masterdata-role-edit');
+    Route::post('/masterdata/role/update', 'Admin\MasterDataController@updatexRole')->name('masterdata-role-update');
+    Route::get('/masterdata/role/delete/{id}', 'Admin\MasterDataController@deleteRole')->name('masterdata-role-delete');
+
     //master data kota
     Route::get('/masterdata/kota', 'Admin\MasterDataController@indexKota')->name('masterdata-kota-index');
     Route::get('/masterdata/kota/create', 'Admin\MasterDataController@createKota')->name('masterdata-kota-create');
@@ -61,7 +69,7 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::get('/pegawai', 'Admin\PegawaiController@indexPegawai')->name('pegawai-index');
     Route::get('/pegawai/create', 'Admin\PegawaiController@createPegawai')->name('pegawai-create');
     Route::post('/pegawai/store', 'Admin\PegawaiController@storePegawai')->name('pegawai-store');
-    Route::post('/pegawai/store-new', 'Admin\PegawaiController@storePegawaiNew')->name('pegawai-store-new');
+    // Route::post('/pegawai/store-new', 'Admin\PegawaiController@storePegawaiNew')->name('pegawai-store-new');
     Route::get('/pegawai/edit/{id}', 'Admin\PegawaiController@editPegawai')->name('pegawai-edit');
     Route::post('/pegawai/update/{id}', 'Admin\PegawaiController@updatePegawai')->name('pegawai-update');
     Route::get('/pegawai/delete/{id}', 'Admin\PegawaiController@deletePegawai')->name('pegawai-delete');
@@ -98,7 +106,7 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     //Manajemen Pengguna
     Route::get('/pengguna', 'Admin\PenggunaController@index')->name('pengguna-index');
     Route::get('/pengguna/create', 'Admin\PenggunaController@create')->name('pengguna-create');
-    Route::post('/pengguna/store', 'Admin\PenggunaController@store')->name('pengguna-store');
+    Route::get('/pengguna/store/{id}', 'Admin\PenggunaController@store')->name('pengguna-store');
     Route::get('/pengguna/edit/{id}', 'Admin\PenggunaController@edit')->name('pengguna-edit');
     Route::post('/pengguna/update/{id}', 'Admin\PenggunaController@update')->name('pengguna-update');
     Route::get('/pengguna/delete/{id}', 'Admin\PenggunaController@delete')->name('pengguna-delete');
@@ -121,8 +129,8 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
 
     //Manajemen Pembayaran
     Route::get('/pembayaran', 'Admin\PembayaranController@index')->name('admin-pembayaran-index');
-    Route::post('/pembayaran/create', 'Admin\PembayaranController@create')->name('admin-pembayaran-verif');
-    Route::post('/pembayaran/verif/{id}', 'Admin\PembayaranController@verif')->name('admin-pembayaran-create');
+    Route::post('/pembayaran/create', 'Admin\PembayaranController@create')->name('admin-pembayaran-create');
+    Route::post('/pembayaran/verif/{id}', 'Admin\PembayaranController@verif')->name('admin-pembayaran-verif');
     Route::post('/pembayaran/update/{id}', 'Admin\PembayaranController@update')->name('admin-pembayaran-update');
     Route::get('/retribusi/delete/{id}', 'Admin\PembayaranController@delete')->name('admin-pembayaran-delete');
 
@@ -140,6 +148,8 @@ Route::get('/loginPage', 'Auth\AuthController@loginPage')->name('login-page');
 Route::post('/login', 'Auth\AuthController@login')->name('login');
 Route::get('/registerPage', 'Auth\AuthController@registerPage')->name('register-page');
 Route::post('/register', 'Auth\AuthController@register')->name('register');
+Route::post('/register/search', 'Auth\AuthController@registerSearch')->name('register-search');
+
 Route::get('/password', 'Auth\PasswordController@requestPass')->name('password.request');
 Route::get('/logout', 'Auth\AuthController@logout')->name('logout');
 

@@ -7,8 +7,24 @@ Index Data Pegawai
 @section('scripts')
 <script>
     $(document).ready( function () {
-            $('#dataTable').DataTable();
-        } );
+        $('#dataTable').DataTable({
+            "oLanguage":{
+                "sSearch": "Cari:",
+                "sZeroRecords": "Data tidak ditemukan",
+                "sSearchPlaceholder": "Cari pegawai...",
+                "infoEmpty": "Menampilkan 0 data",
+                "infoFiltered": "(dari _MAX_ data)",
+                "sLengthMenu": "Tampilkan _MENU_ data",
+            },
+            "language":{
+                "paginate": {
+                        "previous": 'Sebelumnya',
+                        "next": 'Berikutnya'
+                    },
+                "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
+            },
+        });
+    } );
 </script>
 @endsection
 
@@ -64,7 +80,7 @@ Index Data Pegawai
             <a class= "btn btn-success text-white mb-2" href="{{route('pegawai-create')}}"><i class="fas fa-plus"></i> Tambah Pegawai</a>
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
-                    <tr>
+                    <tr class="table-primary">
                         <th class="col-2">Action</th>
                         <!-- <th>No Kartu Keluarga</th> -->
                         <th>Role</th>
@@ -81,16 +97,16 @@ Index Data Pegawai
                             <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/pegawai/delete/{{$pegawai->id_pegawai}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
                         </td>
                         <td>
-                            {{$pegawai->role}}
+                            {{isset($pegawai->role) ? $pegawai->role->map->role : ''}}
                         </td>
                         <td>
-                            {{isset($pegawai->pengguna) ? $pegawai->pengguna->nama_pengguna : ''}}
+                            {{isset($pegawai->kependudukan) ? $pegawai->kependudukan->nama : ''}}
                         </td>
                         <td>
-                        {{isset($pegawai->pengguna) ? $pegawai->pengguna->jenis_kelamin : ''}}
+                        {{isset($pegawai->kependudukan) ? $pegawai->kependudukan->jenis_kelamin : ''}}
                         </td>
                         <td>
-                        {{isset($pegawai->pengguna) ? $pegawai->pengguna->no_telp : ''}}
+                        {{isset($pegawai->kependudukan) ? $pegawai->kependudukan->telepon : ''}}
                         </td>
                     </tr>
                 @endforeach

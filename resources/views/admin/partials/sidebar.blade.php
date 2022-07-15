@@ -3,7 +3,7 @@
     <a href="{{ route('admin-dashboard') }}">{{ env('APP_NAME') }}</a>
   </div>
   <div class="sidebar-brand sidebar-brand-sm">
-    <a href="index.html">Lokasi Desa</a>
+    <a href="index.html">auth()->guard('admin')->user()->kependudukan</a>
   </div>
   <ul class="sidebar-menu">
       <li class="menu-header">Dashboard</li>
@@ -24,6 +24,7 @@
           <!-- <li  class ="text-dark collapse-show {{ request()->segment(3) == 'retribusi' ? 'active' : '' }}"><a class="nav-link" href="{{route('masterdata-retribusi-index')}}">Standar Retribusi</a></li> -->
           <li  class ="text-dark collapse-show {{ request()->segment(3) == 'jenis-jasa' ? 'active' : '' }}"><a class="nav-link" href="{{route('masterdata-jenisjasa-index')}}">Jenis Jasa</a></li>
           <li  class ="text-dark collapse-show {{ request()->segment(3) == 'jenis-sampah' ? 'active' : '' }}"><a class="nav-link" href="{{route('masterdata-jenis-index')}}">Jenis Sampah</a></li>
+          <li  class ="text-dark collapse-show {{ request()->segment(3) == 'role' ? 'active' : '' }}"><a class="nav-link" href="{{route('masterdata-role-index')}}">Role</a></li>
         </div>
       </ul>
       <li class="menu-header">Manajemen Pengguna</li>

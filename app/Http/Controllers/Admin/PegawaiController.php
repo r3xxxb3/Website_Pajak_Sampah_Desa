@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Pegawai;
 use App\Pengguna;
 use App\Banjar;
+use App\Kependudukan;
 use Illuminate\Support\Facades\Hash;
 
 
@@ -20,74 +21,78 @@ class PegawaiController extends Controller
 
     public function createPegawai(){
         $banjar = Banjar::all();
-        $pegawai = Pegawai::select('id_pengguna')->get()->toArray();
+        $pegawai = Pegawai::select('id_penduduk')->get()->toArray();
         // dd($pegawai);
-        $index = Pengguna::whereNotIn('id', $pegawai)->get();
+        $index = Kependudukan::whereNotIn('id', $pegawai)->get();
 
         return view('admin.pegawai.create', compact('banjar', 'index'));
     }
 
     public function storePegawai(Request $request){
-        $pengguna = Pengguna::where('id', $request->idpeng)->first();
+        $penduduk = Kependudukan::where('id', $request->idpeng)->first();
         // dd($pengguna);
-        if($pengguna != null){
+        if($penduduk != null){
             $pegawai = new Pegawai;
-            $pegawai->id_pengguna = $pengguna->id;
-            if($pengguna->no_telp != null){
-                $pegawai->username = $pengguna->no_telp;
-                $pegawai->password = Hash::make($pengguna->no_telp);
+            $pegawai->id_penduduk = $penduduk->id;
+            if($penduduk->telepon != null){
+                $pegawai->username = $penduduk->telepon;
+                $pegawai->password = Hash::make($penduduk->telepon);
+            }else{
+                $pegawai->username = $penduduk->nik;
+                $pegawai->password = Hash::make($penduduk->nik);
             }
             $pegawai->save();
-            return redirect()->route('pegawai-index')->with('success', 'Berhasil Menambahkan Data Pegawai');
+            return redirect()->route('pegawai-index')->with('success', 'Berhasil menambahkan data pegawai !');
         }else{
-            return redirect()->back()->with('error', 'Data Pengguna yang dipilih tidak ditemukan !');
+            return redirect()->back()->with('error', 'Data penduduk yang dipilih tidak ditemukan !');
         }
     }
     
-    public function storePegawaiNew(Request $request){
-        $messages = [
-            'required' => 'Kolom :attribute Wajib Diisi!',
-            'unique' => 'Kolom :attribute Tidak Boleh Sama!',
-		];
+    // public function storePegawaiNew(Request $request){
+    //     $messages = [
+    //         'required' => 'Kolom :attribute Wajib Diisi!',
+    //         'unique' => 'Kolom :attribute Tidak Boleh Sama!',
+	// 	];
 
-        $this->validate($request, [
-            'nik' => 'required|unique:tb_pengguna',
-            'nama' => 'required',
-            'no' => 'required',
-        ],$messages);
+    //     $this->validate($request, [
+    //         'nik' => 'required|unique:tb_pengguna',
+    //         'nama' => 'required',
+    //         'no' => 'required',
+    //     ],$messages);
 
-        // dd($request);
+    //     // dd($request);
 
-        $banjar = Banjar::where('nama_banjar_dinas', 'LIKE' , $request->banjar)->first();
-        // $kota = Kota::where('name', 'LIKE', $request->tempat)->first();
+    //     $banjar = Banjar::where('nama_banjar_dinas', 'LIKE' , $request->banjar)->first();
+    //     // $kota = Kota::where('name', 'LIKE', $request->tempat)->first();
 
-        $pengguna = new Pengguna;
+    //     $pengguna = new Pengguna;
         
 
-        if($banjar!=null){
-            $pengguna->id_banjar = $banjar->id;
-        }
+    //     if($banjar!=null){
+    //         $pengguna->id_banjar = $banjar->id;
+    //     }
 
-        $pengguna->alamat = $request->alamat;
-        $pengguna->nik = $request->nik ;
-        $pengguna->nama_pengguna = $request->nama;
-        $pengguna->tgl_lahir = $request->tanggal ;
-        $pengguna->no_telp = $request->no ;
-        $pengguna->jenis_kelamin = $request->jenis ;
-        $pengguna->save();
+    //     $pengguna->alamat = $request->alamat;
+    //     $pengguna->nik = $request->nik ;
+    //     $pengguna->nama_pengguna = $request->nama;
+    //     $pengguna->tgl_lahir = $request->tanggal ;
+    //     $pengguna->no_telp = $request->no ;
+    //     $pengguna->jenis_kelamin = $request->jenis ;
+    //     $pengguna->save();
 
-        $pengguna = Pengguna::where('nik', $request->nik)->first();
+    //     $pengguna = Pengguna::where('nik', $request->nik)->first();
 
-        $pegawai = new Pegawai;
-        $pegawai->username = $request->no;
-        $pegawai->password = Hash::make($request->no);
-        $pegawai->save();
+    //     $pegawai = new Pegawai;
+    //     $pegawai->username = $request->no;
+    //     $pegawai->password = Hash::make($request->no);
+    //     $pegawai->save();
 
-        return redirect()->route('pegawai-index')->with('success','Berhasil Menambah Data Pengguna dan Menambahkan Pegawai !');
-    }
+    //     return redirect()->route('pegawai-index')->with('success','Berhasil Menambah Data Pengguna dan Menambahkan Pegawai !');
+    // }
 
     public function editPegawai($id){
         $pegawai = Pegawai::where('id_pegawai', $id)->first();
+        // dd($pegawai->kependudukan);
         $banjar = Banjar::all();
         if($pegawai != null){
             // dd($pegawai);
@@ -111,25 +116,21 @@ class PegawaiController extends Controller
 
         // dd($request);
 
-        $banjar = Banjar::where('nama_banjar_dinas', 'LIKE' , $request->banjar)->first();
         // $kota = Kota::where('name', 'LIKE', $request->tempat)->first();
 
         $pegawai = Pegawai::where('id_pengguna', $id)->first();
         if($pegawai != null && $pegawai->id_pengguna != null){
-            $pengguna = Pengguna::where('id', $pegawai->id_pengguna)->first();
+            $data_kependudukan = Kependuduk::where('id', $pegawai->id_penduduk)->first();
             // dd($pengguna);
-            if($banjar!=null){
-                $pengguna->id_banjar = $banjar->id;
-            }
     
             // dd($request->alamat.' '.$request->nama );
-            $pengguna->alamat = $request->alamat;
-            $pengguna->nik = $request->nik ;
-            $pengguna->nama_pengguna = $request->nama;
-            $pengguna->tgl_lahir = $request->tanggal ;
-            $pengguna->no_telp = $request->no ;
-            $pengguna->jenis_kelamin = $request->jenis ;
-            $pengguna->update();
+            $data_kependudukan->alamat = $request->alamat;
+            $data_kependudukan->nik = $request->nik ;
+            $data_kependudukan->nama = $request->nama;
+            $data_kependudukan->tanggal_lahir = $request->tanggal ;
+            $data_kependudukan->telepon = $request->no ;
+            $data_kependudukan->jenis_kelamin = $request->jenis ;
+            $data_kependudukan->update();
 
             // $pegawai->username = $request->no;
             // $pegawai->password = Hash::make($request->no);
