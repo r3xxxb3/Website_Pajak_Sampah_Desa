@@ -17,4 +17,18 @@ class Kependudukan extends Model
     public function pegawai(){
         return $this->hasOne(Pegawai::class, 'id_penduduk', 'id');
     }
+
+    public function mipil(){
+        return $this->hasOne(KramaMipil::class, 'penduduk_id', 'id');
+    }
+
+    public function kTamiu(){
+        return $this->hasOne(KramaTamiu::class, 'penduduk_id', 'id');
+    }
+
+    public function tamiu(){
+        return $this->hasOne(Tamiu::class, 'penduduk_id', 'id');
+    }
+
+    
 }

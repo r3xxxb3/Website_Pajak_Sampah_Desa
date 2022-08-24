@@ -15,11 +15,49 @@ class PembayaranController extends Controller
 {
     //
     public function index(){
-        $index = Pembayaran::orderByRaw("FIELD(status, 'pending', 'verified') DESC")->get();
+        $index = Pembayaran::orderByRaw("FIELD(status, 'pending', 'lunas') DESC")->get();
+        // foreach($index as $pembayaran){
+        //     dd($pembayaran->retribusi()->get());
+        // }
         return view('admin.pembayaran.index', compact('index'));
     }
 
     public function create(){
+
+    }
+
+    public function verif($id){
+        $pembayaran = Pembayaran::where('id_pembayaran', $id)->first();
+        if($pembayaran != null){
+            // dd($pembayaran);
+            $pembayaran->id_pegawai = auth()->guard('admin')->user()->id_pegawai;
+            $pembayaran->status = "lunas";
+            foreach($pembayaran->retribusi()->get() as $retribusi){
+                if(!empty($retribusi)){
+                    // dd($retribusi);
+                    $retribusi->status = "lunas";
+                    $retribusi->update();
+                }
+            }
+            foreach($pembayaran->pengangkutan()->get() as $pengangkutan){
+                if(!empty($pengangkutan)){
+                    // dd($pengangkutan);
+                    $pengangkutan->status = "lunas";
+                    $pengangkutan->update();
+                }
+            }
+            $pembayaran->update();
+            return redirect()->back()->with('success', 'Pembayaran berhasil terverifikasi !');
+        }else{
+            return redirect()->back()->with('error', 'Data pembayaran tidak ditemukan !');
+        }
+    }
+
+    public function update(){
+
+    }
+
+    public function delete(){
 
     }
 }

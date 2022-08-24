@@ -3,14 +3,16 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Role extends Model
 {
     //
+    use SoftDeletes;
     protected $table = "tb_role";
     protected $fillable = ["role"];
 
     public function pegawai(){
-        return $this->belongsToMany(Pegawai::class, 'tb_role_pegawai', 'id_role', 'id_pegawai');
+        return $this->hasMany(Pegawai::class, 'id_role', 'id');
     }
 }

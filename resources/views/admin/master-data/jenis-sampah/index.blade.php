@@ -7,7 +7,7 @@
             "oLanguage":{
                 "sSearch": "Cari:",
                 "sZeroRecords": "Data tidak ditemukan",
-                "sSearchPlaceholder": "Cari pembayaran...",
+                "sSearchPlaceholder": "Cari jenis sampah...",
                 "infoEmpty": "Menampilkan 0 data",
                 "infoFiltered": "(dari _MAX_ data)",
                 "sLengthMenu": "Tampilkan _MENU_ data",
@@ -90,8 +90,8 @@ Index Jenis Sampah
                 @foreach ($index as $jenis)
                     <tr>
                         <td align="center">
-                            <a href="/admin/masterdata/jenis/edit/{{$jenis->id}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
-                            <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/masterdata/jenis/delete/{{$jenis->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
+                            <a href="/admin/masterdata/jenis-sampah/edit/{{$jenis->id}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
+                            <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/masterdata/jenis-sampah/delete/{{$jenis->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
                         </td>
                         <td>
                             {{$jenis->jenis_sampah}}

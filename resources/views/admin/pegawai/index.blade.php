@@ -97,7 +97,7 @@ Index Data Pegawai
                             <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/pegawai/delete/{{$pegawai->id_pegawai}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
                         </td>
                         <td>
-                            {{isset($pegawai->role) ? $pegawai->role->map->role : ''}}
+                            {{isset($pegawai->role) ? $pegawai->role->role : ''}}
                         </td>
                         <td>
                             {{isset($pegawai->kependudukan) ? $pegawai->kependudukan->nama : ''}}

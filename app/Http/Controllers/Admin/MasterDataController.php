@@ -11,6 +11,7 @@ use App\Jadwal;
 use App\StandarRetribusi;
 use App\JenisSampah;
 use App\JenisJasa;
+use App\Role;
 use Auth;
 
 
@@ -413,7 +414,9 @@ class MasterDataController extends Controller
 
     public function deleteJenisSampah ($id)
     {
-
+        $jenis = JenisSampah::where('id', $id)->first();
+        $jenis->delete();
+        return redirect()->route('masterdata-jenis-index')->with('success', 'Berhasil Menghapus Data Jenis Sampah !');
     }
 
     public function indexJenisJasa(){
@@ -485,27 +488,62 @@ class MasterDataController extends Controller
     }
     
     public function indexRole(){
-
+        $index = Role::all();
+        return view('admin.master-data.role.index', compact('index'));
     }
 
     public function createRole(){
-
+        return view('admin.master-data.role.create');
     }
 
     public function storeRole(Request $request){
+        $messages = [
+            'required' => 'Kolom :attribute Wajib Diisi!',
+            'unique' => 'Kolom :attribute Tidak Boleh Sama!',
+		];
 
+        $this->validate($request, [
+            'role' => 'required',
+        ],$messages);
+
+        $role = new Role;
+        $role->role = $request->role;
+        if($role->save()){
+            return redirect()->route('masterdata-role-index')->with('success','Berhasil Menambah Data Role !');    
+        }else{
+            return redirect()->route('masterdata-role-index')->with('error','Proses Penambahan Data Role Tidak Berhasil !');
+        }
     }
 
     public function editRole($id){
-
+        $role = Role::where('id', $id)->first();
+        return view('admin.master-data.role.edit', compact('role'));
     }
 
     public function updateRole($id, Request $request){
+        $messages = [
+            'required' => 'Kolom :attribute Wajib Diisi!',
+            'unique' => 'Kolom :attribute Tidak Boleh Sama!',
+		];
 
+        $this->validate($request, [
+            'role' => 'required',
+        ],$messages);
+
+        $role = Role::where('id', $id)->first();
+        if($role != []){
+            $role->role = $request->role;
+            $role->save();
+            return redirect()->route('masterdata-role-index')->with('success', 'Berhasil Mengubah Data Role !');
+        }else{
+            return redirect()->route('masterdata-role-index')->with('error', 'Data Role Tidak Ditemukan !');
+        }
     }
 
     public function deleteRole($id){
-
+        $role = Role::where('id', $id)->first();
+        $role->delete();
+        return redirect()->route('masterdata-role-index')->with('success', 'Berhasil Menghapus Data Role !');
     }
     //
 }

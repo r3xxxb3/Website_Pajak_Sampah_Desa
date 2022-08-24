@@ -26,6 +26,18 @@ Manajemen Properti User
         });
     });
 </script>
+
+<script>
+function lihatProperti(properti) {
+    // console.log(properti);
+    if(properti.file != null){
+        $('#prop').attr('src', "{{asset('assets/img/properti/')}}"+"/"+properti.file);
+    }else{
+        $('#prop').attr('src', "{{asset('assets/img/properti/blank.png')}}");
+    }
+}
+</script>
+
 @endsection
 
 @section('content')
@@ -76,57 +88,69 @@ Manajemen Properti User
                         </button>
                 </div>
                 @endif
-            <div class="table-responsive">
-            <a class= "btn btn-success text-white mb-2" href="{{route('properti-create')}}"><i class="fas fa-plus"></i> Tambah Properti</a>
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                    <tr class="table-primary">
-                        <th class="col-2">Action</th>
-                        <th>Nama Properti</th>
-                        <th>Jenis Properti</th>
-                        <th>Alamat </th>
-                        <th>Foto </th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach ($index as $properti)
-                    <tr>
-                        <td align="center">
-                            <a href="/user/properti/cancel/{{$properti->id}}" class="btn btn-warning btn-sm" ><i class="fas fa-ban"></i></a>
-                            <a href="/user/properti/edit/{{$properti->id}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
-                            <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/user/properti/delete/{{$properti->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
-                        </td>
-                        <td>
-                            {{$properti->nama_properti}}
-                        </td>
-                        <td>
-                            {{isset($properti->jasa)? $properti->jasa->jenis_jasa : ''}}
-                        </td>
-                        <td>
-                            {{$properti->alamat}}
-                        </td>
-                        <td class="">
-                            @if(!isset($properti->file))
-                            <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
-                            @else
-                            <img src="{{asset('assets/img/properti/'.$properti->file)}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
-                            @endif
-                            <!-- {{$properti->file}} -->
-                        </td>
-                        <td>
-                            {{$properti->status}}
-                        </td>
+                <div class="table-responsive">
+                    <a class= "btn btn-success text-white mb-2" href="{{route('properti-create')}}"><i class="fas fa-plus"></i> Tambah Properti</a>
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr class="table-primary">
+                                <th class="col-2">Action</th>
+                                <th>Nama Properti</th>
+                                <th>Jenis Properti</th>
+                                <th>Alamat </th>
+                                <th>Foto </th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($index as $properti)
+                            <tr>
+                                <td align="center">
+                                    <a href="/user/properti/cancel/{{$properti->id}}" class="btn btn-warning btn-sm" ><i class="fas fa-ban"></i></a>
+                                    <a href="/user/properti/edit/{{$properti->id}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
+                                    <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/user/properti/delete/{{$properti->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
+                                </td>
+                                <td>
+                                    {{$properti->nama_properti}}
+                                </td>
+                                <td>
+                                    {{isset($properti->jasa)? $properti->jasa->jenis_jasa : ''}}
+                                </td>
+                                <td>
+                                    {{$properti->alamat}}
+                                </td>
+                                <td class="">
+                                    <a class= "btn btn-success text-white mb-2" data-toggle="modal" data-target="#modal-single" onClick="lihatProperti({{$properti}})"><i class="fas fa-eye"></i> Lihat Properti</a>
+                                    <!-- {{$properti->file}} -->
+                                </td>
+                                <td>
+                                    {{$properti->status}}
+                                </td>
 
-                    </tr>
-                @endforeach
-                </tbody>
-                </table>
-            </div>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
     <!-- /.container-fluid -->
   </div>
 </section>
+
+<div class="modal fade" id="modal-single">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div id="myDIV" style="display: block">
+                        <div class="row justify-content-between mb-3">
+                            <div class="col">
+                                <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3 rounded mx-auto d-block" id="prop">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
 @endsection

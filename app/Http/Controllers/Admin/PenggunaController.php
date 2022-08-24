@@ -5,10 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Pengguna;
+use App\KramaMipil;
+use App\KramaTamiu;
+use App\Tamiu;
 use App\Desa;
+use App\DesaAdat;
 use App\Kota;
 use App\Kecamatan;
 use App\Banjar;
+use App\BanjarAdat;
 use App\JenisJasa;
 use App\KartuK;
 use App\Properti;
@@ -22,16 +27,101 @@ class PenggunaController extends Controller
 {
     //
     public function index(){
-        $index = Pengguna::all();
-        
-        return view('admin.pengguna.index',compact('index'));
+        $checkKrama = KramaMipil::where('penduduk_id', auth()->guard('admin')->user()->kependudukan->id)->first();
+        if(!isset($checkKrama)){
+            $checkKrama = KramaTamiu::where('penduduk_id', auth()->guard('admin')->user()->kependudukan->id)->first();
+            if(!isset($checkKrama)){
+                $checkKrama = Tamiu::where('penduduk_id', auth()->guard('admin')->user()->kependudukan->id)->first();
+            }
+        }
+        $banjarAdat = BanjarAdat::where('id',$checkKrama->banjar_adat_id)->first();
+        if(isset($banjarAdat)){
+            $desaAdat = DesaAdat::where('id',$banjarAdat->desa_adat_id)->first();
+            $penduduk = [];
+            if(isset($desaAdat)){
+                foreach($desaAdat->banjarAdat as $banjar){
+                    $data = KramaMipil::where('banjar_adat_id', $banjar->id)->get()->toArray();
+                    if(!empty($data)){
+                        foreach($data as $index=>$d){
+                            array_push($penduduk,$d['penduduk_id']);
+                            // dd($penduduk);
+                        }
+                    }
+                    $data = KramaTamiu::where('banjar_adat_id', $banjar->id)->get()->toArray();
+                    if(!empty($data)){
+                        foreach($data as $index=>$d){
+                            array_push($penduduk,$d['penduduk_id']);
+                            // dd($penduduk);
+                        }
+                    }
+                    $data = Tamiu::where('banjar_adat_id', $banjar->id)->get()->toArray();
+                    if(!empty($data)){
+                        foreach($data as $index=>$d){
+                            array_push($penduduk,$d['penduduk_id']);
+                            // dd($penduduk);
+                        }
+                    }
+                }
+                // dd($penduduk);
+                $index = Pengguna::whereIn('id_penduduk', $penduduk)->get();
+                return view('admin.pengguna.index',compact('index'));
+            }else{
+                return view('admin.pengguna.index')->with('error', "Desa Adat tidak ditemukan !");
+            }
+        }else{
+            return view('admin.pengguna.index')->with('error', "Banjar Adat tidak ditemukan !");
+        }
     }
 
     public function create(){
-        $index = Kependudukan::where('desa_id', auth()->guard('admin')->user()->kependudukan->desa_id)->get();
-        $kota = Kota::all();
-        $banjar = Banjar::all();
-        return view('admin.pengguna.create', compact('banjar', 'kota', 'index'));
+        $checkKrama = KramaMipil::where('penduduk_id', auth()->guard('admin')->user()->kependudukan->id)->first();
+        if(!isset($checkKrama)){
+            $checkKrama = KramaTamiu::where('penduduk_id', auth()->guard('admin')->user()->kependudukan->id)->first();
+            if(!isset($checkKrama)){
+                $checkKrama = Tamiu::where('penduduk_id', auth()->guard('admin')->user()->kependudukan->id)->first();
+            }
+        }
+        $banjarAdat = BanjarAdat::where('id',$checkKrama->banjar_adat_id)->first();
+        if(isset($banjarAdat)){
+            $desaAdat = DesaAdat::where('id',$banjarAdat->desa_adat_id)->first();
+            $penduduk = [];
+            if(isset($desaAdat)){
+                foreach($desaAdat->banjarAdat as $banjar){
+                    $data = KramaMipil::where('banjar_adat_id', $banjar->id)->get()->toArray();
+                    if(!empty($data)){
+                        foreach($data as $index=>$d){
+                            array_push($penduduk,$d['penduduk_id']);
+                            // dd($penduduk);
+                        }
+                    }
+                    $data = KramaTamiu::where('banjar_adat_id', $banjar->id)->get()->toArray();
+                    if(!empty($data)){
+                        foreach($data as $index=>$d){
+                            array_push($penduduk,$d['penduduk_id']);
+                            // dd($penduduk);
+                        }
+                    }
+                    $data = Tamiu::where('banjar_adat_id', $banjar->id)->get()->toArray();
+                    if(!empty($data)){
+                        foreach($data as $index=>$d){
+                            array_push($penduduk,$d['penduduk_id']);
+                            // dd($penduduk);
+                        }
+                    }
+                }
+                // dd($penduduk);
+                $index = Kependudukan::whereIn('id', $penduduk)->get();
+                return view('admin.pengguna.create',compact('index'));
+            }else{
+                return view('admin.pengguna.create')->with('error', "Desa Adat tidak ditemukan !");
+            }
+        }else{
+            return view('admin.pengguna.create')->with('error', "Banjar Adat tidak ditemukan !");
+        }
+        // $index = Kependudukan::where('desa_id', auth()->guard('admin')->user()->kependudukan->desa_id)->get();
+        // $kota = Kota::all();
+        // $banjar = Banjar::all();
+        // return view('admin.pengguna.create', compact('banjar', 'kota', 'index'));
     }
 
     // public function storeOld(Request $request){
@@ -196,7 +286,7 @@ class PenggunaController extends Controller
     public function propertiUpdate($id, Request $request){
         $properti = Properti::where('id', $id)->first();
         if(isset($properti)){
-            if($request->file('file')){
+            if($request->file('file_edit')){
                 //simpan file
                 if(!is_null($properti->file)){
                     $oldfile = public_path("assets/img/properti/".$properti->file);
@@ -207,7 +297,7 @@ class PenggunaController extends Controller
                         // unlink($oldfile);
                     }
                 }
-                $file = $request->file('file');
+                $file = $request->file('file_edit');
                 $images = $properti->pengguna->nik."_".$request->nama."_".$file->getClientOriginalName();
                 // dd($images);
                 $properti->file = $images;
@@ -215,18 +305,18 @@ class PenggunaController extends Controller
                 $file->move($foto_upload,$images);
             }
 
-            if($properti->id_jenis != $request->jenis){
-                $jenis = JenisJasa::where('id', $request->jenis)->first();
-                $properti->lat = $request->lat;
-                $properti->lng = $request->lng;
-                $properti->id_jenis = $request->jenis;
+            if($properti->id_jenis != $request->jenis_edit){
+                $jenis = JenisJasa::where('id', $request->jenis_edit)->first();
+                $properti->lat = $request->lat_edit;
+                $properti->lng = $request->lat_edit;
+                $properti->id_jenis = $request->jenis_edit;
                 $properti->note = "Admin Mengubah Jenis properti menjadi ".$jenis->jenis_jasa;
                 $properti->status = "Verified";
                 $properti->update();
                 return redirect()->back()->with('success', 'verifikasi Properti berhasil !');
             }else{
-                $properti->lat = $request->lat;
-                $properti->lng = $request->lng;
+                $properti->lat = $request->lat_edit;
+                $properti->lng = $request->lng_edit;
                 $properti->status = "Verified";
                 $properti->update();
                 return redirect()->back()->with('success', 'verifikasi Properti berhasil !');

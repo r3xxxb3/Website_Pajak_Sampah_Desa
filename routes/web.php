@@ -30,7 +30,7 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::get('/masterdata/role/create', 'Admin\MasterDataController@createRole')->name('masterdata-role-create');
     Route::post('/masterdata/role/store', 'Admin\MasterDataController@storeRole')->name('masterdata-role-store');
     Route::get('/masterdata/role/edit/{id}', 'Admin\MasterDataController@editRole')->name('masterdata-role-edit');
-    Route::post('/masterdata/role/update', 'Admin\MasterDataController@updatexRole')->name('masterdata-role-update');
+    Route::post('/masterdata/role/update/{id}', 'Admin\MasterDataController@updateRole')->name('masterdata-role-update');
     Route::get('/masterdata/role/delete/{id}', 'Admin\MasterDataController@deleteRole')->name('masterdata-role-delete');
 
     //master data kota
@@ -129,8 +129,8 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
 
     //Manajemen Pembayaran
     Route::get('/pembayaran', 'Admin\PembayaranController@index')->name('admin-pembayaran-index');
-    Route::post('/pembayaran/create', 'Admin\PembayaranController@create')->name('admin-pembayaran-create');
-    Route::post('/pembayaran/verif/{id}', 'Admin\PembayaranController@verif')->name('admin-pembayaran-verif');
+    Route::get('/pembayaran/create', 'Admin\PembayaranController@create')->name('admin-pembayaran-create');
+    Route::get('/pembayaran/verif/{id}', 'Admin\PembayaranController@verif')->name('admin-pembayaran-verif');
     Route::post('/pembayaran/update/{id}', 'Admin\PembayaranController@update')->name('admin-pembayaran-update');
     Route::get('/retribusi/delete/{id}', 'Admin\PembayaranController@delete')->name('admin-pembayaran-delete');
 

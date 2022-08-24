@@ -26,6 +26,18 @@ Pembayaran
         });
     } );
 </script>
+
+<script>
+    function lihatPembayaran(pembayaran) {
+        // console.log(properti);
+        if(pembayaran.bukti_bayar != null){
+            $('#bayar').attr('src', "{{asset('assets/img/bukti_bayar/')}}"+"/"+pembayaran.bukti_bayar);
+        }else{
+            $('#bayar').attr('hidden', true);
+            $('#ket').attr('hidden', false);
+        }
+    }
+</script>
 @endsection
 
 @section('style')
@@ -86,11 +98,12 @@ Pembayaran
                     <table class="table table-hover table-bordered  " id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr class="table-primary">
-                                <th class="col-2">Action</th>
+                                <th class="col col-sm-2">Action</th>
+                                <th>Pelanggan</th>
                                 <th>Properti</th>
                                 <th>Bukti Bayar</th>
-                                <th>Metode Pembayaran</th>
-                                <th>Nominal</th>
+                                <th class="col col-sm-2">Metode Pembayaran</th>
+                                <th class="col col-sm-2">Nominal</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -98,9 +111,16 @@ Pembayaran
                         @foreach ($index as $pembayaran)
                             <tr>
                                 <td align="center">
-                                <a href="/admin/pembayaran/confirm/{{$pembayaran->id_pembayaran}}" class="btn btn-success btn-sm"><i class="fas fa-check"></i></a>
+                                @if($pembayaran->status == "pending")
+                                    <a href="/admin/pembayaran/verif/{{$pembayaran->id_pembayaran}}" class="btn btn-success btn-sm"><i class="fas fa-check"></i></a>
                                     <a href="/admin/pembayaran/edit/{{$pembayaran->id_pembayaran}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
                                     <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/pembayaran/delete/{{$pembayaran->id_pembayaran}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
+                                @elseif($pembayaran->status == "lunas")
+                                    <a class="btn btn-info text-white btn-sm"><i class="fas fa-eye"></i></a>
+                                @endif
+                                </td>
+                                <td>
+                                    {{$pembayaran->pelanggan->kependudukan->nama}}
                                 </td>
                                 <td>
                                     @if(isset($pembayaran->retribusi))
@@ -117,7 +137,8 @@ Pembayaran
                                 </td>
                                 <td>
                                     @if(isset($pembayaran->bukti_bayar))
-                                        <img src="{{asset('assets/img/bukti_bayar/'.$pembayaran->bukti_bayar)}}"  height="100px" style="object-fit:cover" class="mb-3" id="prop">
+                                        <a class= "btn btn-success btn-sm text-white mb-2 " data-toggle="modal" data-target="#modal-single" onClick="lihatPembayaran({{$pembayaran}})"><i class="fas fa-eye"></i> Lihat bukti bayar</a>
+                                        <!-- <img src="{{asset('assets/img/bukti_bayar/'.$pembayaran->bukti_bayar)}}"  height="100px" style="object-fit:cover" class="mb-3" id="prop"> -->
                                     @else
                                         Tidak Terdapat Foto Bukti Bayar
                                     @endif
@@ -129,9 +150,9 @@ Pembayaran
                                     {{"Rp. ".number_format($pembayaran->nominal ?? 0,0,',','.')}}
                                 </td>
                                 <td>
-                                    @if($pembayaran->status = "pending")
+                                    @if($pembayaran->status == "pending")
                                         <span class="badge badge-warning">{{$pembayaran->status}}</span>
-                                    @else
+                                    @elseif($pembayaran->status == "lunas")
                                         <span class="badge badge-success">{{$pembayaran->status}}</span>
                                     @endif
                                 </td>
@@ -146,4 +167,23 @@ Pembayaran
     <!-- /.container-fluid -->
   </div>
 </section>
+
+<div class="modal fade" id="modal-single">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div id="myDIV" style="display: block">
+                        <div class="row justify-content-between mb-3">
+                            <div class="col">
+                                <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3 rounded mx-auto d-block" id="bayar">
+                                <h1 id="ket" hidden>Tidak terdapat bukti pembayaran</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+
 @endsection

@@ -30,6 +30,6 @@ class Pegawai extends Authenticatable
     }
 
     public function role(){
-        return $this->belongsToMany(Role::class, 'tb_role_pegawai', 'id_pegawai', 'id_role');
+        return $this->belongsTo(Role::class, 'id_role', 'id');
     }
 }

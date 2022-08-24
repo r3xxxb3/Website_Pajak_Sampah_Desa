@@ -16,6 +16,29 @@ Index Retribusi
 @endsection
 
 @section('scripts')
+
+<script>
+    $(document).ready( function () {
+        $('#dataTable').DataTable({
+            "oLanguage":{
+                "sSearch": "Cari:",
+                "sZeroRecords": "Data tidak ditemukan",
+                "sSearchPlaceholder": "Cari retribusi...",
+                "infoEmpty": "Menampilkan 0 data",
+                "infoFiltered": "(dari _MAX_ data)",
+                "sLengthMenu": "Tampilkan _MENU_ data",
+            },
+            "language":{
+                "paginate": {
+                        "previous": 'Sebelumnya',
+                        "next": 'Berikutnya'
+                    },
+                "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
+            },
+        });
+    });
+</script>
+
 <script>
 
 function calculateNom(retri){
@@ -70,6 +93,7 @@ $("#file-single").change(function() {
   readURL_single(this);
 });
 </script>
+
 @endsection
 
 @section('content')
@@ -120,50 +144,54 @@ $("#file-single").change(function() {
                         </button>
                 </div>
                 @endif
-            <div class="table-responsive">
-            <a class= "btn btn-success text-white mb-2" data-toggle="modal" data-target="#modal-choose"><i class="fas fa-cash-register"></i> Pilih Tagihan Retribusi</a>
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                <tr  class="table-primary">
-                        <th class="col-2">Action</th>
-                        <th>Nama Properti</th>
-                        <th>Jenis Properti</th>
-                        <th>Nominal </th>
-                        <th>Tanggal Retribusi </th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach ($index as $retri)
-                    <tr>
-                        <td align="center">
-                            @if(!isset($retri->pembayaran))
-                                <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-single" onClick="calculateNom_b({{$retri}})"><i class="fas fa-cart-plus"></i></a>
-                            @else
-                                <a href="#" class="btn btn-info btn-md" data-toggle="" data-target=""><i class="fas fa-exclamation"></i></a>
-                            @endif
-                        </td>
-                        <td>
-                            {{isset($retri->properti) ? $retri->properti->nama_properti : ''}}
-                        </td>
-                        <td>
-                            {{isset($retri->properti->jasa)? $retri->properti->jasa->jenis_jasa : ''}}
-                        </td>
-                        <td>
-                            Rp. {{number_format($retri->nominal)}}
-                        </td>
-                        <td>
-                            {{$retri->created_at->format('d M Y')}}
-                        </td>
-                        <td>
-                            {{$retri->status}}
-                        </td>
-
-                    </tr>
-                @endforeach
-                </tbody>
-                </table>
-            </div>
+                <div class="table-responsive">
+                    <a class= "btn btn-success text-white mb-2" data-toggle="modal" data-target="#modal-choose"><i class="fas fa-cash-register"></i> Bayar Tagihan Retribusi</a>
+                    <a class= "btn btn-info text-white mb-2" data-toggle="modal" data-target="#modal-cicil"><i class="fas fa-cash-register"></i> Cicil Tagihan Retribusi</a>
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr class="table-primary">
+                                <th class="col-2">Action</th>
+                                <th>Nama Properti</th>
+                                <th>Jenis Properti</th>
+                                <th>Nominal </th>
+                                <th>Tanggal Retribusi </th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($index as $retri)
+                            <tr>
+                                <td align="center">
+                                    @if($retri->pembayaran->isEmpty())
+                                        <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-single" onClick="calculateNom_b({{$retri}})"><i class="fas fa-cart-plus"></i></a>
+                                    @else
+                                        <a href="#" class="btn btn-info btn-md" data-toggle="" data-target=""><i class="fas fa-exclamation"></i></a>
+                                    @endif
+                                </td>
+                                <td>
+                                    {{isset($retri->properti) ? $retri->properti->nama_properti : ''}}
+                                </td>
+                                <td>
+                                    {{isset($retri->properti->jasa)? $retri->properti->jasa->jenis_jasa : ''}}
+                                </td>
+                                <td>
+                                    Rp. {{number_format($retri->nominal)}}
+                                </td>
+                                <td>
+                                    {{$retri->created_at->format('d M Y')}}
+                                </td>
+                                <td>
+                                @if($retri->status == "pending")
+                                    <span class="badge badge-warning">{{$retri->status}}</span>
+                                @elseif($retri->status == "lunas")
+                                    <span class="badge badge-success">{{$retri->status}}</span>
+                                @endif
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -194,28 +222,33 @@ $("#file-single").change(function() {
                                     </thead>
                                     <tbody>
                                     @foreach ($index as $retri)
-                                        <tr>
-                                            <td align="center">
-                                                <input type="checkbox" name="id[]" id="id-{{$retri->id}}" value="{{$retri->id}}" onClick="calculateNom({{$retri}})">
-                                                <!-- <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-{{$retri->id}}"><i class="fas fa-cart-plus"></i></a> -->
-                                            </td>
-                                            <td>
-                                                {{isset($retri->properti) ? $retri->properti->nama_properti : ''}}
-                                            </td>
-                                            <td>
-                                                {{isset($retri->properti->jasa)? $retri->properti->jasa->jenis_jasa : ''}}
-                                            </td>
-                                            <td>
-                                                Rp. {{number_format($retri->nominal)}}
-                                            </td>
-                                            <td>
-                                                {{$retri->created_at->format('d M Y')}}
-                                            </td>
-                                            <td>
-                                                {{$retri->status}}
-                                            </td>
-            
-                                        </tr>
+                                        @if($retri->status == "pending")
+                                            <tr>
+                                                <td align="center">
+                                                    <input type="checkbox" name="id[]" id="id-{{$retri->id}}" value="{{$retri->id}}" onClick="calculateNom({{$retri}})">
+                                                    <!-- <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-{{$retri->id}}"><i class="fas fa-cart-plus"></i></a> -->
+                                                </td>
+                                                <td>
+                                                    {{isset($retri->properti) ? $retri->properti->nama_properti : ''}}
+                                                </td>
+                                                <td>
+                                                    {{isset($retri->properti->jasa)? $retri->properti->jasa->jenis_jasa : ''}}
+                                                </td>
+                                                <td>
+                                                    Rp. {{number_format($retri->nominal)}}
+                                                </td>
+                                                <td>
+                                                    {{$retri->created_at->format('d M Y')}}
+                                                </td>
+                                                <td>
+                                                @if($retri->status == "pending")
+                                                    <span class="badge badge-warning">{{$retri->status}}</span>
+                                                @elseif($retri->status == "lunas")
+                                                    <span class="badge badge-success">{{$retri->status}}</span>
+                                                @endif
+                                                </td>
+                                            </tr>
+                                        @endif
                                     @endforeach
                                     </tbody>
                                 </table>
@@ -235,7 +268,7 @@ $("#file-single").change(function() {
                                 <div class='col mb-2'>
                                     <label for="file" class="font-weight-bold text-dark">Bukti Pembayaran</label>
                                     <div class="d-flex justify-content-center">
-                                        <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
+                                        <img src=""  height="300px" style="object-fit:cover" class="mb-3" id="prop">
                                     </div>
                                     <input type="file" class="form-control @error('file') is-invalid @enderror" id="file-multi" name="file" accept="image/png, image/jpeg, image/jpg" placeholder="File/Foto Bukti bayar"  value="{{is_null($retri->pembayaran) ? $retri->pembayaran->bukti_bayar : old('file')}}" >
                                         @error('file')
@@ -304,7 +337,7 @@ $("#file-single").change(function() {
                                 <div class='col mb-2'>
                                     <label for="file" class="font-weight-bold text-dark">Bukti Pembayaran</label>
                                     <div class="col-12 d-flex justify-content-center">
-                                        <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3" id="photo">
+                                        <img src=""  height="300px" style="object-fit:cover" class="mb-3" id="photo">
                                     </div>
                                     <input type="file" class="form-control @error('file') is-invalid @enderror" id="file-single" name="file" accept="image/png, image/jpeg, image/jpg" placeholder="File/Foto Bukti bayar" value="{{is_null($retri->pembayaran) ? $retri->pembayaran->bukti_bayar : old('file')}}"  >
                                         @error('file')

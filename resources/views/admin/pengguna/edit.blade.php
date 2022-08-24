@@ -106,15 +106,15 @@ function catchProp(properti, jenis){
     }
     $('#cancelation').attr('href', "/admin/properti/cancel/"+properti.id);
     $('#action-edit').attr('action', "/admin/properti/update/"+properti.id ); 
-    $('#nama-edit').val(properti.nama_properti);
-    $('#alamat-edit').val(properti.alamat);
-    $('#lat-edit').val(properti.lat);
-    $('#lng-edit').val(properti.lng);
-    $('#banjar-edit').val(properti.banjar);
-    $('#jenis-edit').val(properti.id_jenis);
-    $('#lat-edit').val(properti.lat);
-    $('#lng-edit').val(properti.lng);
-    $('#file-edit').change(function(){
+    $('#nama_edit').val(properti.nama_properti);
+    $('#alamat_edit').val(properti.alamat);
+    $('#lat_edit').val(properti.lat);
+    $('#lng_edit').val(properti.lng);
+    $('#banjar_edit').val(properti.banjar);
+    $('#jenis_edit').val(properti.id_jenis);
+    $('#lat_edit').val(properti.lat);
+    $('#lng_edit').val(properti.lng);
+    $('#file_edit').change(function(){
         readURL(properti.file);
     });
 }
@@ -134,7 +134,7 @@ function catchProp(properti, jenis){
   }
 }
 
-$("#file-edit").change(function() {
+$("#file_edit").change(function() {
   readURL(this);
 });
 
@@ -454,21 +454,21 @@ $(document).ready( function () {
                                     <label for="nama" class="font-weight-bold text-dark">Nama Properti</label>
                                     <input type="text" class="form-control @error('jenis') is-invalid @enderror" id="nama" name="nama" placeholder="Masukan Nama Properti (cth: rumah tinggal,.. etc)" value="{{old('nama')}}">
                                     <input type="text" class="form-control @error('pengguna') is-invalid @enderror" id="pengguna" name="pengguna" placeholder="id" value="{{$pengguna->id}}" hidden>
-                                        @error('jenis')
+                                        @error('nama')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                         @enderror
                                 </div>
                                 <div class="col mb-2">
-                                    <label for="JENIS" class="font-weight-bold text-dark">Jenis Properti</label>
+                                    <label for="jenis" class="font-weight-bold text-dark">Jenis Properti</label>
                                     <select class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="jenis">
                                         <option value="" >Pilih Jenis Properti</option>
                                             @foreach($jenis as $j)
                                                 <option value="{{$j->id}}" {{old('jenis') == $j->id ? 'selected' : ''}}>{{$j->jenis_jasa}}</option>
                                             @endforeach
                                     </select>
-                                        @error('deskripsi')
+                                        @error('jenis')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>    
@@ -477,7 +477,7 @@ $(document).ready( function () {
                                 <div class="col mb-2" id="additional" hidden>
                                     <label for="kamar" class="font-weight-bold text-dark">Jumlah Kamar</label>
                                     <input type="number" class="form-control @error('deskripsi') is-invalid @enderror" id="kamar" name="kamar" placeholder="Masukan Jumlah Kamar terisi (Kos)" value="{{old('kamar')}}">
-                                        @error('deskripsi')
+                                        @error('kamar')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>    
@@ -535,16 +535,16 @@ $(document).ready( function () {
                                     <div class="" id="map-edit"></div>
                                     <div class="row mt-3">
                                         <div class="col">
-                                            <input type="text" class="form-control @error('lat') is-invalid @enderror" id="lat-edit" name="lat-edit" placeholder="Latitude" value="">
-                                            @error('lat-edit')
+                                            <input type="text" class="form-control @error('lat') is-invalid @enderror" id="lat_edit" name="lat_edit" placeholder="Latitude" value="">
+                                            @error('lat_edit')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>    
                                             @enderror
                                         </div>
                                         <div class="col">
-                                            <input type="text" class="form-control @error('lng') is-invalid @enderror" id="lng-edit" name="lng-edit" placeholder="Longitude" value="">
-                                            @error('lng-edit')
+                                            <input type="text" class="form-control @error('lng') is-invalid @enderror" id="lng_edit" name="lng_edit" placeholder="Longitude" value="">
+                                            @error('lng_edit')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>    
@@ -553,12 +553,12 @@ $(document).ready( function () {
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <label for="file-edit" class="font-weight-bold text-dark">Upload Gambar Properti</label>
+                                    <label for="file_edit" class="font-weight-bold text-dark">Upload Gambar Properti</label>
                                     <div class="col-12 d-flex justify-content-center">
                                         <img src="{{asset('assets/img/properti/blank.png')}}" id="propic" height="300px" style="object-fit:cover" class="mb-3" id="prop">
                                     </div>
-                                    <input type="file" class="form-control @error('file') is-invalid @enderror" id="file-edit" name="file-edit" accept="image/png, image/jpeg, image/jpg" placeholder="Masukan file gambar properti" value="{{old('file')}}">
-                                        @error('file-edit')
+                                    <input type="file" class="form-control @error('file') is-invalid @enderror" id="file_edit" name="file_edit" accept="image/png, image/jpeg, image/jpg" placeholder="Masukan file gambar properti" value="{{old('file')}}">
+                                        @error('file_edit')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>    
@@ -567,23 +567,23 @@ $(document).ready( function () {
                             </div>      
                             <div class="row">
                                 <div class='col mb-2'>
-                                    <label for="nama-edit" class="font-weight-bold text-dark">Nama Properti</label>
-                                    <input type="text" class="form-control @error('jenis') is-invalid @enderror" id="nama-edit" name="nama-edit" placeholder="Masukan Nama Properti (cth: rumah tinggal,.. etc)" value="" disabled>
-                                        @error('nama-edit')
+                                    <label for="nama_edit" class="font-weight-bold text-dark">Nama Properti</label>
+                                    <input type="text" class="form-control @error('jenis') is-invalid @enderror" id="nama_edit" name="nama_edit" placeholder="Masukan Nama Properti (cth: rumah tinggal,.. etc)" value="" disabled>
+                                        @error('nama_edit')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                         @enderror
                                 </div>
                                 <div class="col mb-2">
-                                    <label for="jenis-edit" class="font-weight-bold text-dark">Jenis Properti</label>
-                                    <select class="form-control @error('jenis') is-invalid @enderror" id="jenis-edit" name="jenis-edit">
+                                    <label for="jenis_edit" class="font-weight-bold text-dark">Jenis Properti</label>
+                                    <select class="form-control @error('jenis') is-invalid @enderror" id="jenis_edit" name="jenis_edit">
                                         <option value="" selected>Pilih Jenis Properti</option>
                                             @foreach($jenis as $j)
                                                 <option value="{{$j->id}}" >{{$j->jenis_jasa}}</option>
                                             @endforeach
                                     </select>
-                                        @error('jenis-edit')
+                                        @error('jenis_edit')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>    
@@ -591,9 +591,9 @@ $(document).ready( function () {
                                 </div>
                                 @if(isset($properti) && $properti->jasa->jenis_jasa == "Kos-kosan")
                                 <div class="col mb-2" id="additional" >
-                                    <label for="kamar-edit" class="font-weight-bold text-dark">Jumlah Kamar</label>
-                                    <input type="number" class="form-control @error('kamar') is-invalid @enderror" id="kamar-edit" name="kamar-edit" placeholder="Masukan Jumlah Kamar terisi (Kos)" value="" disabled>
-                                        @error('kamar-edit')
+                                    <label for="kamar_edit" class="font-weight-bold text-dark">Jumlah Kamar</label>
+                                    <input type="number" class="form-control @error('kamar') is-invalid @enderror" id="kamar_edit" name="kamar_edit" placeholder="Masukan Jumlah Kamar terisi (Kos)" value="" disabled>
+                                        @error('kamar_edit')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>    
@@ -603,8 +603,8 @@ $(document).ready( function () {
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    <label for="banjar-edit" class="font-weight-bold text-dark">Banjar</label>
-                                    <input type="text" class="form-control @error('banjar') is-invalid @enderror" id="banjar-edit" name="banjar-edit" placeholder="Masukan Banjar Properti (opsional)" value="" disabled>
+                                    <label for="banjar_edit" class="font-weight-bold text-dark">Banjar</label>
+                                    <input type="text" class="form-control @error('banjar') is-invalid @enderror" id="banjar_edit" name="banjar_edit" placeholder="Masukan Banjar Properti (opsional)" value="" disabled>
                                         @error('banjar')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -612,9 +612,9 @@ $(document).ready( function () {
                                         @enderror
                                 </div>
                                 <div class="col">
-                                    <label for="alamat-edit" class="font-weight-bold text-dark">Alamat Properti</label>
-                                    <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat-edit" name="alamat-edit" placeholder="Masukan Alamat Properti" value="" disabled>
-                                        @error('alamat-edit')
+                                    <label for="alamat_edit" class="font-weight-bold text-dark">Alamat Properti</label>
+                                    <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat_edit" name="alamat_edit" placeholder="Masukan Alamat Properti" value="" disabled>
+                                        @error('alamat_edit')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>    

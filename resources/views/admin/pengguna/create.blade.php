@@ -171,22 +171,6 @@ Create Data Pelanggan
 
                     <div class="row mb-3 ">
                         <div class='col mb-2'>
-                            <label for="banjar" class="font-weight-bold text-dark">Banjar</label>
-                            <input type="text" class="form-control @error('banjar') is-invalid @enderror" list="banjardata" id="banjar" name="banjar" placeholder="Masukan Banjar (Tempat Tinggal)">
-                                <datalist id="banjardata">
-                                    @if($banjar != [])
-                                        @foreach($banjar as $b)
-                                            <option value="{{$b->nama_banjar_dinas}}">
-                                        @endforeach
-                                    @endif
-                                </datalist>
-                                @error('banjar')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                        </div>
-                        <div class='col mb-2'>
                             <label for="no" class="font-weight-bold text-dark">No Telpon</label>
                             <input type="text" class="form-control @error('no') is-invalid @enderror" id="no" name="no" placeholder="Masukan No Telpon Aktif">
                                 @error('no')

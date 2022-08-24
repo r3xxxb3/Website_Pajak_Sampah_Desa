@@ -14,7 +14,8 @@ class RetribusiController extends Controller
 {
     //
     public function index(){
-        $index = Retribusi::where('id_pengguna', auth()->guard('web')->user()->id)->orderByRaw("FIELD(status, 'pending', 'lunas ')")->get();
+        $index = Retribusi::where('id_pengguna', auth()->guard('web')->user()->id)->orderByRaw("FIELD(status, 'pending', 'lunas ') DESC")->get();
+        // dd($index);
         return view('user.retribusi.index', compact('index'));
     }
 

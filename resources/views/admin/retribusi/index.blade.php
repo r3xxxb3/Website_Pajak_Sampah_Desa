@@ -117,11 +117,11 @@ Index Retribusi
                                     {{$retri->created_at->format('d M Y')}}
                                 </td>
                                 <td >
-                                    @if($retri->status = "pending")
+                                @if($retri->status == "pending")
                                     <span class="badge badge-warning">{{$retri->status}}</span>
-                                    @else
+                                @elseif($retri->status == "lunas")
                                     <span class="badge badge-success">{{$retri->status}}</span>
-                                    @endif
+                                @endif
                                 </td>
         
                             </tr>
@@ -158,9 +158,9 @@ Index Retribusi
                                 <div class="col mb-2 d-flex justify-content-center">
                                     <!-- Properti -->
                                     @if(!isset($retri->properti->file))
-                                    <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
+                                        <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
                                     @else
-                                    <img src="{{asset('assets/img/properti/'.$properti->file)}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
+                                        <img src="{{asset('assets/img/properti/'.$retri->properti->file)}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
                                     @endif
                                     @error('file')
                                     <span class="invalid-feedback" role="alert">

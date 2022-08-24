@@ -43,7 +43,7 @@ Edit Jadwal
                     <div class="row mb-2">
                         <div class='col col-3 mb-2'>
                             <label for="jenis" class="font-weight-bold text-dark">Jenis Sampah</label>
-                            <input type="text" class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="jenis" placeholder="Masukan Jenis Sampah" value='$jenis->jenis_sampah'>
+                            <input type="text" class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="jenis" placeholder="Masukan Jenis Sampah" value='{{$jenis->jenis_sampah}}'>
                                 @error('jenis')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -52,7 +52,7 @@ Edit Jadwal
                         </div>
                         <div class="col mb-2">
                             <label for="deskripsi" class="font-weight-bold text-dark">Deskripsi Sampah</label>
-                            <input type="text" class="form-control @error('deskripsi') is-invalid @enderror" id="deskripsi" name="deskripsi" placeholder="Masukan deskripsi mengenai jenis sampah (Optional)" value='$jenis->deskripsi'>
+                            <input type="text" class="form-control @error('deskripsi') is-invalid @enderror" id="deskripsi" name="deskripsi" placeholder="Masukan deskripsi mengenai jenis sampah (Optional)" value='{{$jenis->deskripsi}}'>
                             <!-- <small style="color: red">
                                 @error('deskripsi')
                                     {{$message}}

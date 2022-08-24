@@ -13,13 +13,14 @@ class TestingController extends Controller
     public function test(){
         // $properti = Properti::where('status', 'Verified')->get();
         // foreach($properti as $prop){
-        //     $retribusi = Retribusi::where('id_properti', $prop->id)->orderBy('created_at', 'ASC')->first();
-        //     $standar = StandarRetribusi::where('id_jenis_jasa', $prop->id_jenis)->get();
-        //     $stanres = $standar->where('tanggal_berlaku', '<=', now())->where('tanggal_selesai', '>=', now())->Where('active', 1)->first();
+        //     print_r($prop->nama_properti);
+        //     $retribusi = Retribusi::where('id_properti', $prop->id)->orderBy('created_at', 'DESC')->first();
+        //     $standar = StandarRetribusi::where('id_jenis_jasa', $prop->id_jenis)->where(function ($query){
+        //         $query->where('tanggal_berlaku', '<=', now())->orWhere('tanggal_selesai', '>=', now())->orWhere('active', 1);
+        //     })->first();
+        //     // $stanres = $standar->where('tanggal_berlaku', '<=', now())->where('tanggal_selesai', '>=', now())->Where('active', 1)->first();
+        //     // dd($standar);
         //     if(!isset($retribusi)){
-        //         if($prop->id_jenis == 5 || $prop->id_jenis == 5){
-        //             // dd('asem');
-        //         }
         //         if(isset($standar)){
         //             $retribusi = new Retribusi;
         //             $retribusi->id_pengguna = $prop->id_pengguna;
@@ -30,10 +31,7 @@ class TestingController extends Controller
         //         }else{
         //             continue;
         //         }
-        //     }elseif($retribusi->created_at->format('m') != now()->format('m')){
-        //         if($prop->id_jenis == 5 || $prop->id_jenis == 5){
-        //             dd('manis');
-        //         }
+        //     }elseif($retribusi->created_at->format('m') != now()->format('m') && $retribusi->created_at->format('m') < now()->format('m') ){
         //         if(isset($standar)){
         //             $retribusi = new Retribusi;
         //             $retribusi->id_pengguna = $prop->id_pengguna;
