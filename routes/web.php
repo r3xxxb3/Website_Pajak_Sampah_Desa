@@ -116,6 +116,7 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::post('/properti/update/{id}', 'Admin\PenggunaController@propertiUpdate')->name('admin-properti-update');
     Route::get('/properti/cancel/{id}', 'Admin\PenggunaController@propertiCancel')->name('admin-properti-cancel');
     Route::get('/properti/delete/{id}', 'Admin\PenggunaController@propertiDelete')->name('admin-properti-delete');
+    Route::post('/banjar/search', 'Admin\PenggunaController@banjarCheck')->name('banjar-search');
 
 
     //Manajemen Retribusi

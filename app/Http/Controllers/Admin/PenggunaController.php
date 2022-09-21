@@ -431,5 +431,25 @@ class PenggunaController extends Controller
         }
     }
 
+    public function banjarCheck(Request $request){
+        $desa = DesaAdat::where('id', $request->desa)->first();
+        if(isset($desa)){
+            $banjar = BanjarAdat::where('desa_adat_id', $desa->id)->get();
+            if(!$banjar->isEmpty()){
+                $data['banjar'] = $banjar;
+                $data['status'] = "success";
+    
+                return response()->json($data, 200);
+            }else{
+                $data['status'] = "Data banjar tidak ditemukan !";
+    
+                return response()->json($data, 200);
+            }
+        }else{
+            $data['status'] = "Data desa adat tidak ditemukan !";
+            return response()->json($data, 200);
+        }
+    }
+
 
 }

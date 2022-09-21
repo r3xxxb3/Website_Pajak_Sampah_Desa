@@ -164,7 +164,46 @@ $(document).ready( function () {
 </script>
 
 <script>
+$('#desa_edit').on('change', function(e){
+        e.preventDefault();
+        const desa = $('#desa_edit').val();
+        console.log(desa);
 
+        $.ajax({
+            method : 'POST',
+            url : '/admin/banjar/search',
+            data : {
+            "_token" : "{{ csrf_token() }}",
+            desa : desa,
+            },
+            beforeSend : function() {
+                        
+            },
+            success : (res) => {
+                if(res.status == "success"){
+                    $('#banjar_edit').removeAttr('disabled');
+                    $('#banjar_edit option').remove();
+                    // console.log(res);
+                    select = document.getElementById('banjar_edit');
+                    $.each(res.banjar, function(k, v){
+                        // console.log(v.nama_banjar_adat);
+                        var opt = document.createElement('option');
+                        opt.value = v.id;
+                        opt.innerHTML = v.nama_banjar_adat;
+                        select.appendChild(opt);
+                    })
+                }else{
+                    $('#banjar_edit option').remove();
+                    select = document.getElementById('banjar_edit');
+                    var opt = document.createElement('option');
+                    opt.innerHTML = res.status;
+                    console.log(opt);
+                    select.appendChild(opt);
+                    $('#banjar_edit').attr('disabled');
+                }
+            }
+        }).done(()=>{})
+    });
 </script>
 @endsection
 
@@ -606,7 +645,7 @@ $(document).ready( function () {
                             <div class="row">
                                 <div class='col mb-2'>
                                         <label for="desa_edit" class="font-weight-bold text-dark">Desa Adat</label>
-                                        <select class="form-control @error('desa_edit') is-invalid @enderror" id="desa_edit" name="desa_edit" disabled>
+                                        <select class="form-control @error('desa_edit') is-invalid @enderror" id="desa_edit" name="desa_edit" >
                                             <option value="">Pilih Desa Adat</option>
                                                 @foreach($desaAdat as $d)
                                                     <option value="{{$d->id}}" >{{$d->desadat_nama}}</option>
@@ -620,7 +659,7 @@ $(document).ready( function () {
                                     </div>
                                 <div class="col">
                                     <label for="banjar_edit" class="font-weight-bold text-dark">Banjar Adat</label>
-                                        <select class="form-control @error('banjar_edit') is-invalid @enderror" id="banja_edit" name="banjar_edit" disabled>
+                                        <select class="form-control @error('banjar_edit') is-invalid @enderror" id="banjar_edit" name="banjar_edit" >
                                             <option value="" selected>Pilih Desa Adat terlebih dahulu !</option>
                                                 @foreach($banjarAdat as $b)
                                                     <option value="{{$b->id}}">{{$b->nama_banjar_adat}}</option>
@@ -632,6 +671,8 @@ $(document).ready( function () {
                                         </span>    
                                         @enderror
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="col">
                                     <label for="alamat" class="font-weight-bold text-dark">Alamat Properti<i class="text-danger text-sm text-bold">*</i></label>
                                     <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" placeholder="Masukan Alamat Properti" value="{{isset($properti->alamat) ? $properti->alamat : old('alamat')}}" >
