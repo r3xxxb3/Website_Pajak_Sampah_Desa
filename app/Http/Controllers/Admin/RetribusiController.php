@@ -14,7 +14,8 @@ class RetribusiController extends Controller
 {
     //
     public function index(){
-        $index = Retribusi::orderByRaw("FIELD(status, 'pending', 'lunas ') DESC")->get();
+        $retribusi = Retribusi::orderByRaw("FIELD(status, 'pending', 'lunas ') DESC")->get();
+        $index =  
         // dd($index);
         return view('admin.retribusi.index', compact('index'));
     }

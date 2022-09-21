@@ -12,7 +12,7 @@ class BanjarAdat extends Model
     protected $fillable = ['kode_banjar_adat', 'nnama_banjar_adat'];
 
     public function desaAdat(){
-        return $this->belongsTo(DesaAdat::class, 'id', 'desa_adat_id');
+        return $this->belongsTo(DesaAdat::class, 'desa_adat_id', 'id');
     }
 
 }

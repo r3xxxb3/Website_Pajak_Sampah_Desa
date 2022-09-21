@@ -26,4 +26,8 @@ class Properti extends Model
     public function banjar(){
         return $this->belongsTo(Banjar::class, 'id_banjar', 'id');
     }
+
+    public function banjarAdat(){
+        return $this->belongsTo();
+    }
 }

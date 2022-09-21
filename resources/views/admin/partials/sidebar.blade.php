@@ -32,7 +32,7 @@
       <li class="{{ request()->segment(2) == 'pengguna' ? 'active' : '' }}"><a class="nav-link" href="{{ route('pengguna-index') }}"><i class="fa fa-id-card"></i> <span>Manajemen Pelanggan</span></a></li>
       <li class="menu-header">Retribusi & Pengangkutan</li>
       <li class="{{ request()->segment(2) == 'retribusi' ? 'active' : '' }}"><a class="nav-link" href="{{ route('admin-retribusi-index') }}"><i class="fa fa-receipt"></i> <span>Manajemen Retribusi</span></a></li>
-      <li class=""><a class="nav-link" href=""><i class="fa fa-truck"></i> <span>Request Pengangkutan</span></a></li>
+      <li class="{{ request()->segment(2) == 'request' ? 'active' : '' }}"><a class="nav-link" href="{{ route('admin-request-index') }}"><i class="fa fa-truck"></i> <span>Request Pengangkutan</span ></a></li>
       <li class="menu-header">Pembayaran</li>
       <li class="{{ request()->segment(2) == 'pembayaran' ? 'active' : '' }}"><a class="nav-link" href="{{Route('admin-pembayaran-index')}}"><i class="fa fa-money-bill-wave-alt"></i> <span>Manajemen Pembayaran</span></a></li>
       <li class="menu-header">Reporting</li>

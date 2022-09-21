@@ -193,14 +193,32 @@ $("#file").change(function() {
                     </div>
                     <div class="row">
                         <div class="col">
-                            <label for="banjar" class="font-weight-bold text-dark">Banjar</label>
-                            <input type="text" class="form-control @error('banjar') is-invalid @enderror" id="banjar" name="banjar" placeholder="Masukan Banjar Properti (opsional)" value="{{old('banjar')}}">
-                                @error('banjar')
+                            <label for="desaAdat" class="font-weight-bold text-dark">Desa Adat</label>
+                                <input type="text" class="form-control @error('desaAdat') is-invalid @enderror" list="desadata" id="desaAdat" name="desaAdat" placeholder="Masukan Desa Adat dari Properti" value="{{old('desaAdat')}}" {{!is_null(old('desaAdat')) ? '' : 'disabled'  }}>
+                                    <datalist id="desadata">
+                                        @if($desa != [])
+                                            @foreach($desaAdat as $b)
+                                                <option value="{{$b->desadat_nama}}">
+                                            @endforeach
+                                        @endif
+                                    </datalist>
+                                    @error('desaAdat')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                        </div>
+                        <div class="col">
+                            <label for="banjarAdat" class="font-weight-bold text-dark">Banjar Adat</label>
+                            <input type="text" class="form-control @error('banjarAdat') is-invalid @enderror" id="banjarAdat" name="banjarAdat" placeholder="Masukan Banjar Adat Properti " value="{{old('banjarAdat')}}">
+                                @error('banjarAdat')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>    
                                 @enderror
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col">
                             <label for="alamat" class="font-weight-bold text-dark">Alamat Properti<i class="text-danger text-sm text-bold">*</i></label>
                             <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" placeholder="Masukan Alamat Properti" value="{{old('alamat')}}">

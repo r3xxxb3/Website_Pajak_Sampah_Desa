@@ -27,12 +27,6 @@
             success : (res) => {
                 if(!res.error){
                     swal("Success", "Data Penduduk Ditemukan !", "success").then(function(){
-                        $("#nama").removeAttr('disabled');
-                        $("#no").removeAttr('disabled');
-                        $("#tanggal").removeAttr('disabled');
-                        $("#alamat").removeAttr('disabled');
-                        $("#jenis").removeAttr('disabled');
-                        $("#desa").removeAttr('disabled');
                         $("#username").removeAttr('disabled');
                         $("#password").removeAttr('disabled');
                         $("#passcheck").removeAttr('disabled');
@@ -53,16 +47,6 @@
                     })
                 }else{
                     swal("Error", "Data Penduduk Tidak Ditemukan !", "error").then(function(){ 
-                        $("#nama").removeAttr('disabled');
-                        $("#no").removeAttr('disabled');
-                        $("#tanggal").removeAttr('disabled');
-                        $("#alamat").removeAttr('disabled');
-                        $("#jenis").removeAttr('disabled');
-                        $("#desa").removeAttr('disabled');
-                        $("#username").removeAttr('disabled');
-                        $("#password").removeAttr('disabled');
-                        $("#passcheck").removeAttr('disabled');
-                        $("#sub").removeClass('disabled');
 
                         $("#desa").val(null);
                         $("#nama").val(null);
@@ -165,12 +149,12 @@
 
                         <div class="row mb-3 ">
                             <div class='col mb-2'>
-                                <label for="desa" class="font-weight-bold text-dark">desa</label>
-                                <input type="text" class="form-control @error('desa') is-invalid @enderror" list="desadata" id="desa" name="desa" placeholder="Masukan desa (Tempat Tinggal)" value="{{old('desa')}}" {{!is_null(old('desa')) ? '' : 'disabled'  }}>
+                                <label for="desa" class="font-weight-bold text-dark">Desa Adat</label>
+                                <input type="text" class="form-control @error('desa') is-invalid @enderror" list="desadata" id="desa" name="desa" placeholder="Masukan desa adat (Tempat Tinggal)" value="{{old('desa')}}" {{!is_null(old('desa')) ? '' : 'disabled'  }}>
                                     <datalist id="desadata">
                                         @if($desa != [])
                                             @foreach($desa as $b)
-                                                <option value="{{$b->name}}">
+                                                <option value="{{$b->desadat_nama}}">
                                             @endforeach
                                         @endif
                                     </datalist>

@@ -8,8 +8,13 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Pengguna;
 use App\Banjar;
+use App\BanjarAdat;
 use App\Desa;
+use App\DesaAdat;
 use App\Kependudukan;
+use App\KramaMipil;
+use App\KramaTamiu;
+use App\Tamiu;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -73,7 +78,7 @@ class AuthController extends Controller
     }
 
     public function registerPage(){
-        $desa = Desa::all();
+        $desa = DesaAdat::all();
         return view('auth.register', compact('desa'));
     }
 
@@ -118,10 +123,23 @@ class AuthController extends Controller
     
     public function registerSearch(Request $request){
         $cpelanggan = Kependudukan::where('nik', $request->nik)->first();
+
         if(!is_null($cpelanggan)){
-            $desa = Desa::where('id', $cpelanggan->desa_id)->first();
-            if(!is_null($desa)){
-                $data['desa'] = $desa->name;
+            $checkKrama = KramaMipil::where('penduduk_id', $cpelanggan->id)->first();
+            if(!isset($checkKrama)){
+                $checkKrama = KramaTamiu::where('penduduk_id', $cpelanggan->id)->first();
+                if(!isset($checkKrama)){
+                    $checkKrama = Tamiu::where('penduduk_id', $cpelanggan->id)->first();
+                }
+            }
+            
+            $banjarAdat = BanjarAdat::where('id',$checkKrama->banjar_adat_id)->first();
+            
+            if(isset($banjarAdat)){
+                $desaAdat = DesaAdat::where('id',$banjarAdat->desa_adat_id)->first();
+            }
+            if(!is_null($desaAdat)){
+                $data['desa'] = $desaAdat->desadat_nama;
             }
             $data['nama'] = $cpelanggan->nama;
             $data['tanggal_lahir'] = $cpelanggan->tanggal_lahir ;

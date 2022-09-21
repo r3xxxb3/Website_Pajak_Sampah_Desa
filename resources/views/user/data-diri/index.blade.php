@@ -7,7 +7,7 @@ Data Diri
 @section('content')
 <section class="section">
     <div class="section-header">
-        <h1>Manajemen Data Diri</h1>
+        <h1>Info Data Diri</h1>
     </div>
 
     <div class="section-body">
@@ -32,13 +32,6 @@ Data Diri
             <form method="POST" enctype="multipart/form-data" action="{{route('data-update', $pengguna->id)}}">
             @csrf
             <div class="card shadow">
-                <div class="form-group card-header shadow">
-                    <div class="row">
-                        <div class="col">
-                            <h3 class="font-weight-bold text-primary"><i class="fas fa-pen"></i>Edit Data Diri</h3>
-                        </div>
-                    </div>
-                </div>
                 <div class="form-group card-body">    
                     <div class="row">
                         <!-- <div class='col mb-2'>
@@ -52,7 +45,7 @@ Data Diri
                         </div> -->
                         <div class="col mb-2">
                             <label for="nik" class="font-weight-bold text-dark">NIK<i class="text-danger text-sm text-bold">*</i></label>
-                            <input type="text" class="form-control @error('nik') is-invalid @enderror" id="nik" name="nik" placeholder="Masukan No Induk Kependudukan" value="{{$pengguna->kependudukan->nik}}">
+                            <input type="text" class="form-control @error('nik') is-invalid @enderror" id="nik" name="nik" placeholder="Masukan No Induk Kependudukan" value="{{$pengguna->kependudukan->nik}}" disabled>
                                 @error('nik')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -61,7 +54,7 @@ Data Diri
                         </div>
                         <div class="col mb-2">
                             <label for="nama" class="font-weight-bold text-dark">Nama Lengkap<i class="text-danger text-sm text-bold">*</i></label>
-                            <input type="nama" class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama" placeholder="Masukan Nama Lengkap Pengguna" value="{{$pengguna->kependudukan->nama}}">
+                            <input type="nama" class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama" placeholder="Masukan Nama Lengkap Pengguna" value="{{$pengguna->kependudukan->nama}}" disabled>
                                 @error('nama')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -72,7 +65,7 @@ Data Diri
                     <div class="row">
                         <div class='col mb-2'>
                             <label for="jenis" class="font-weight-bold text-dark">Jenis Kelamin<i class="text-danger text-sm text-bold">*</i></label>
-                            <select class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="jenis">
+                            <select class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="jenis" disabled>
                                 <option value="" selected>Pilih Jenis Kelamin</option>
                                     <option value="Pria" {{$pengguna->kependudukan->jenis_kelamin == 'laki-laki' ? 'selected' : ''}}>laki-laki</option>
                                     <option value="Wanita" {{$pengguna->kependudukan->jenis_kelamin == 'perempuan' ? 'selected' : ''}}>perempuan</option>
@@ -85,41 +78,66 @@ Data Diri
                         </div>
                         <div class="col mb-2">
                             <label for="tanggal" class="font-weight-bold text-dark">Tanggal Lahir</label>
-                            <input type="date" class="form-control @error('tanggal') is-invalid @enderror" id="tanggal" name="tanggal" placeholder="Masukan Tanggal Lahir" value="{{$pengguna->kependudukan->tanggal_lahir}}">
+                            <input type="date" class="form-control @error('tanggal') is-invalid @enderror" id="tanggal" name="tanggal" placeholder="Masukan Tanggal Lahir" value="{{$pengguna->kependudukan->tanggal_lahir}}" disabled>
                                 @error('tanggal')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>    
                                 @enderror
                         </div>
-                        <div class="col mb-2">
-                            <label for="alamat" class="font-weight-bold text-dark">Alamat</label>
-                            <input type="text" class="form-control @error('alamat') is-invalid @enderror"  id="alamat" name="alamat" placeholder="Masukan Alamat Penggunan" value="{{$pengguna->kependudukan->alamat}}">
-                                @error('alamat')
+                        <div class='col mb-2'>
+                            <label for="no" class="font-weight-bold text-dark">No Telpon</label>
+                            <input type="text" class="form-control @error('no') is-invalid @enderror" id="no" name="no" placeholder="Masukan No Telpon Aktif" value="{{$pengguna->kependudukan->telepon}}" disabled>
+                                @error('no')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
-                                </span>    
+                                </span>
                                 @enderror
                         </div>
                     </div>
                     
                     <div class="row mb-3">
                         <div class='col mb-2'>
-                            <label for="banjar" class="font-weight-bold text-dark">Banjar</label>
-                            <input type="text" class="form-control @error('banjar') is-invalid @enderror" id="banjar" name="banjar" placeholder="Masukan Banjar (Tempat Tinggal)" value="{{isset($pengguna->kependudukan->mipil) ? $pengguna->kependudukan->mipil->banjarAdat->nama_banjar_adat : (isset($pengguna->kependudukan->kTamiu) ? $pengguna->kependudukan->kTamiu->banjarAdat->nama_banjar_adat : (isset($pengguna->kependudukan->tamiu) ? $pengguna->kependudukan->tamiu->banjarAdat->nama_banjar_adat : '' )) }}">
+                                <label for="desa" class="font-weight-bold text-dark">Desa Adat</label>
+                                <input type="text" class="form-control @error('desa') is-invalid @enderror" list="desadata" id="desa" name="desa" placeholder="Masukan desa adat (Tempat Tinggal)" value="{{isset($pengguna->kependudukan->mipil) ? $pengguna->kependudukan->mipil->banjarAdat->desaAdat->desadat_nama : (isset($pengguna->kependudukan->kTamiu) ? $pengguna->kependudukan->kTamiu->banjarAdat->desaAdat->desadat_nama : (isset($pengguna->kependudukan->tamiu) ? $pengguna->kependudukan->tamiu->banjarAdat->desaAdat->desadat_nama : '' )) }}" disabled>
+                                    <datalist id="desadata">
+                                        @if($desaAdat != [])
+                                            @foreach($desaAdat as $d)
+                                                <option value="{{$d->desadat_nama}}">
+                                            @endforeach
+                                        @endif
+                                    </datalist>
+                                    @error('desa')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                            </div>
+                        <div class='col mb-2'>
+                            <label for="banjar" class="font-weight-bold text-dark">Banjar Adat</label>
+                            <input type="text" class="form-control @error('banjar') is-invalid @enderror" id="banjar" name="banjar" list="banjardata" placeholder="Masukan Banjar (Tempat Tinggal)" value="{{isset($pengguna->kependudukan->mipil) ? $pengguna->kependudukan->mipil->banjarAdat->nama_banjar_adat : (isset($pengguna->kependudukan->kTamiu) ? $pengguna->kependudukan->kTamiu->banjarAdat->nama_banjar_adat : (isset($pengguna->kependudukan->tamiu) ? $pengguna->kependudukan->tamiu->banjarAdat->nama_banjar_adat : '' )) }}" disabled>
+                                <datalist id="banjardata">
+                                        @if($banjarAdat != [])
+                                            @foreach($banjarAdat as $b)
+                                                <option value="{{$b->nama_banjar_adat}}">
+                                            @endforeach
+                                        @endif
+                                    </datalist>
                                 @error('banjar')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
                         </div>
-                        <div class='col mb-2'>
-                            <label for="no" class="font-weight-bold text-dark">No Telpon</label>
-                            <input type="text" class="form-control @error('no') is-invalid @enderror" id="no" name="no" placeholder="Masukan No Telpon Aktif" value="{{$pengguna->kependudukan->telepon}}">
-                                @error('no')
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col mb-2">
+                            <label for="alamat" class="font-weight-bold text-dark">Alamat</label>
+                            <input type="text" class="form-control @error('alamat') is-invalid @enderror"  id="alamat" name="alamat" placeholder="Masukan Alamat Penggunan" value="{{$pengguna->kependudukan->alamat}}" disabled>
+                                @error('alamat')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
-                                </span>
+                                </span>    
                                 @enderror
                         </div>
                     </div>
@@ -137,7 +155,7 @@ Data Diri
                     </div> -->
 
                     <div class="row">
-                        <div class="col">
+                        <div class="col" hidden>
                             <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda Yakin Ingin Menambah Data?')"><i class="fas fa-save"></i> Simpan</button>
                             <a href="{{route('user-dashboard')}}" class="btn btn-danger"><i class="fas fa-times"></i> Cancel</a>
                         </div>

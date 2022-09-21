@@ -10,6 +10,8 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Pengguna;
 use App\Banjar;
+use App\BanjarAdat;
+use App\DesaAdat;
 use App\Pegawai;
 use App\Notifications\PropertiNotif;
 use File;
@@ -20,19 +22,16 @@ class UserController extends Controller
 
     public function dataIndex(){
         $pengguna = Pengguna::where('id', Auth()->guard('web')->user()->id)->first();
-        return view('user.data-diri.index', compact('pengguna'));
+        $desaAdat= DesaAdat::all();
+        $banjarAdat = BanjarAdat::all();
+        return view('user.data-diri.index', compact('pengguna', 'desaAdat' ,'banjarAdat'));
     }
 
     public function dataUpdate(Request $request){
         $pengguna = Pengguna::where('id', Auth()->guard('web')->user()->id)->first();
 
         if($pengguna!= null){
-            $banjar = Banjar::where('nama_banjar_dinas', 'LIKE' , $request->banjar)->first();
-            
-            if($banjar!=null){
-                $pengguna->id_banjar = $banjar->id;
-            }
-
+            $banjarAdat = BanjarAdat::where('nama_banjar_adat', 'LIKE' , $request->banjar)->first();
             $pengguna->alamat = $request->alamat;
             $pengguna->nik = $request->nik ;
             $pengguna->nama_pengguna = $request->nama ;
@@ -49,12 +48,15 @@ class UserController extends Controller
     public function properti(){
         // dd(Auth::guard('web')->user()->id);
         $index = Properti::where('id_pengguna', Auth::guard('web')->user()->id)->get();
-        return view('user.properti.index', compact('index'));
+        $banjarAdat = BanjarAdat::all();
+        $desaAdat = DesaAdat::all();
+        return view('user.properti.index', compact('index', 'banjarAdat', 'desaAdat'));
     }
 
     public function propertiCreate(){
         $jenis = JenisJasa::all();
-        return view('user.properti.create', compact('jenis'));
+        $desaAdat = DesaAdat::all();
+        return view('user.properti.create', compact('jenis', 'desaAdat'));
     }
 
     public function propertiStore(Request $request){
@@ -110,7 +112,9 @@ class UserController extends Controller
     public function propertiEdit($id){
         $jenis = Jenisjasa::all();
         $properti = Properti::where('id', $id)->first();
-        return view('user.properti.edit', compact('properti', 'jenis'));
+        $banjarAdat = BanjarAdat::all();
+        $desaAdat = DesaAdat::all();
+        return view('user.properti.edit', compact('properti', 'jenis', 'desaAdat'));
     }
 
     public function propertiUpdate($id, Request $request){
@@ -204,6 +208,26 @@ class UserController extends Controller
                 return redirect()->route('properti-index')->with('success', 'Data Properti berhasil dihapus !');
             }
 
+        }
+    }
+
+    public function banjarCheck(Request $request){
+        $desa = DesaAdat::where('id', $request->desa)->first();
+        if(isset($desa)){
+            $banjar = BanjarAdat::where('desa_adat_id', $desa->id)->get();
+            if(!$banjar->isEmpty()){
+                $data['banjar'] = $banjar;
+                $data['status'] = "success";
+    
+                return response()->json($data, 200);
+            }else{
+                $data['status'] = "Data banjar tidak ditemukan !";
+    
+                return response()->json($data, 200);
+            }
+        }else{
+            $data['status'] = "Data desa adat tidak ditemukan !";
+            return response()->json($data, 200);
         }
     }
 }

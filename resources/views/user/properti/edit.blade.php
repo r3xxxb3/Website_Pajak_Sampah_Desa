@@ -53,7 +53,6 @@ $(document).ready(function() {
         ]).addTo(markerGroup);
     
     });
-   
 
 })
 
@@ -76,6 +75,49 @@ $(document).ready(function() {
 $("#file").change(function() {
   readURL(this);
 });
+</script>
+
+<script>
+    $('#desa').on('change', function(e){
+        e.preventDefault();
+        const desa = $('#desa').val();
+        console.log(desa);
+
+        $.ajax({
+            method : 'POST',
+            url : '/user/banjar/search',
+            data : {
+            "_token" : "{{ csrf_token() }}",
+            desa : desa,
+            },
+            beforeSend : function() {
+                        
+            },
+            success : (res) => {
+                if(res.status == "success"){
+                    $('#banjar').removeAttr('disabled');
+                    $('#banjar option').remove();
+                    // console.log(res);
+                    select = document.getElementById('banjar');
+                    $.each(res.banjar, function(k, v){
+                        // console.log(v.nama_banjar_adat);
+                        var opt = document.createElement('option');
+                        opt.value = v.id;
+                        opt.innerHTML = v.nama_banjar_adat;
+                        select.appendChild(opt);
+                    })
+                }else{
+                    $('#banjar').attr('disabled');
+                    $('#banjar option').remove();
+                    select = document.getElementById('banjar');
+                    var opt = document.createElement('option');
+                        opt.value = null;
+                        opt.innerHTML = res.status;
+                        select.appendChild(opt);
+                }
+            }
+        }).done(()=>{})
+    });
 </script>
 @endsection
 
@@ -192,14 +234,45 @@ $("#file").change(function() {
                         @endif
                     </div>
                     <div class="row">
+                        <div class='col mb-2'>
+                                <label for="desa" class="font-weight-bold text-dark">Desa Adat</label>
+                                <select class="form-control @error('desa') is-invalid @enderror" id="desa" name="desa" >
+                                    <option value="">Pilih Desa Adat</option>
+                                        @foreach($desaAdat as $d)
+                                            <option value="{{$d->id}}" {{isset($properti->id_banjar_adat) ? ($properti->banjarAdat->desaAdat->id == $d->id ? 'selected' : '') : '' }}>{{$d->desadat_nama}}</option>
+                                        @endforeach
+                                </select>
+                                <!-- <input type="text" class="form-control @error('desa') is-invalid @enderror" list="desadata" id="" name="" placeholder="Masukan desa adat (Tempat Tinggal)" value="" >
+                                    <datalist id="desadata">
+                                    </datalist> -->
+                                    @error('desa')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                            </div>
                         <div class="col">
-                            <label for="banjar" class="font-weight-bold text-dark">Banjar</label>
-                            <input type="text" class="form-control @error('banjar') is-invalid @enderror" id="banjar" name="banjar" placeholder="Masukan Banjar Properti (opsional)" value="{{isset($properti->id_banjar) ? $properti->banjar->first()->nama_banjar_dinas : old('banjar')}}" >
+                            <label for="banjar" class="font-weight-bold text-dark">Banjar Adat</label>
+                            @if(isset($properti->id_banjar_adat))
+                                <select class="form-control @error('banjar') is-invalid @enderror" id="banjar" name="banjar" disabled>
+                                    <option value="" selected>Pilih Banjar Adat</option>
+                                        @foreach($banjarAdat as $b)
+                                            <option value="{{$b->id}}" {{isset($properti->id_banjar_adat) ? ($properti->banjarAdat->id == $b->id ? 'selected' : '') : '' }}>{{$b->nama_banjar_adat}}</option>
+                                        @endforeach
+                                </select>
+                            @else
+                                <select class="form-control @error('banjar') is-invalid @enderror" id="banjar" name="banjar" disabled>
+                                    <option value="" selected>Pilih Banjar Adat</option>
+                                </select>
+                            @endif
+                            <!-- <input type="text" class="form-control @error('banjar') is-invalid @enderror" id="" name="" placeholder="Masukan Banjar Properti (opsional)" value="" >
+                                <datalist id="banjardata">
+                                </datalist>
                                 @error('banjar')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>    
-                                @enderror
+                                @enderror -->
                         </div>
                         <div class="col">
                             <label for="alamat" class="font-weight-bold text-dark">Alamat Properti<i class="text-danger text-sm text-bold">*</i></label>

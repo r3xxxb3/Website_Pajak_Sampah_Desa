@@ -125,7 +125,13 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::get('/retribusi/verif/{id}', 'Admin\RetribusiController@verif')->name('admin-retribusi-verif');
 
     //Manajemen Request
-
+    Route::get('/request', 'Admin\RequestController@index')->name('admin-request-index');
+    Route::get('/request/create', 'Admin\RequestController@create')->name('admin-request-create');
+    Route::post('/request/store', 'Admin\RequestController@store')->name('admin-request-store');
+    Route::get('/request/edit', 'Admin\RequestController@edit')->name('admin-request-store');
+    Route::post('/request/update/{id}', 'Admin\RequestController@update')->name('admin-request-update');
+    Route::get('/retribusi/verif/{id}', 'Admin\RequestController@verif')->name('admin-request-verif');
+    Route::post('/request/verif-many', 'Admin\RequestController@verifMany')->name('admin-request-verif-many');
 
     //Manajemen Pembayaran
     Route::get('/pembayaran', 'Admin\PembayaranController@index')->name('admin-pembayaran-index');
@@ -168,6 +174,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user'] , function(){
     Route::post('/properti/update/{id}', 'User\UserController@propertiUpdate')->name('properti-update');
     Route::post('/properti/cancel/{id}', 'User\UserController@propertiCancel')->name('properti-cancel');
     Route::get('/properti/delete/{id}', 'User\UserController@propertiDelete')->name('properti-delete');
+    Route::post('/banjar/search', 'User\UserController@banjarCheck')->name('banjar-search');
 
     //Retribusi
     Route::get('/retribusi', 'User\RetribusiController@index')->name('retribusi-index');
