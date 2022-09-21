@@ -83,6 +83,49 @@ $("#file").change(function() {
   readURL(this);
 });
 </script>
+
+<script>
+    $('#desa').on('change', function(e){
+        e.preventDefault();
+        const desa = $('#desa').val();
+        console.log(desa);
+
+        $.ajax({
+            method : 'POST',
+            url : '/user/banjar/search',
+            data : {
+            "_token" : "{{ csrf_token() }}",
+            desa : desa,
+            },
+            beforeSend : function() {
+                        
+            },
+            success : (res) => {
+                if(res.status == "success"){
+                    $('#banjar').removeAttr('disabled');
+                    $('#banjar option').remove();
+                    // console.log(res);
+                    select = document.getElementById('banjar');
+                    $.each(res.banjar, function(k, v){
+                        // console.log(v.nama_banjar_adat);
+                        var opt = document.createElement('option');
+                        opt.value = v.id;
+                        opt.innerHTML = v.nama_banjar_adat;
+                        select.appendChild(opt);
+                    })
+                }else{
+                    $('#banjar option').remove();
+                    select = document.getElementById('banjar');
+                    var opt = document.createElement('option');
+                    opt.value = null;
+                    opt.innerHTML = res.status;
+                    select.appendChild(opt);
+                    $('#banjar').attr('disabled');
+                }
+            }
+        }).done(()=>{})
+    });
+</script>
 @endsection
 
 @section('content')
@@ -191,17 +234,17 @@ $("#file").change(function() {
                                 @enderror
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mb-2">
                         <div class="col">
-                            <label for="desaAdat" class="font-weight-bold text-dark">Desa Adat</label>
-                                <input type="text" class="form-control @error('desaAdat') is-invalid @enderror" list="desadata" id="desaAdat" name="desaAdat" placeholder="Masukan Desa Adat dari Properti" value="{{old('desaAdat')}}" {{!is_null(old('desaAdat')) ? '' : 'disabled'  }}>
-                                    <datalist id="desadata">
-                                        @if($desa != [])
-                                            @foreach($desaAdat as $b)
-                                                <option value="{{$b->desadat_nama}}">
-                                            @endforeach
-                                        @endif
-                                    </datalist>
+                            <label for="desaAdat" class="font-weight-bold text-dark">Desa Adat<i class="text-danger text-sm text-bold">*</i></label>
+                                <select type="text" class="form-control @error('desaAdat') is-invalid @enderror"  id="desa" name="desa" placeholder="Pilih Desa Adat dari Properti" value="{{old('desaAdat')}}">
+                                    <option value="">Pilih Desa Adat !</option>
+                                    @if($desaAdat != [])
+                                        @foreach($desaAdat as $d)
+                                            <option value="{{$d->id}}">{{$d->desadat_nama}}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
                                     @error('desaAdat')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -209,13 +252,10 @@ $("#file").change(function() {
                                     @enderror
                         </div>
                         <div class="col">
-                            <label for="banjarAdat" class="font-weight-bold text-dark">Banjar Adat</label>
-                            <input type="text" class="form-control @error('banjarAdat') is-invalid @enderror" id="banjarAdat" name="banjarAdat" placeholder="Masukan Banjar Adat Properti " value="{{old('banjarAdat')}}">
-                                @error('banjarAdat')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>    
-                                @enderror
+                            <label for="banjar" class="font-weight-bold text-dark">Banjar Adat</label>
+                                <select class="form-control @error('banjar') is-invalid @enderror" id="banjar" name="banjar" disabled>
+                                    <option value="" selected>Pilih Desa Adat terlebih dahulu !</option>
+                                </select>
                         </div>
                     </div>
                     <div class="row">

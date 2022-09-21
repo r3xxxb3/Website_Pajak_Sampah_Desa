@@ -186,14 +186,14 @@ class PenggunaController extends Controller
     }
 
     public function edit($id){
-        $kota = Kota::all();
-        $desa = Desa::all();
+        $desaAdat = DesaAdat::all();
+        $banjarAdat = BanjarAdat::all();
         $pengguna = Pengguna::where('id', $id)->first();
         $jenis = JenisJasa::all();
         $index = Properti::where('id_pengguna', $pengguna->id)->get();
         if($pengguna != null){
             // dd($pengguna);
-            return view('admin.pengguna.edit', compact('pengguna','desa', 'kota', 'index', 'jenis'));
+            return view('admin.pengguna.edit', compact('pengguna', 'index', 'jenis', 'desaAdat', 'banjarAdat'));
         }else{
             return redirect()->route('pengguna-index')->with('error', 'Data Pelanggan Tidak Ditemukan !');
         }

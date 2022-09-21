@@ -82,11 +82,12 @@ Edit Data Pelanggan
     });
 
 
-function catchProp(properti, jenis){
+function catchProp(properti, jenis, desa, banjar){
     console.log(properti);
     // console.log(pengguna);
     console.log(jenis);
-
+    console.log(desa);
+    console.log(banjar);
     // var markerGroupEdit = L.layerGroup().addTo(map_edit);
 
     markerGroupEdit.clearLayers();
@@ -110,7 +111,8 @@ function catchProp(properti, jenis){
     $('#alamat_edit').val(properti.alamat);
     $('#lat_edit').val(properti.lat);
     $('#lng_edit').val(properti.lng);
-    $('#banjar_edit').val(properti.banjar);
+    $('#desa_edit').val(desa);
+    $('#banjar_edit').val(banjar);
     $('#jenis_edit').val(properti.id_jenis);
     $('#lat_edit').val(properti.lat);
     $('#lng_edit').val(properti.lng);
@@ -366,7 +368,7 @@ $(document).ready( function () {
                         <tr>
                             
                             <td align="center">
-                                <a  data-toggle="modal" data-target="#modal-edit" class="btn btn-info btn-sm text-white" onClick="catchProp({{$properti}}, {{$properti->jasa}} )"><i class="fas fa-pencil-alt"></i></a>
+                                <a  data-toggle="modal" data-target="#modal-edit" class="btn btn-info btn-sm text-white" onClick="catchProp({{$properti}}, {{$properti->jasa}}, {{$properti->id_desa_adat}}, {{$properti->id_banjar_adat }})"><i class="fas fa-pencil-alt"></i></a>
                                 <a style="margin-right:7px" class="btn btn-danger btn-sm" href="{{Route('admin-properti-delete', $properti->id)}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
                             </td>
                             <td>
@@ -602,19 +604,38 @@ $(document).ready( function () {
                                 @endif
                             </div>
                             <div class="row">
+                                <div class='col mb-2'>
+                                        <label for="desa_edit" class="font-weight-bold text-dark">Desa Adat</label>
+                                        <select class="form-control @error('desa_edit') is-invalid @enderror" id="desa_edit" name="desa_edit" disabled>
+                                            <option value="">Pilih Desa Adat</option>
+                                                @foreach($desaAdat as $d)
+                                                    <option value="{{$d->id}}" >{{$d->desadat_nama}}</option>
+                                                @endforeach
+                                        </select>
+                                            @error('desa')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                    </div>
                                 <div class="col">
-                                    <label for="banjar_edit" class="font-weight-bold text-dark">Banjar</label>
-                                    <input type="text" class="form-control @error('banjar') is-invalid @enderror" id="banjar_edit" name="banjar_edit" placeholder="Masukan Banjar Properti (opsional)" value="" disabled>
-                                        @error('banjar')
+                                    <label for="banjar_edit" class="font-weight-bold text-dark">Banjar Adat</label>
+                                        <select class="form-control @error('banjar_edit') is-invalid @enderror" id="banja_edit" name="banjar_edit" disabled>
+                                            <option value="" selected>Pilih Desa Adat terlebih dahulu !</option>
+                                                @foreach($banjarAdat as $b)
+                                                    <option value="{{$b->id}}">{{$b->nama_banjar_adat}}</option>
+                                                @endforeach
+                                        </select>
+                                        @error('banjar_edit')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>    
                                         @enderror
                                 </div>
                                 <div class="col">
-                                    <label for="alamat_edit" class="font-weight-bold text-dark">Alamat Properti</label>
-                                    <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat_edit" name="alamat_edit" placeholder="Masukan Alamat Properti" value="" disabled>
-                                        @error('alamat_edit')
+                                    <label for="alamat" class="font-weight-bold text-dark">Alamat Properti<i class="text-danger text-sm text-bold">*</i></label>
+                                    <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" placeholder="Masukan Alamat Properti" value="{{isset($properti->alamat) ? $properti->alamat : old('alamat')}}" >
+                                        @error('alamat')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>    

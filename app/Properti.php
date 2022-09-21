@@ -23,11 +23,7 @@ class Properti extends Model
         return $this->belongsTo(JenisJasa::class, 'id_jenis', 'id');
     }
 
-    public function banjar(){
-        return $this->belongsTo(Banjar::class, 'id_banjar', 'id');
-    }
-
     public function banjarAdat(){
-        return $this->belongsTo();
+        return $this->belongsTo(BanjarAdat::class, 'id_banjar_adat', 'id');
     }
 }

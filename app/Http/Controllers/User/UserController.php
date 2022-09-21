@@ -69,6 +69,7 @@ class UserController extends Controller
         $this->validate($request, [
             'jenis' => 'required',
             'nama' => 'required',
+            'desa' => 'required',
             'alamat' => 'required',
             'file' => 'max:5120',
         ],$messages);
@@ -91,6 +92,8 @@ class UserController extends Controller
         $properti->id_jenis = $request->jenis;
         $properti->lat = $request->lat;
         $properti->lng = $request->lng;
+        $properti->id_desa_adat = $request->desa;
+        $properti->id_banjar_adat = $request->banjar;
         $properti->status = "Pending";
         $properti->id_pengguna = Auth::guard('web')->user()->id;
         $properti->jumlah_kamar = $request->kamar;
@@ -127,6 +130,7 @@ class UserController extends Controller
         $this->validate($request, [
             'jenis' => 'required',
             'nama' => 'required',
+            'desa' => 'required',
             'alamat' => 'required',
             'file' => 'max:5120',
         ],$messages);
@@ -155,6 +159,8 @@ class UserController extends Controller
             $properti->lat = $request->lat;
             $properti->lng = $request->lng;
             $properti->nama_properti = $request->nama;
+            $properti->id_desa_adat = $request->desa;
+            $properti->id_banjar_adat = $request->banjar;
             $properti->alamat = $request->alamat;
             if($properti->id_jenis != $request->jenis){
                 $properti->id_jenis = $request->jenis;

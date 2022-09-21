@@ -239,7 +239,7 @@ $("#file").change(function() {
                                 <select class="form-control @error('desa') is-invalid @enderror" id="desa" name="desa" >
                                     <option value="">Pilih Desa Adat</option>
                                         @foreach($desaAdat as $d)
-                                            <option value="{{$d->id}}" {{isset($properti->id_banjar_adat) ? ($properti->banjarAdat->desaAdat->id == $d->id ? 'selected' : '') : '' }}>{{$d->desadat_nama}}</option>
+                                            <option value="{{$d->id}}" {{isset($properti->id_desa_adat) ? ($properti->id_desa_adat == $d->id ? 'selected' : '')  : '' }}>{{$d->desadat_nama}}</option>
                                         @endforeach
                                 </select>
                                 <!-- <input type="text" class="form-control @error('desa') is-invalid @enderror" list="desadata" id="" name="" placeholder="Masukan desa adat (Tempat Tinggal)" value="" >
@@ -262,7 +262,7 @@ $("#file").change(function() {
                                 </select>
                             @else
                                 <select class="form-control @error('banjar') is-invalid @enderror" id="banjar" name="banjar" disabled>
-                                    <option value="" selected>Pilih Banjar Adat</option>
+                                    <option value="" selected>Pilih Desa Adat terlebih dahulu !</option>
                                 </select>
                             @endif
                             <!-- <input type="text" class="form-control @error('banjar') is-invalid @enderror" id="" name="" placeholder="Masukan Banjar Properti (opsional)" value="" >
@@ -274,6 +274,8 @@ $("#file").change(function() {
                                 </span>    
                                 @enderror -->
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col">
                             <label for="alamat" class="font-weight-bold text-dark">Alamat Properti<i class="text-danger text-sm text-bold">*</i></label>
                             <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" placeholder="Masukan Alamat Properti" value="{{isset($properti->alamat) ? $properti->alamat : old('alamat')}}" >
