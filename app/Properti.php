@@ -13,14 +13,18 @@ class Properti extends Model
 
     protected $table = 'tb_properti';
 
-    protected $fillable = ['id_pengguna', 'id_jenis', 'id_banjar', 'alamat', 'status', 'nama_properti', 'file', 'jumlah_kamar'];
+    protected $fillable = ['id_pengguna', 'id_jenis', 'id_desa_adat' ,'id_banjar_adat', 'alamat', 'status', 'nama_properti', 'file', 'jumlah_kamar'];
 
     public function pengguna(){
-        return $this->belongsTo(Pengguna::class, 'id', 'id_pengguna');
+        return $this->belongsTo(Pengguna::class, 'id_pengguna', 'id');
     }
 
     public function jasa(){
         return $this->belongsTo(JenisJasa::class, 'id_jenis', 'id');
+    }
+
+    public function desaAdat(){
+        return $this->belongsTo(DesaAdat::class, 'id_desa_adat', 'id');
     }
 
     public function banjarAdat(){
