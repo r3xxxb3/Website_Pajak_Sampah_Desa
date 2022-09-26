@@ -9,6 +9,7 @@ class Retribusi extends Model
 {
     //
     use SoftDeletes;
+    public $timestamps = true;
     protected $table = 'tb_retribusi';
     protected $fillable = ['id_pengguna', 'id_properti', 'status', 'nominal'];
 

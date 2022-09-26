@@ -258,7 +258,7 @@ class PenggunaController extends Controller
             //simpan file
             
             $file = $request->file('file');
-            $images = $pelanggan->nik."_".$request->nama."_".$file->getClientOriginalName();
+            $images = $pelanggan->kependudukan->nik."_".$request->nama."_".$file->getClientOriginalName();
             // dd($images);
             $properti->file = $images;
             $foto_upload = 'assets/img/properti';
@@ -298,7 +298,7 @@ class PenggunaController extends Controller
                     }
                 }
                 $file = $request->file('file_edit');
-                $images = $properti->pengguna->nik."_".$request->nama."_".$file->getClientOriginalName();
+                $images = $properti->pengguna->kependudukan->nik."_".$request->nama."_".$file->getClientOriginalName();
                 // dd($images);
                 $properti->file = $images;
                 $foto_upload = 'assets/img/properti';
@@ -311,13 +311,13 @@ class PenggunaController extends Controller
                 $properti->lng = $request->lat_edit;
                 $properti->id_jenis = $request->jenis_edit;
                 $properti->note = "Admin Mengubah Jenis properti menjadi ".$jenis->jenis_jasa;
-                $properti->status = "Verified";
+                $properti->status = "Terverifikasi";
                 $properti->update();
                 return redirect()->back()->with('success', 'verifikasi Properti berhasil !');
             }else{
                 $properti->lat = $request->lat_edit;
                 $properti->lng = $request->lng_edit;
-                $properti->status = "Verified";
+                $properti->status = "Terverifikasi";
                 $properti->update();
                 return redirect()->back()->with('success', 'verifikasi Properti berhasil !');
             }

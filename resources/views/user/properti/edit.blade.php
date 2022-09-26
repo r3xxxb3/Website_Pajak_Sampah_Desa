@@ -33,6 +33,7 @@ $(document).ready(function() {
         }).addTo(mymap);
 
     var markerGroup = L.layerGroup().addTo(mymap);
+
     @if(isset($properti->lat) && isset($properti->lng))
     const lat = <?php echo $properti->lat?>;
     const lng = <?php echo $properti->lng?>;
@@ -41,6 +42,7 @@ $(document).ready(function() {
         lat, lng
     ]).addTo(markerGroup);
     @endif
+    
     mymap.on('click', function(e) {
         
         markerGroup.clearLayers();
@@ -253,18 +255,15 @@ $("#file").change(function() {
                             </div>
                         <div class="col">
                             <label for="banjar" class="font-weight-bold text-dark">Banjar Adat</label>
-                            @if(isset($properti->id_banjar_adat))
                                 <select class="form-control @error('banjar') is-invalid @enderror" id="banjar" name="banjar" disabled>
                                     <option value="" selected>Pilih Banjar Adat</option>
+                                    @if(isset($properti->id_banjar_adat))
                                         @foreach($banjarAdat as $b)
                                             <option value="{{$b->id}}" {{isset($properti->id_banjar_adat) ? ($properti->banjarAdat->id == $b->id ? 'selected' : '') : '' }}>{{$b->nama_banjar_adat}}</option>
                                         @endforeach
+                                    @endif
                                 </select>
-                            @else
-                                <select class="form-control @error('banjar') is-invalid @enderror" id="banjar" name="banjar" disabled>
-                                    <option value="" selected>Pilih Desa Adat terlebih dahulu !</option>
-                                </select>
-                            @endif
+                            
                             <!-- <input type="text" class="form-control @error('banjar') is-invalid @enderror" id="" name="" placeholder="Masukan Banjar Properti (opsional)" value="" >
                                 <datalist id="banjardata">
                                 </datalist>

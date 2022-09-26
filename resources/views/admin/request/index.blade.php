@@ -34,7 +34,7 @@ List Request Pengangkutan
 
 <section class="section">
     <div class="section-header">
-        <h1>Manajemen Data Pembayaran</h1>
+        <h1>Manajemen Request Pengangkutan</h1>
     </div>
 
   <div class="section-body">
@@ -44,7 +44,7 @@ List Request Pengangkutan
         <!-- Copy drisini -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">List Pembayaran</h6>
+                <h6 class="m-0 font-weight-bold text-primary">List Request Pengangkutan</h6>
             </div>
             <div class="card-body">
             @if (Session::has('error'))
@@ -80,6 +80,28 @@ List Request Pengangkutan
                 </div>
                 @endif
 
+                <div class="table-responsive">
+                    <form action="" method="post">
+                        @csrf
+                        <a class= "btn btn-success text-white mb-2"  ><i class="fas fa-plus"></i> Tambah Request Pengangkutan</a>
+                        <table class="table table-bordered " id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr class="table-primary">
+                                    <th class="col-2 text-center">Action</th>
+                                    <th>Nama Pelanggan</th>
+                                    <th>Alamat</th>
+                                    <th>Nominal </th>
+                                    <th>Tanggal Request </th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody >
+                                <tr>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
                 
             </div>
     </div>

@@ -139,7 +139,7 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::get('/pembayaran/create', 'Admin\PembayaranController@create')->name('admin-pembayaran-create');
     Route::get('/pembayaran/verif/{id}', 'Admin\PembayaranController@verif')->name('admin-pembayaran-verif');
     Route::post('/pembayaran/update/{id}', 'Admin\PembayaranController@update')->name('admin-pembayaran-update');
-    Route::get('/retribusi/delete/{id}', 'Admin\PembayaranController@delete')->name('admin-pembayaran-delete');
+    Route::get('/pembayaran/delete/{id}', 'Admin\PembayaranController@delete')->name('admin-pembayaran-delete');
 
 });
 
@@ -179,6 +179,14 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user'] , function(){
 
     //Retribusi
     Route::get('/retribusi', 'User\RetribusiController@index')->name('retribusi-index');
+
+    //Request
+    Route::get('/request', 'User\RequestController@index')->name('request-index');
+    Route::get('/request/create', 'User\RequestController@create')->name('request-create');
+    Route::post('/request/store', 'User\RequestController@store')->name('request-store');
+    Route::get('/request/edit/{id}', 'User\RequestController@edit')->name('request-edit');
+    Route::post('/request/update/{id}', 'User\RequestController@update')->name('request-update');
+    Route::get('/request/cancel/{id}', 'User\RequestController@cancel')->name('request-cancel');
 
     //Pembayaran
     Route::post('/pembayaran/store', 'User\PembayaranController@store')->name('pembayaran-store');

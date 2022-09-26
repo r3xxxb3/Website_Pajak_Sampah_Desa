@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Pengguna;
-use App\RequestP;
+use App\Pengangkutan;
 use App\Properti;
 use App\JenisJasa;
 use App\Retribusi;
@@ -16,8 +16,8 @@ class RequestController extends Controller
 {
     //
     public function index(){
-        $index = Request::all();
-        
+        $index = Pengangkutan::all();
+        return view('admin.request.index', compact('index'));
     }
 
     public function create(){

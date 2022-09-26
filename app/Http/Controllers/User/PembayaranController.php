@@ -49,7 +49,7 @@ class PembayaranController extends Controller
             //simpan file
             
             $file = $request->file('file');
-            $images = auth()->guard('web')->user()->nik."_".$file->getClientOriginalName();
+            $images = auth()->guard('web')->user()->kependudukan->nik."_".$file->getClientOriginalName();
             // dd($images);
             $pembayaran->bukti_bayar = $images;
             $foto_upload = 'assets/img/bukti_bayar';

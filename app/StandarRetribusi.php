@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class StandarRetribusi extends Model
 {
     //
+    use SoftDeletes;
+    public $timestamps = true;
     protected $table = 'tb_standar_retribusi';
     protected $primaryKey = 'id';
-    use SoftDeletes;
 
     protected $fillable = ['nominal_retribusi', 'durasi'];
 

@@ -44,7 +44,7 @@ class RetribusiCommand extends Command
      */
     public function handle()
     {
-        $properti = Properti::where('status', 'Verified')->get();
+        $properti = Properti::where('status', 'Terverifikasi')->get();
         foreach($properti as $prop){
             print_r($prop->nama_properti);
             $retribusi = Retribusi::where('id_properti', $prop->id)->orderBy('created_at', 'DESC')->first();

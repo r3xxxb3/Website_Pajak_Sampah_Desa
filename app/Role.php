@@ -9,6 +9,7 @@ class Role extends Model
 {
     //
     use SoftDeletes;
+    public $timestamps = true;
     protected $table = "tb_role";
     protected $fillable = ["role"];
 
