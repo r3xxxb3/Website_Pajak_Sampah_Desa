@@ -109,7 +109,7 @@ List Request Pengangkutan
                             <tbody >
                                 @foreach ($index as $i)
                                 <tr>
-                                    <td>
+                                    <td align="center">
                                         <a href="/user/request/edit/{{$i->id}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
                                         <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/user/request/delete/{{$i->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
                                     </td>

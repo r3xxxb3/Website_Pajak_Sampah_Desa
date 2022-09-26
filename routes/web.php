@@ -130,9 +130,10 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::get('/request/create', 'Admin\RequestController@create')->name('admin-request-create');
     Route::post('/request/store', 'Admin\RequestController@store')->name('admin-request-store');
     Route::get('/request/edit', 'Admin\RequestController@edit')->name('admin-request-store');
-    Route::post('/request/update/{id}', 'Admin\RequestController@update')->name('admin-request-update');
-    Route::get('/retribusi/verif/{id}', 'Admin\RequestController@verif')->name('admin-request-verif');
-    Route::post('/request/verif-many', 'Admin\RequestController@verifMany')->name('admin-request-verif-many');
+    Route::get('/request/update/{id}', 'Admin\RequestController@update')->name('admin-request-update');
+    Route::get('/request/confirm/{id}', 'Admin\RequestController@confirm')->name('admin-request-confirm');
+    Route::post('/request/verif', 'Admin\RequestController@verif')->name('admin-request-verif');
+    // Route::post('/request/verif-many', 'Admin\RequestController@verifMany')->name('admin-request-verif-many');
 
     //Manajemen Pembayaran
     Route::get('/pembayaran', 'Admin\PembayaranController@index')->name('admin-pembayaran-index');

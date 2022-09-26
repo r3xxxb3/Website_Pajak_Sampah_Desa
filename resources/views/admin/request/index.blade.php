@@ -5,14 +5,13 @@ List Request Pengangkutan
 @endsection
 
 @section('scripts')
-
 <script>
     $(document).ready( function () {
         $('#dataTable').DataTable({
             "oLanguage":{
                 "sSearch": "Cari:",
                 "sZeroRecords": "Data tidak ditemukan",
-                "sSearchPlaceholder": "Cari pembayaran...",
+                "sSearchPlaceholder": "Cari request...",
                 "infoEmpty": "Menampilkan 0 data",
                 "infoFiltered": "(dari _MAX_ data)",
                 "sLengthMenu": "Tampilkan _MENU_ data",
@@ -25,9 +24,22 @@ List Request Pengangkutan
                 "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
             },
         });
-    } );
-</script>
+    });
 
+    function lihatLokasi(lokasi){
+        // console.log(lokasi);
+        if(lokasi.file != null){
+            $('#prop').attr('src', "{{asset('assets/img/request_p/')}}"+"/"+lokasi.file);
+        }else{
+            $('#prop').attr('src', "{{asset('assets/img/properti/blank.png')}}");
+        }
+    }
+
+    function setRequest(id){
+            $('#idReq').val(id);
+            // console.log(id);
+    }
+</script>
 @endsection
 
 @section('content')
@@ -92,12 +104,47 @@ List Request Pengangkutan
                                     <th>Alamat</th>
                                     <th>Nominal </th>
                                     <th>Tanggal Request </th>
+                                    <th>Lokasi</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody >
+                            @foreach ($index as $i)
                                 <tr>
+                                    <td align="center">
+                                        <a class="btn btn-success btn-sm text-white" onclick="setRequest({{$i}})" data-toggle="modal" data-target="#modal-confirm"  ><i class="fas fa-check-double"></i></a>
+                                        <a class="btn btn-info btn-sm text-white" onclick="swal({title: 'Konfirmasi Request Pengangkutan ?', icon: 'warning', buttons:{cancel: {text: 'Tidak',value: null,visible: true,closeModal: true,},confirm: {text: 'Ya',value: true,visible: true,closeModal: true}}}).then(function(value){if(value){window.location = window.location = '{{Route('admin-request-confirm', $i->id)}}' }})" ><i class="fas fa-check"></i></a>
+                                        <a href="/admin/request/edit/{{$i->id}}" class="btn btn-warning btn-sm"><i class="fas fa-pencil-alt"></i></a>
+                                        <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/request/delete/{{$i->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
+                                    </td>
+                                    <td>
+                                        {{isset($i->pelanggan) ? $i->pelanggan->kependudukan->nama : ''}}
+                                    </td>
+                                    <td>
+                                        {{isset($i) ? $i->alamat : ''}}
+                                    </td>
+                                    <td>
+                                        {{isset($i->nominal) ? $i->nominal : 'Belum Ditetapkan !'}}
+                                    </td>
+                                    <td>
+                                        {{isset($i) ? $i->created_at : ''}}
+                                    </td>
+                                    <td>
+                                        <a class= "btn btn-success text-white mb-2" data-toggle="modal" data-target="#modal-single" onClick="lihatLokasi({{$i}})"><i class="fas fa-eye"></i> Lihat Lokasi</a>
+                                    </td>
+                                    <td>
+                                        @if($i->status == "Pending")
+                                            <span class="badge badge-warning">{{$i->status}}</span>
+                                        @elseif($i->status == "Terkonfirmasi")
+                                            <span class="badge badge-primary">{{$i->status}}</span>
+                                        @elseif($i->status == "Selesai")
+                                            <span class="badge badge-success">{{$i->status}}</span>
+                                        @else
+                                            <span class="badge badge-danger">{{$i->status}}</span>
+                                        @endif
+                                    </td>
                                 </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </form>
@@ -109,5 +156,54 @@ List Request Pengangkutan
 
 </section>
 
+<div class="modal fade" id="modal-single">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div id="myDIV" style="display: block">
+                        <div class="row justify-content-between mb-3">
+                            <div class="col">
+                                <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3 rounded mx-auto d-block" id="prop">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-confirm">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div id="myDIV" style="display: block">
+                        <div class="row justify-content-between mb-3">
+                            <div class="col">
+                                <h6 class="m-0 font-weight-bold text-primary">Verifikasi Request Pengangkutan</h6>
+                            </div>
+                            <form id="konfirmasi" action="{{Route('admin-request-verif')}}" method="post" enctype="multipart/form-data">
+                                <div class="row">
+                                    <div class="col mb-2">
+                                        <input type="text" class="form-control @error('idReq') is-invalid @enderror" id="idReq" name="idReq" hidden>
+                                        <input type="number" class="form-control @error('nominal') is-invalid @enderror disabled" id="nominal" name="Nominal" placeholder="Tentukan Nominal !">
+                                        @error('nominal')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>    
+                                        @enderror
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="row">
+                                <div class="col">
+                                    onclick="swal({title: 'Anda yakin ingin menambahkan pegawai ?', icon: 'warning', buttons:{cancel: {text: 'Tidak',value: null,visible: true,closeModal: true,},confirm: {text: 'Ya',value: true,visible: true,closeModal: true}}}).then(function(value){if(value){$('#pegawai').submit()}})"
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
 
 @endsection

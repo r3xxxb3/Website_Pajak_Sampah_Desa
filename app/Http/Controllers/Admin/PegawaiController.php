@@ -33,6 +33,7 @@ class PegawaiController extends Controller
         // dd($pengguna);
         if($penduduk != null){
             $pegawai = new Pegawai;
+            $pegawai->id_desa_adat = auth()->guard('admin')->user()->kependudukan->mipil->banjarAdat->desaAdat->id;
             $pegawai->id_penduduk = $penduduk->id;
             if($penduduk->telepon != null){
                 $pegawai->username = $penduduk->telepon;

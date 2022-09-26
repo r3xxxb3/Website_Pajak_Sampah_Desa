@@ -77,7 +77,7 @@ Edit Data Pegawai
                     </div>
                     <div class="col mb-2">
                         <label for="role" class="font-weight-bold text-dark">Role</label>
-                        <input type="text" class="form-control @error('nama') is-invalid @enderror disabled" id="role" name="role" placeholder="Masukan Role Pegawai" value="{{$pegawai->role->role}}">
+                        <input type="text" class="form-control @error('nama') is-invalid @enderror disabled" id="role" name="role" placeholder="Masukan Role Pegawai" value="{{isset($pegawai->role) ? $pegawai->role->role : ''}}">
                             @error('role')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
