@@ -1,7 +1,7 @@
 @extends('layouts.admin-master')
 
 @section('title')
-Index Data Pengguna
+Index Data Pegawai
 @endsection
 
 @section('scripts')
@@ -181,7 +181,6 @@ Index Data Pengguna
                 </div>
                 @endif
             <div class="table-responsive">
-            <!-- <a class= "btn btn-success text-white mb-2" href="{{route('pengguna-create')}}"><i class="fas fa-plus"></i> Tambah Data Pengguna</a> -->
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr class="table-primary">

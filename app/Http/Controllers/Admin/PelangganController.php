@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Pengguna;
+use App\Pelanggan;
 use App\KramaMipil;
 use App\KramaTamiu;
 use App\Tamiu;
@@ -23,7 +23,7 @@ use App\Notifications\PropertiNotif;
 use Illuminate\Support\Facades\Hash;
 
 
-class PenggunaController extends Controller
+class PelangganController extends Controller
 {
     //
     public function index(){
@@ -63,13 +63,13 @@ class PenggunaController extends Controller
                     }
                 }
                 // dd($penduduk);
-                $index = Pengguna::whereIn('id_penduduk', $penduduk)->get();
-                return view('admin.pengguna.index',compact('index'));
+                $index = Pelanggan::whereIn('id_penduduk', $penduduk)->get();
+                return view('admin.pelanggan.index',compact('index'));
             }else{
-                return view('admin.pengguna.index')->with('error', "Desa Adat tidak ditemukan !");
+                return view('admin.pelanggan.index')->with('error', "Desa Adat tidak ditemukan !");
             }
         }else{
-            return view('admin.pengguna.index')->with('error', "Banjar Adat tidak ditemukan !");
+            return view('admin.pelanggan.index')->with('error', "Banjar Adat tidak ditemukan !");
         }
     }
 
@@ -111,17 +111,17 @@ class PenggunaController extends Controller
                 }
                 // dd($penduduk);
                 $index = Kependudukan::whereIn('id', $penduduk)->get();
-                return view('admin.pengguna.create',compact('index'));
+                return view('admin.pelanggan.create',compact('index'));
             }else{
-                return view('admin.pengguna.create')->with('error', "Desa Adat tidak ditemukan !");
+                return view('admin.pelanggan.create')->with('error', "Desa Adat tidak ditemukan !");
             }
         }else{
-            return view('admin.pengguna.create')->with('error', "Banjar Adat tidak ditemukan !");
+            return view('admin.pelanggan.create')->with('error', "Banjar Adat tidak ditemukan !");
         }
         // $index = Kependudukan::where('desa_id', auth()->guard('admin')->user()->kependudukan->desa_id)->get();
         // $kota = Kota::all();
         // $banjar = Banjar::all();
-        // return view('admin.pengguna.create', compact('banjar', 'kota', 'index'));
+        // return view('admin.pelanggan.create', compact('banjar', 'kota', 'index'));
     }
 
     // public function storeOld(Request $request){
@@ -131,7 +131,7 @@ class PenggunaController extends Controller
 	// 	];
 
     //     $this->validate($request, [
-    //         'nik' => 'required|unique:tb_pengguna',
+    //         'nik' => 'required|unique:tb_pelanggan',
     //         'nama' => 'required',
     //         'alamat' => 'required',
     //         'no' => 'required',
@@ -142,39 +142,39 @@ class PenggunaController extends Controller
     //     $banjar = Banjar::where('nama_banjar_dinas', 'LIKE' , $request->banjar)->first();
     //     // $kota = Kota::where('name', 'LIKE', $request->tempat)->first();
 
-    //     $pengguna = new Pengguna;
+    //     $pelanggan = new Pelanggan;
         
 
     //     if($banjar!=null){
-    //         $pengguna->id_banjar = $banjar->id;
+    //         $pelanggan->id_banjar = $banjar->id;
     //     }
 
-    //     $pengguna->alamat = $request->alamat;
-    //     $pengguna->nik = $request->nik ;
-    //     $pengguna->nama_pengguna = $request->nama;
-    //     $pengguna->tgl_lahir = $request->tanggal ;
-    //     $pengguna->no_telp = $request->no ;
-    //     $pengguna->password = Hash::make($request->no);
-    //     $pengguna->jenis_kelamin = $request->jenis ;
-    //     $pengguna->save();
-    //     return redirect()->route('pengguna-index')->with('success','Berhasil Menambah Data Pelanggan !');
+    //     $pelanggan->alamat = $request->alamat;
+    //     $pelanggan->nik = $request->nik ;
+    //     $pelanggan->nama = $request->nama;
+    //     $pelanggan->tgl_lahir = $request->tanggal ;
+    //     $pelanggan->no_telp = $request->no ;
+    //     $pelanggan->password = Hash::make($request->no);
+    //     $pelanggan->jenis_kelamin = $request->jenis ;
+    //     $pelanggan->save();
+    //     return redirect()->route('pelanggan-index')->with('success','Berhasil Menambah Data Pelanggan !');
     // }
 
     public function store($id){
         $penduduk = Kependudukan::where('id', $id)->first();
         if(isset($penduduk)){
-            $check = Pengguna::where('id_penduduk', $penduduk->id)->first();
+            $check = Pelanggan::where('id_penduduk', $penduduk->id)->first();
             if(!isset($check)){
-                $pengguna = new Pengguna;
-                $pengguna->id_penduduk = $penduduk->id;
+                $pelanggan = new Pelanggan;
+                $pelanggan->id_penduduk = $penduduk->id;
                 if($penduduk->telepon != null){
-                    $pengguna->username = $penduduk->telepon;
-                    $pengguna->password = Hash::make($penduduk->telepon);
-                    $pengguna->save();
+                    $pelanggan->username = $penduduk->telepon;
+                    $pelanggan->password = Hash::make($penduduk->telepon);
+                    $pelanggan->save();
                 }else{
-                    $pengguna->username = $penduduk->nik;
-                    $pengguna->password = Hash::make($penduduk->nik);
-                    $pengguna->save();
+                    $pelanggan->username = $penduduk->nik;
+                    $pelanggan->password = Hash::make($penduduk->nik);
+                    $pelanggan->save();
                 }
                 return response()->json(['status'=> 'success','info' => 'Berhasil menambahkan data pelanggan !']);
             }else{
@@ -188,48 +188,48 @@ class PenggunaController extends Controller
     public function edit($id){
         $desaAdat = DesaAdat::all();
         $banjarAdat = BanjarAdat::all();
-        $pengguna = Pengguna::where('id', $id)->first();
+        $pelanggan = Pelanggan::where('id', $id)->first();
         $jenis = JenisJasa::all();
-        $index = Properti::where('id_pengguna', $pengguna->id)->get();
-        if($pengguna != null){
-            // dd($pengguna);
-            return view('admin.pengguna.edit', compact('pengguna', 'index', 'jenis', 'desaAdat', 'banjarAdat'));
+        $index = Properti::where('id_pelanggan', $pelanggan->id)->get();
+        if($pelanggan != null){
+            // dd($pelanggan);
+            return view('admin.pelanggan.edit', compact('pelanggan', 'index', 'jenis', 'desaAdat', 'banjarAdat'));
         }else{
-            return redirect()->route('pengguna-index')->with('error', 'Data Pelanggan Tidak Ditemukan !');
+            return redirect()->route('pelanggan-index')->with('error', 'Data Pelanggan Tidak Ditemukan !');
         }
         
     }
 
     public function update($id, Request $request){
-        $pengguna = Pengguna::where('id', $id)->first();
+        $pelanggan = Pelanggan::where('id', $id)->first();
 
-        if($pengguna!= null){
+        if($pelanggan!= null){
             $desa = Desa::where('name', 'LIKE' , $request->desa)->first();
             
             if($desa!=null){
-                $pengguna->id_desa = $desa->id;
+                $pelanggan->id_desa = $desa->id;
             }
 
-            $pengguna->kependudukan->alamat = $request->alamat;
-            $pengguna->kependudukan->nik = $request->nik ;
-            $pengguna->kependudukan->nama_pengguna = $request->nama;
-            $pengguna->kependudukan->tanggal_lahir = $request->tanggal ;
-            $pengguna->kependudukan->telepon = $request->no ;
-            $pengguna->kependudukan->jenis_kelamin = $request->jenis ;
-            $pengguna->update();
-            return redirect()->route('pengguna-index')->with('success', 'Berhasil Mengubah Data Pengguna !');
+            $pelanggan->kependudukan->alamat = $request->alamat;
+            $pelanggan->kependudukan->nik = $request->nik ;
+            $pelanggan->kependudukan->nama = $request->nama;
+            $pelanggan->kependudukan->tanggal_lahir = $request->tanggal ;
+            $pelanggan->kependudukan->telepon = $request->no ;
+            $pelanggan->kependudukan->jenis_kelamin = $request->jenis ;
+            $pelanggan->update();
+            return redirect()->route('pelanggan-index')->with('success', 'Berhasil Mengubah Data Pelanggan !');
         }else{
-            return redirect()->route('pengguna-index')->with('error', 'Data Pengguna Tidak Ditemukan !');
+            return redirect()->route('pelanggan-index')->with('error', 'Data Pelanggan Tidak Ditemukan !');
         }
     }
 
     public function delete($id){
-        $pengguna = Pengguna::where('id', $id)->first();
-        if($pengguna != null){
-            $pengguna->delete();
-            return redirect()->route('pengguna-index')->with('success', 'Berhasil Menghapus Data Pengguna !');
+        $pelanggan = Pelanggan::where('id', $id)->first();
+        if($pelanggan != null){
+            $pelanggan->delete();
+            return redirect()->route('pelanggan-index')->with('success', 'Berhasil Menghapus Data Pelanggan !');
         }else{
-            return  redirect()->route('pengguna-index')->with('error', 'Data Pengguna Tidak Ditemukan !');
+            return  redirect()->route('pelanggan-index')->with('error', 'Data Pelanggan Tidak Ditemukan !');
         }
     }
 
@@ -248,10 +248,10 @@ class PenggunaController extends Controller
         ],$messages);
         
         $properti = new Properti;
-        $pelanggan = Pengguna::where('id', $request->pengguna)->first();
+        $pelanggan = Pelanggan::where('id', $request->pelanggan)->first();
         // dd($pelanggan);
         if(!isset($pelanggan)){
-            return redirect()->back->with('error','Pengguna Tidak Terdeteksi, Kesalahan pada Kode !');
+            return redirect()->back->with('error','Pelanggan Tidak Terdeteksi, Kesalahan pada Kode !');
         }
 
         if($request->file('file')){
@@ -271,14 +271,14 @@ class PenggunaController extends Controller
         $properti->lat = $request->lat;
         $properti->lng = $request->lng;
         $properti->status = "Pending";
-        $properti->id_pengguna = $pelanggan->id;
+        $properti->id_pelanggan = $pelanggan->id;
         $properti->jumlah_kamar = $request->kamar;
         
         if($properti->save()){
             $pelanggan->notify(new PropertiNotif($properti, "create"));
-            return redirect()->route('pengguna-edit', $request->pengguna)->with('success','Berhasil Menambah Properti, Properti akan segera diproses !');    
+            return redirect()->route('pelanggan-edit', $request->pelanggan)->with('success','Berhasil Menambah Properti, Properti akan segera diproses !');    
         }else{
-            return redirect()->route('pengguna-edit', $request->pengguna)->with('error','Proses Penambahan Properti Tidak Berhasil !');
+            return redirect()->route('pelanggan-edit', $request->pelanggan)->with('error','Proses Penambahan Properti Tidak Berhasil !');
         }
         
     }
@@ -298,7 +298,7 @@ class PenggunaController extends Controller
                     }
                 }
                 $file = $request->file('file_edit');
-                $images = $properti->pengguna->kependudukan->nik."_".$request->nama."_".$file->getClientOriginalName();
+                $images = $properti->pelanggan->kependudukan->nik."_".$request->nama."_".$file->getClientOriginalName();
                 // dd($images);
                 $properti->file = $images;
                 $foto_upload = 'assets/img/properti';
@@ -365,7 +365,7 @@ class PenggunaController extends Controller
 		];
 
         $this->validate($request, [
-            'nik' => 'required|unique:tb_pengguna',
+            'nik' => 'required|unique:tb_pelanggan',
             'nama' => 'required',
             'alamat' => 'required',
             'no' => 'required',
@@ -380,7 +380,7 @@ class PenggunaController extends Controller
         
 
         // if($banjar!=null){
-        //     $pengguna->id_banjar = $banjar->id;
+        //     $pelanggan->id_banjar = $banjar->id;
         // }
 
         $penduduk->alamat = $request->alamat;
@@ -398,7 +398,7 @@ class PenggunaController extends Controller
         $desa = Desa::all();
         $penduduk = Kependudukan::where('id', $id)->first();
         $jenis = JenisJasa::all();
-        $index = Properti::where('id_pengguna', $penduduk->pelanggan->id)->get();
+        $index = Properti::where('id_pelanggan', $penduduk->pelanggan->id)->get();
         if($penduduk != null){
             // dd($penduduk);
             return view('admin.penduduk.edit', compact('penduduk','desa', 'kota', 'index', 'jenis'));
@@ -409,25 +409,25 @@ class PenggunaController extends Controller
     }
 
     public function updatePendudukan($id, Request $request){
-        $pengguna = Pengguna::where('id', $id)->first();
+        $pelanggan = Pelanggan::where('id', $id)->first();
 
-        if($pengguna!= null){
+        if($pelanggan!= null){
             $banjar = Banjar::where('nama_banjar_dinas', 'LIKE' , $request->banjar)->first();
             
             if($banjar!=null){
-                $pengguna->id_banjar = $banjar->id;
+                $pelanggan->id_banjar = $banjar->id;
             }
 
-            $pengguna->alamat = $request->alamat;
-            $pengguna->nik = $request->nik ;
-            $pengguna->nama_pengguna = $request->nama;
-            $pengguna->tgl_lahir = $request->tanggal ;
-            $pengguna->no_telp = $request->no ;
-            $pengguna->jenis_kelamin = $request->jenis ;
-            $pengguna->update();
-            return redirect()->route('pengguna-index')->with('success', 'Berhasil Mengubah Data Pengguna !');
+            $pelanggan->alamat = $request->alamat;
+            $pelanggan->nik = $request->nik ;
+            $pelanggan->nama = $request->nama;
+            $pelanggan->tgl_lahir = $request->tanggal ;
+            $pelanggan->no_telp = $request->no ;
+            $pelanggan->jenis_kelamin = $request->jenis ;
+            $pelanggan->update();
+            return redirect()->route('pelanggan-index')->with('success', 'Berhasil Mengubah Data Pelanggan !');
         }else{
-            return redirect()->route('pengguna-index')->with('error', 'Data Pengguna Tidak Ditemukan !');
+            return redirect()->route('pelanggan-index')->with('error', 'Data Pelanggan Tidak Ditemukan !');
         }
     }
 

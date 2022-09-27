@@ -11,7 +11,7 @@ class Kependudukan extends Model
     protected $primaryKey = 'id';
 
     public function pelanggan(){
-        return $this->hasOne(Pengguna::class, 'id_penduduk', 'id');
+        return $this->hasOne(Pelanggan::class, 'id_penduduk', 'id');
     }
 
     public function pegawai(){

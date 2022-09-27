@@ -77,7 +77,7 @@ Index Data Pelanggan
                 </div>
                 @endif
             <div class="table-responsive">
-            <a class= "btn btn-success text-white mb-2" href="{{route('pengguna-create')}}"><i class="fas fa-plus"></i> Tambah Pelanggan</a>
+            <a class= "btn btn-success text-white mb-2" href="{{route('pelanggan-create')}}"><i class="fas fa-plus"></i> Tambah Pelanggan</a>
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr class="table-primary">
@@ -90,26 +90,26 @@ Index Data Pelanggan
                     </tr>
                 </thead>
                 <tbody>
-                @foreach ($index as $pengguna)
+                @foreach ($index as $pelanggan)
                     <tr>
                         <td align="center">
-                            <a href="/admin/pengguna/edit/{{$pengguna->id}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
-                            <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/pengguna/delete/{{$pengguna->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
+                            <a href="/admin/pelanggan/edit/{{$pelanggan->id}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
+                            <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/pelanggan/delete/{{$pelanggan->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
                         </td>
                         <!-- <td>
-                            {{$pengguna->no_kk}}
+                            {{$pelanggan->no_kk}}
                         </td> -->
                         <td>
-                            {{isset($pengguna->kependudukan) ? $pengguna->kependudukan->nik : 'Null'}}
+                            {{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->nik : 'Null'}}
                         </td>
                         <td>
-                            {{isset($pengguna->kependudukan) ? $pengguna->kependudukan->nama : 'Null'}}
+                            {{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->nama : 'Null'}}
                         </td>
                         <td>
-                            {{isset($pengguna->kependudukan) ? $pengguna->kependudukan->jenis_kelamin : 'Null'}}
+                            {{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->jenis_kelamin : 'Null'}}
                         </td>
                         <td>
-                            {{isset($pengguna->kependudukan) ? $pengguna->kependudukan->telepon : 'Null'}}
+                            {{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->telepon : 'Null'}}
                         </td>
                     </tr>
                 @endforeach

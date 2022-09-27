@@ -37,7 +37,8 @@
     </div>
   </li>
   <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-  <img alt="image" src="{{ Auth::guard('web')->user()->avatarlink }}" class="rounded-circle mr-1">
+  <!-- <img alt="image" src="{{ Auth::guard('web')->user()->avatarlink }}" class="rounded-circle mr-1"> -->
+  {{auth()->guard('web')->user()->kependudukan->nama}}
     <!-- <div class="d-sm-none d-lg-inline-block">Hi, {{ Auth::guard('web')->user()}}</div></a> -->
     <div class="dropdown-menu dropdown-menu-right">
       <!-- <div class="dropdown-title">Welcome, {{ Auth::guard('web')->user() }}</div> -->

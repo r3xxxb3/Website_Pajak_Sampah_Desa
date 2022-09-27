@@ -29,7 +29,7 @@
       </ul>
       <li class="menu-header">Manajemen Pengguna</li>
       <li class="{{ request()->segment(2) == 'pegawai' ? 'active' : '' }}"><a class="nav-link" href="{{ route('pegawai-index') }}"><i class="fa fa-briefcase"></i> <span>Manajemen Pegawai</span></a></li>
-      <li class="{{ request()->segment(2) == 'pengguna' ? 'active' : '' }}"><a class="nav-link" href="{{ route('pengguna-index') }}"><i class="fa fa-id-card"></i> <span>Manajemen Pelanggan</span></a></li>
+      <li class="{{ request()->segment(2) == 'pelanggan' ? 'active' : '' }}"><a class="nav-link" href="{{ route('pelanggan-index') }}"><i class="fa fa-id-card"></i> <span>Manajemen Pelanggan</span></a></li>
       <li class="menu-header">Retribusi & Pengangkutan</li>
       <li class="{{ request()->segment(2) == 'retribusi' ? 'active' : '' }}"><a class="nav-link" href="{{ route('admin-retribusi-index') }}"><i class="fa fa-receipt"></i> <span>Manajemen Retribusi</span></a></li>
       <li class="{{ request()->segment(2) == 'request' ? 'active' : '' }}"><a class="nav-link" href="{{ route('admin-request-index') }}"><i class="fa fa-truck"></i> <span>Request Pengangkutan</span ></a></li>

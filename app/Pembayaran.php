@@ -21,6 +21,6 @@ class Pembayaran extends Model
     }
 
     public function pelanggan(){
-        return $this->belongsTo(Pengguna::class, 'id_pengguna', 'id');
+        return $this->belongsTo(Pelanggan::class, 'id_pelanggan', 'id');
     }
 }

@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Properti;
 use App\User;
 use Illuminate\Support\Facades\Auth;
-use App\Pengguna;
+use App\Pelanggan;
 use App\Banjar;
 use App\BanjarAdat;
 use App\DesaAdat;
@@ -21,33 +21,33 @@ class UserController extends Controller
     //
 
     public function dataIndex(){
-        $pengguna = Pengguna::where('id', Auth()->guard('web')->user()->id)->first();
+        $pelanggan = Pelanggan::where('id', Auth()->guard('web')->user()->id)->first();
         $desaAdat= DesaAdat::all();
         $banjarAdat = BanjarAdat::all();
-        return view('user.data-diri.index', compact('pengguna', 'desaAdat' ,'banjarAdat'));
+        return view('user.data-diri.index', compact('pelanggan', 'desaAdat' ,'banjarAdat'));
     }
 
     public function dataUpdate(Request $request){
-        $pengguna = Pengguna::where('id', Auth()->guard('web')->user()->id)->first();
+        $pelanggan = Pelanggan::where('id', Auth()->guard('web')->user()->id)->first();
 
-        if($pengguna!= null){
+        if($pelanggan!= null){
             $banjarAdat = BanjarAdat::where('nama_banjar_adat', 'LIKE' , $request->banjar)->first();
-            $pengguna->alamat = $request->alamat;
-            $pengguna->nik = $request->nik ;
-            $pengguna->nama_pengguna = $request->nama ;
-            $pengguna->tgl_lahir = $request->tanggal ;
-            $pengguna->no_telp = $request->no ;
-            $pengguna->jenis_kelamin = $request->jenis ;
-            $pengguna->update();
+            $pelanggan->alamat = $request->alamat;
+            $pelanggan->nik = $request->nik ;
+            $pelanggan->nama_pelanggan = $request->nama ;
+            $pelanggan->tgl_lahir = $request->tanggal ;
+            $pelanggan->no_telp = $request->no ;
+            $pelanggan->jenis_kelamin = $request->jenis ;
+            $pelanggan->update();
             return redirect()->route('data-index')->with('success', 'Berhasil Mengubah Data Diri !');
         }else{
-            return redirect()->route('data-index')->with('error', 'Data Pengguna Tidak Ditemukan !');
+            return redirect()->route('data-index')->with('error', 'Data Pelanggan Tidak Ditemukan !');
         }
     }
 
     public function properti(){
         // dd(Auth::guard('web')->user()->id);
-        $index = Properti::where('id_pengguna', Auth::guard('web')->user()->id)->get();
+        $index = Properti::where('id_pelanggan', Auth::guard('web')->user()->id)->get();
         $banjarAdat = BanjarAdat::all();
         $desaAdat = DesaAdat::all();
         return view('user.properti.index', compact('index', 'banjarAdat', 'desaAdat'));
@@ -95,7 +95,7 @@ class UserController extends Controller
         $properti->id_desa_adat = $request->desa;
         $properti->id_banjar_adat = $request->banjar;
         $properti->status = "Pending";
-        $properti->id_pengguna = Auth::guard('web')->user()->id;
+        $properti->id_pelanggan = Auth::guard('web')->user()->id;
         $properti->jumlah_kamar = $request->kamar;
         
         if($properti->save()){
@@ -150,7 +150,7 @@ class UserController extends Controller
                     }
                 }
                 $file = $request->file('file');
-                $images = $properti->pengguna->kependudukan->nik."_".$request->nama."_".$file->getClientOriginalName();
+                $images = $properti->pelanggan->kependudukan->nik."_".$request->nama."_".$file->getClientOriginalName();
                 // dd($images);
                 $properti->file = $images;
                 $foto_upload = 'assets/img/properti';
@@ -166,7 +166,7 @@ class UserController extends Controller
                 $properti->id_jenis = $request->jenis;
                 $properti->status = "Pending";
                 
-                $properti->id_pengguna = Auth::guard('web')->user()->id;
+                $properti->id_pelanggan = Auth::guard('web')->user()->id;
                 $properti->jumlah_kamar = $request->kamar;
 
                 if($properti->update()){
@@ -179,7 +179,7 @@ class UserController extends Controller
                     return redirect()->route('properti-index')->with('error','Proses Penngubahan Properti Tidak Berhasil !');
                 }
             }else{
-                $properti->id_pengguna = Auth::guard('web')->user()->id;
+                $properti->id_pelanggan = Auth::guard('web')->user()->id;
                 $properti->jumlah_kamar = $request->kamar;
 
                 if($properti->update()){
@@ -199,7 +199,7 @@ class UserController extends Controller
     } 
 
     public function propertiDelete($id){
-        $properti = Properti::where('id', $id)->where('id_pengguna', Auth::guard('web')->user()->id)->first();
+        $properti = Properti::where('id', $id)->where('id_pelanggan', Auth::guard('web')->user()->id)->first();
         // dd($properti);
         if(isset($properti)){
             if($properti->status == 'Cancelled'){

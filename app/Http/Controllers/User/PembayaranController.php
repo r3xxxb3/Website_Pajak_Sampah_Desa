@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Pegawai;
 use App\Properti;
-use App\Pengguna;
+use App\Pelanggan;
 use App\Retribusi;
 use App\Pembayaran;
 
@@ -55,7 +55,7 @@ class PembayaranController extends Controller
             $foto_upload = 'assets/img/bukti_bayar';
             $file->move($foto_upload,$images);
         }
-        $pembayaran->id_pengguna = auth()->guard('web')->user()->id;
+        $pembayaran->id_pelanggan = auth()->guard('web')->user()->id;
         $pembayaran->media = $request->media;
         $pembayaran->nominal = $request->nominal;
         $pembayaran->jenis = $request->type;

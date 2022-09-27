@@ -60,26 +60,26 @@ class PropertiNotif extends Notification
     public function toArray($notifiable)
     {
         // dd($this->type, $this->properti);
-        if(isset($notifiable->pengguna)){
+        if(isset($notifiable->pelanggan)){
             if($this->type == "create"){
                 return [
                     //
-                    'message' => $notifiable->pengguna->nama_pengguna." Menambahkan Properti dengan Jenis ".$this->properti->jasa->jenis_jasa,
-                    'user_id' => $notifiable->pengguna->id,
+                    'message' => $notifiable->pelanggan->kependudukan->nama." Menambahkan Properti dengan Jenis ".$this->properti->jasa->jenis_jasa,
+                    'user_id' => $notifiable->pelanggan->id,
                     'type' => $this->type,
                 ];
             }elseif($this->type == "update"){
                 return [
                     //
-                    'message' => $notifiable->pengguna->nama_pengguna." Mengubah Properti ".$this->properti->nama_properti." menjadi Jenis ".$this->properti->jasa->jenis_jasa,
-                    'user_id' => $notifiable->pengguna->id,
+                    'message' => $notifiable->pelanggan->kependudukan->nama." Mengubah Properti ".$this->properti->nama_properti." menjadi Jenis ".$this->properti->jasa->jenis_jasa,
+                    'user_id' => $notifiable->pelanggan->id,
                     'type' => $this->type,
                 ];
             }elseif($this->type == "cancel"){
                 return [
                     //
-                    'message' => $notifiable->pengguna->nama_pengguna." Menambahkan Properti dengan Jenis ".$this->properti->jasa->jenis_jasa,
-                    'user_id' => $notifiable->pengguna->id,
+                    'message' => $notifiable->pelanggan->kependudukan->nama." Menambahkan Properti dengan Jenis ".$this->properti->jasa->jenis_jasa,
+                    'user_id' => $notifiable->pelanggan->id,
                     'type' => $this->type,
                 ];
             }
@@ -88,21 +88,21 @@ class PropertiNotif extends Notification
                 return [
                     //
                     'message' => "Admin Menambahkan Properti dengan Jenis ".$this->properti->jasa->jenis_jasa,
-                    'user_id' => $this->properti->id_pengguna,
+                    'user_id' => $this->properti->id_pelanggan,
                     'type' => $this->type,
                 ];
             }elseif($this->type == "update"){
                 return [
                     //
                     'message' => "Admin Mengubah Properti ".$this->properti->nama_properti." menjadi Jenis ".$this->properti->jasa->jenis_jasa,
-                    'user_id' => $this->properti->id_pengguna,
+                    'user_id' => $this->properti->id_pelanggan,
                     'type' => $this->type,
                 ];
             }elseif($this->type == "cancel"){
                 return [
                     //
                     'message' => "Admin Membatalkan Properti dengan Jenis ".$this->properti->jasa->jenis_jasa,
-                    'user_id' => $this->properti->id_pengguna,
+                    'user_id' => $this->properti->id_pelanggan,
                     'type' => $this->type,
                 ];
             }

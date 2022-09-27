@@ -21,7 +21,7 @@
       <div class="dropdown-list-content dropdown-list-icons">
       @if(Auth::guard('admin')->user()->unreadNotifications->count())
         @foreach(Auth::guard('admin')->user()->unreadNotifications as $notif)
-        <a href="{{Route('pengguna-edit', $notif->data['user_id'])}}"  class="dropdown-item dropdown-item-unread">
+        <a href="{{Route('pelanggan-edit', $notif->data['user_id'])}}"  class="dropdown-item dropdown-item-unread">
           <div class="dropdown-item-icon bg-primary text-white">
             @if($notif->data['type']== "update")
               <i class="fas fa-pen"></i>
@@ -43,12 +43,12 @@
     </div>
   </li>
   <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-  <img alt="image" src="{{ Auth::guard('admin')->user()->avatarlink }}" class="rounded-circle mr-1">
+  <!-- <img alt="image" src="{{ Auth::guard('admin')->user()->avatarlink }}" class="rounded-circle mr-1"> -->
+  {{auth()->guard('admin')->user()->kependudukan->nama}}
     <!-- <div class="d-sm-none d-lg-inline-block">Hi, {{ Auth::guard('admin')->user()}}</div></a> -->
     <div class="dropdown-menu dropdown-menu-right">
-      <!-- <div class="dropdown-title">Welcome, {{ Auth::guard('admin')->user() }}</div> -->
       <a href="" class="dropdown-item has-icon">
-        <i class="far fa-user"></i> Profile Settings
+        <i class="fa fa-cog"></i>  Pengaturan Pengguna
       </a>
       <div class="dropdown-divider"></div>
       <a href="{{ route('admin-logout') }}" class="dropdown-item has-icon text-danger">

@@ -11,7 +11,7 @@ class RequestController extends Controller
 {
     //
     public function index(){
-        $index = Pengangkutan::where('id_pengguna', auth()->guard('web')->user()->id)->get();
+        $index = Pengangkutan::where('id_pelanggan', auth()->guard('web')->user()->id)->get();
         return view('user.request.index', compact('index'));
     }
 
@@ -56,7 +56,7 @@ class RequestController extends Controller
             $foto_upload = 'assets/img/request_p';
             $file->move($foto_upload,$images);
         }
-        $requestP->id_pengguna = auth()->guard('web')->user()->id;
+        $requestP->id_pelanggan = auth()->guard('web')->user()->id;
         $requestP->lat = $request->lat;
         $requestP->lng = $request->lng;
         $requestP->id_desa_adat = $request->desaAdat;
@@ -113,7 +113,7 @@ class RequestController extends Controller
                 $foto_upload = 'assets/img/request_p';
                 $file->move($foto_upload,$images);
             }
-            $requestP->id_pengguna = auth()->guard('web')->user()->id;
+            $requestP->id_pelanggan = auth()->guard('web')->user()->id;
             $requestP->lat = $request->lat;
             $requestP->lng = $request->lng;
             $requestP->alamat = $request->alamat;
@@ -132,7 +132,7 @@ class RequestController extends Controller
 
     public function cancel($id){
         $requestP = Pengangkutan::where('id', $id)->first();
-
+        
     }
 
 

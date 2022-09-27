@@ -9,11 +9,11 @@ class Pengangkutan extends Model
     //
     public $timestamps = true;
     protected $table = 'tb_request_pengangkutan';
-    protected $fillable = ['id_pengguna', 'status', 'alamat', 'file'];
+    protected $fillable = ['id_pelanggan', 'status', 'alamat', 'file'];
 
 
     public function pelanggan(){
-        return $this->belongsTo(Pengguna::class, 'id_pengguna', 'id');
+        return $this->belongsTo(Pelanggan::class, 'id_pelanggan', 'id');
     }
 
     public function pembayaran(){

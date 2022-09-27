@@ -47,7 +47,7 @@ Create Data Pelanggan
         }).then(function(value){
                 if(value){
                     jQuery.ajax({  
-                        url: "/admin/pengguna/store/"+id,
+                        url: "/admin/pelanggan/store/"+id,
                         type: "GET",
                         success: function(result){
                             if(result){
@@ -184,7 +184,7 @@ Create Data Pelanggan
                     <div class="row">
                         <div class="col">
                             <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda Yakin Ingin Menambah Data?')"><i class="fas fa-save"></i> Simpan</button>
-                            <a href="{{route('pengguna-index')}}" class="btn btn-danger"><i class="fas fa-times"></i> Cancel</a>
+                            <a href="{{route('pelanggan-index')}}" class="btn btn-danger"><i class="fas fa-times"></i> Cancel</a>
                         </div>
                     </div>
                 </div>
@@ -233,7 +233,7 @@ Create Data Pelanggan
                     </div>
                     @endif
                 <div class="table-responsive">
-                <!-- <a class= "btn btn-success text-white mb-2" href="{{route('pengguna-create')}}"><i class="fas fa-plus"></i> Tambah Data Pengguna</a> -->
+                <!-- <a class= "btn btn-success text-white mb-2" href="{{route('pelanggan-create')}}"><i class="fas fa-plus"></i> Tambah Data Pengguna</a> -->
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr class="table-primary">

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Pembayaran;
 use App\Retribusi;
-use App\Pengguna;
+use App\Pelanggan;
 use App\Pegawai;
 use App\Properti;
 

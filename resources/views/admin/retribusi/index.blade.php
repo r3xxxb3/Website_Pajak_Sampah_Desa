@@ -102,7 +102,7 @@ Index Retribusi
                                     <a href="#" data-toggle="modal" data-target="#modal-{{$retri->id}}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
                                 </td>
                                 <td>
-                                    {{isset($retri->pengguna->kependudukan) ? $retri->pengguna->kependudukan->nama : ''}}
+                                    {{isset($retri->pelanggan->kependudukan) ? $retri->pelanggan->kependudukan->nama : ''}}
                                 </td>
                                 <td>
                                     {{isset($retri->properti) ? $retri->properti->nama_properti : ''}}

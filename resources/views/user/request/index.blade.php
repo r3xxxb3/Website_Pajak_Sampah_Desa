@@ -111,7 +111,11 @@ List Request Pengangkutan
                                 <tr>
                                     <td align="center">
                                         <a href="/user/request/edit/{{$i->id}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
-                                        <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/user/request/delete/{{$i->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
+                                        @if($i->status == "Batal")
+                                            <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/user/request/delete/{{$i->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
+                                        @elseif($i->status != "Selesai" && $i->status != "Terkonfirmasi")
+                                            <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/user/request/cancel/{{$i->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-times"></i></a>
+                                        @endif
                                     </td>
                                     <td>
                                         {{isset($i->pelanggan) ? $i->pelanggan->kependudukan->nama : ''}}
@@ -132,7 +136,7 @@ List Request Pengangkutan
                                         @if($i->status == "Pending")
                                             <span class="badge badge-warning">{{$i->status}}</span>
                                         @elseif($i->status == "Terkonfirmasi")
-                                            <span class="badge badge-primary">{{$i->status}}</span>
+                                            <span class="badge badge-info">{{$i->status}}</span>
                                         @elseif($i->status == "Selesai")
                                             <span class="badge badge-success">{{$i->status}}</span>
                                         @else

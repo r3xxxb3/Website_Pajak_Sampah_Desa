@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Pengguna;
+use App\Pelanggan;
 use App\Pengangkutan;
 use App\Properti;
 use App\JenisJasa;

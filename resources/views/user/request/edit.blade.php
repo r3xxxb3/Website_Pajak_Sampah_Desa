@@ -34,6 +34,15 @@ List Request Pengangkutan
 
         var markerGroup = L.layerGroup().addTo(mymap);
 
+        @if(isset($requestP->lat) && isset($requestP->lng))
+        const lat = <?php echo $requestP->lat?>;
+        const lng = <?php echo $requestP->lng?>;
+        
+        L.marker([
+            lat, lng
+        ]).addTo(markerGroup);
+        @endif
+
         // var xlng = 0.000256;
         // var xlat = 0.000200;
         mymap.on('click', function(e) {
@@ -119,7 +128,7 @@ List Request Pengangkutan
                 <div class="form-group card-header shadow">
                     <div class="row">
                         <div class="col">
-                            <h3 class="font-weight-bold text-primary"><i class="fas fa-plus"></i>Tambah Request Pengangkutan</h3>
+                            <h3 class="font-weight-bold text-primary"><i class="fas fa-plus"></i>Edit Request Pengangkutan</h3>
                         </div>
                     </div>
                 </div>

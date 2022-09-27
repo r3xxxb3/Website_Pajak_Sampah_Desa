@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Pengguna;
+use App\Pelanggan;
 use App\Properti;
 use App\JenisJasa;
 use App\Retribusi;
@@ -17,7 +17,7 @@ class RetribusiController extends Controller
     public function index(){
         $index = Retribusi::whereHas('properti', function (Builder $query){
             $query->where('id_desa_adat', auth()->guard('admin')->user()->kependudukan->mipil->banjarAdat->desaAdat->id);
-        })->orderByRaw("FIELD(status, 'pending', 'lunas ') DESC")->get();
+        })->where('status', 'pending')->get();
         // dd($retribusi);
         // foreach($retribusi as $i){
         //     if(isset($i->properti->desaAdat)){
@@ -26,6 +26,12 @@ class RetribusiController extends Controller
         //     }
         // }
         return view('admin.retribusi.index', compact('index'));
+    }
+
+    public function history(){
+        $index = Retribusi::whereHas('properti', function (Builder $query){
+            $query->where('id_desa_adat', auth()->guard('admin')->user()->kependudukan->mipil->banjarAdat->desaAdat->id);
+        })->where('status', 'lunas')->get();
     }
 
     public function update(){

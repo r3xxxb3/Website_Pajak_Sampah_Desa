@@ -177,8 +177,8 @@
 
                         <div class="row mb-3">
                             <div class='col mb-2'>
-                                <label for="username" class="font-weight-bold text-dark">Username<i class="text-danger text-sm text-bold">*</i></label>
-                                <input type="text" class="form-control @error('username') is-invalid @enderror" id="username" name="username" placeholder="Masukan username akun anda !" value="{{old('username')}}" {{!is_null(old('nama')) ? '' : 'disabled'  }}>
+                                <label for="username" class="font-weight-bold text-dark">Buat Username<i class="text-danger text-sm text-bold">*</i></label>
+                                <input type="text" class="form-control @error('username') is-invalid @enderror" id="username" name="username" placeholder="Buat username akun anda !" value="{{old('username')}}" {{!is_null(old('nama')) ? '' : 'disabled'  }}>
                                     @error('username')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -186,7 +186,7 @@
                                     @enderror
                             </div>
                             <div class='col mb-2'>
-                                <label for="password" class="font-weight-bold text-dark">Password<i class="text-danger text-sm text-bold">*</i></label>
+                                <label for="password" class="font-weight-bold text-dark">Buat Password<i class="text-danger text-sm text-bold">*</i></label>
                                 <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Buat Password akun anda !" value="{{old('password')}}" {{!is_null(old('nama')) ? '' : 'disabled'  }}>
                                     @error('password')
                                     <span class="invalid-feedback" role="alert">

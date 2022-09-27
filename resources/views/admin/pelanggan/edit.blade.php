@@ -84,7 +84,7 @@ Edit Data Pelanggan
 
 function catchProp(properti, jenis, desa, banjar){
     console.log(properti);
-    // console.log(pengguna);
+    // console.log(pelanggan);
     console.log(jenis);
     console.log(desa);
     console.log(banjar);
@@ -232,7 +232,7 @@ $('#desa_edit').on('change', function(e){
                     </button>
                 </div>
             @endif
-            <form method="POST" enctype="multipart/form-data" action="{{route('pengguna-update', $pengguna->id)}}">
+            <form method="POST" enctype="multipart/form-data" action="{{route('pelanggan-update', $pelanggan->id)}}">
             @csrf
             <div class="card shadow">
                 <div class="form-group card-header shadow">
@@ -255,7 +255,7 @@ $('#desa_edit').on('change', function(e){
                         </div> -->
                         <div class="col mb-2">
                             <label for="nik" class="font-weight-bold text-dark">NIK<i class="text-danger text-sm text-bold">*</i><i class="text-danger text-sm text-bold">*</i></label>
-                            <input type="text" class="form-control @error('nik') is-invalid @enderror" id="nik" name="nik" placeholder="Masukan No Induk Kependudukan" value="{{isset($pengguna->kependudukan) ? $pengguna->kependudukan->nik : old(nik)}}">
+                            <input type="text" class="form-control @error('nik') is-invalid @enderror" id="nik" name="nik" placeholder="Masukan No Induk Kependudukan" value="{{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->nik : old(nik)}}">
                                 @error('nik')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -264,7 +264,7 @@ $('#desa_edit').on('change', function(e){
                         </div>
                         <div class="col mb-2">
                             <label for="nama" class="font-weight-bold text-dark">Nama Lengkap<i class="text-danger text-sm text-bold">*</i><i class="text-danger text-sm text-bold">*</i></label>
-                            <input type="nama" class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama" placeholder="Masukan Nama Lengkap Pengguna" value="{{isset($pengguna->kependudukan) ? $pengguna->kependudukan->nama : old(nama) }}">
+                            <input type="nama" class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama" placeholder="Masukan Nama Lengkap Pengguna" value="{{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->nama : old(nama) }}">
                                 @error('nama')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -277,8 +277,8 @@ $('#desa_edit').on('change', function(e){
                             <label for="jenis" class="font-weight-bold text-dark">Jenis Kelamin<i class="text-danger text-sm text-bold">*</i><i class="text-danger text-sm text-bold">*</i></label>
                             <select class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="jenis">
                                 <option value="" selected>Pilih Jenis Kelamin</option>
-                                    <option value="Pria" {{$pengguna->jenis_kelamin == 'Pria' ? 'selected' : ''}}>Pria</option>
-                                    <option value="Wanita" {{$pengguna->jenis_kelamin == 'Wanita' ? 'selected' : ''}}>Wanita</option>
+                                    <option value="Pria" {{$pelanggan->jenis_kelamin == 'Pria' ? 'selected' : ''}}>Pria</option>
+                                    <option value="Wanita" {{$pelanggan->jenis_kelamin == 'Wanita' ? 'selected' : ''}}>Wanita</option>
                             </select>
                                 @error('jenis')
                                 <span class="invalid-feedback" role="alert">
@@ -288,7 +288,7 @@ $('#desa_edit').on('change', function(e){
                         </div>
                         <div class="col mb-2">
                             <label for="tanggal" class="font-weight-bold text-dark">Tanggal Lahir</label>
-                            <input type="date" class="form-control @error('tanggal') is-invalid @enderror" id="tanggal" name="tanggal" placeholder="Masukan Tanggal Lahir" value="{{$pengguna->tgl_lahir}}">
+                            <input type="date" class="form-control @error('tanggal') is-invalid @enderror" id="tanggal" name="tanggal" placeholder="Masukan Tanggal Lahir" value="{{$pelanggan->tgl_lahir}}">
                                 @error('tanggal')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -297,7 +297,7 @@ $('#desa_edit').on('change', function(e){
                         </div>
                         <div class="col mb-2">
                             <label for="alamat" class="font-weight-bold text-dark">Alamat</label>
-                            <input type="text" class="form-control @error('alamat') is-invalid @enderror"  id="alamat" name="alamat" placeholder="Masukan Alamat Penggunan" value="{{$pengguna->alamat}}">
+                            <input type="text" class="form-control @error('alamat') is-invalid @enderror"  id="alamat" name="alamat" placeholder="Masukan Alamat Penggunan" value="{{$pelanggan->alamat}}">
                                 @error('alamat')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -310,7 +310,7 @@ $('#desa_edit').on('change', function(e){
                         <!-- ganti desa -->
                         <!-- <div class='col mb-2'>
                             <label for="banjar" class="font-weight-bold text-dark">Banjar</label>
-                            <input type="text" class="form-control @error('banjar') is-invalid @enderror" id="banjar" name="banjar" placeholder="Masukan Banjar (Tempat Tinggal)" value="{{isset($pengguna->banjar) ? $pengguna->banjar->nama_banjar_dinas : '' }}">
+                            <input type="text" class="form-control @error('banjar') is-invalid @enderror" id="banjar" name="banjar" placeholder="Masukan Banjar (Tempat Tinggal)" value="{{isset($pelanggan->banjar) ? $pelanggan->banjar->nama_banjar_dinas : '' }}">
                                 @error('banjar')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -319,7 +319,7 @@ $('#desa_edit').on('change', function(e){
                         </div> -->
                         <div class='col mb-2'>
                             <label for="no" class="font-weight-bold text-dark">No Telpon</label>
-                            <input type="text" class="form-control @error('no') is-invalid @enderror" id="no" name="no" placeholder="Masukan No Telpon Aktif" value="{{$pengguna->no_telp}}">
+                            <input type="text" class="form-control @error('no') is-invalid @enderror" id="no" name="no" placeholder="Masukan No Telpon Aktif" value="{{$pelanggan->no_telp}}">
                                 @error('no')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -343,7 +343,7 @@ $('#desa_edit').on('change', function(e){
                     <div class="row">
                         <div class="col">
                             <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda Yakin Ingin Menambah Data?')"><i class="fas fa-save"></i> Simpan</button>
-                            <a href="{{route('pengguna-index')}}" class="btn btn-danger"><i class="fas fa-times"></i> Cancel</a>
+                            <a href="{{route('pelanggan-index')}}" class="btn btn-danger"><i class="fas fa-times"></i> Cancel</a>
                         </div>
                     </div>
                 </div>
@@ -494,7 +494,7 @@ $('#desa_edit').on('change', function(e){
                                 <div class='col mb-2'>
                                     <label for="nama" class="font-weight-bold text-dark">Nama Properti</label>
                                     <input type="text" class="form-control @error('jenis') is-invalid @enderror" id="nama" name="nama" placeholder="Masukan Nama Properti (cth: rumah tinggal,.. etc)" value="{{old('nama')}}">
-                                    <input type="text" class="form-control @error('pengguna') is-invalid @enderror" id="pengguna" name="pengguna" placeholder="id" value="{{$pengguna->id}}" hidden>
+                                    <input type="text" class="form-control @error('pelanggan') is-invalid @enderror" id="pelanggan" name="pelanggan" placeholder="id" value="{{$pelanggan->id}}" hidden>
                                         @error('nama')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>

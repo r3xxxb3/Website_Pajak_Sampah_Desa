@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use App\Pengguna;
+use App\Pelanggan;
 use App\Banjar;
 use App\BanjarAdat;
 use App\Desa;
@@ -42,11 +42,11 @@ class AuthController extends Controller
             'password' => 'required|min:8'
         ]);
         // dd(auth()->guard('web')->attempt($request->only(['no_telp', 'password'])));
-        $checkus = Pengguna::where('username', $request->username)->first();
+        $checkus = Pelanggan::where('username', $request->username)->first();
         if(!is_null($checkus)){
             if(auth()->guard('web')->attempt($request->only(['username', 'password']))) {
                 $request->session()->regenerate();
-                // $user = Pengguna::where('no_telp', $request->no_telp)->first();
+                // $user = Pelanggan::where('no_telp', $request->no_telp)->first();
                 
                 // dd(Auth::guard('web')->login($user));
                 // dd($user);
@@ -59,13 +59,13 @@ class AuthController extends Controller
                 return redirect()
                     ->back()
                     ->withInput()
-                    ->withErrors(["password" => "Data login pengguna salah !"], 'login');
+                    ->withErrors(["password" => "Data login pelanggan salah !"], 'login');
             }
         }else{
             return redirect()
                     ->back()
                     ->withInput()
-                    ->withErrors([ "username" => "Username pengguna tidak ditemukan !"], 'login');
+                    ->withErrors([ "username" => "Username pelanggan tidak ditemukan !"], 'login');
         }
     }
 
@@ -92,32 +92,16 @@ class AuthController extends Controller
 
         $this->validate($request, [
             'nik' => 'required',
-            'nama' => 'required',
-            'alamat' => 'required',
             'password' => 'required|min:8',
             'passcheck' => 'required|same:password'
         ],$messages);
 
         // dd($request);
 
-        $desa = Desa::where('name', 'LIKE' , $request->desa)->first();
-        // $kota = Kota::where('name', 'LIKE', $request->tempat)->first();
-
-        $pengguna = new Pengguna;
-        
-
-        if($desa!=null){
-            $pengguna->id_desa = $desa->id;
-        }
-
-        $pengguna->alamat = $request->alamat;
-        $pengguna->nik = $request->nik ;
-        $pengguna->nama_pengguna = $request->nama;
-        $pengguna->tgl_lahir = $request->tanggal ;
-        $pengguna->no_telp = $request->no ;
-        $pengguna->password = Hash::make($request->no);
-        $pengguna->jenis_kelamin = $request->jenis ;
-        $pengguna->save();
+        $pelanggan = new Pelanggan;
+        $pelanggan->username = $request->username;
+        $pelanggan->password = Hash::make($request->no);
+        $pelanggan->save();
         return redirect()->route('login-page')->with('success','Berhasil Mendaftarkan Data Pelanggan !');
     }
     

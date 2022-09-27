@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Properti;
-use App\Pengguna;
+use App\Pelanggan;
 use App\JenisJasa;
 use App\Retribusi;
 use App\StandarRetribusi;
@@ -56,7 +56,7 @@ class RetribusiCommand extends Command
             if(!isset($retribusi)){
                 if(isset($standar)){
                     $retribusi = new Retribusi;
-                    $retribusi->id_pengguna = $prop->id_pengguna;
+                    $retribusi->id_pelanggan = $prop->id_pelanggan;
                     $retribusi->id_properti = $prop->id;
                     $retribusi->status = "pending";
                     $retribusi->nominal = $standar->nominal_retribusi;
@@ -67,7 +67,7 @@ class RetribusiCommand extends Command
             }elseif($retribusi->created_at->format('m') != now()->format('m') && $retribusi->created_at->format('m') < now()->format('m') ){
                 if(isset($standar)){
                     $retribusi = new Retribusi;
-                    $retribusi->id_pengguna = $prop->id_pengguna;
+                    $retribusi->id_pelanggan = $prop->id_pelanggan;
                     $retribusi->id_properti = $prop->id;
                     $retribusi->status = "pending";
                     $retribusi->nominal = $standar->nominal_retribusi;

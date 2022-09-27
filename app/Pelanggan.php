@@ -8,12 +8,12 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class Pengguna extends Authenticatable
+class Pelanggan extends Authenticatable
 {
     use Notifiable;
     use SoftDeletes;
     //
-    protected $table = 'tb_pengguna';
+    protected $table = 'tb_pelanggan';
     protected $primaryKey = 'id';
 
     protected $fillable = [ 'chat_id'];

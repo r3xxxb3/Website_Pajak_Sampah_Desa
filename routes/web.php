@@ -103,20 +103,20 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     //Manajemen Banjar
 
 
-    //Manajemen Pengguna
-    Route::get('/pengguna', 'Admin\PenggunaController@index')->name('pengguna-index');
-    Route::get('/pengguna/create', 'Admin\PenggunaController@create')->name('pengguna-create');
-    Route::get('/pengguna/store/{id}', 'Admin\PenggunaController@store')->name('pengguna-store');
-    Route::get('/pengguna/edit/{id}', 'Admin\PenggunaController@edit')->name('pengguna-edit');
-    Route::post('/pengguna/update/{id}', 'Admin\PenggunaController@update')->name('pengguna-update');
-    Route::get('/pengguna/delete/{id}', 'Admin\PenggunaController@delete')->name('pengguna-delete');
+    //Manajemen pelanggan
+    Route::get('/pelanggan', 'Admin\pelangganController@index')->name('pelanggan-index');
+    Route::get('/pelanggan/create', 'Admin\pelangganController@create')->name('pelanggan-create');
+    Route::get('/pelanggan/store/{id}', 'Admin\pelangganController@store')->name('pelanggan-store');
+    Route::get('/pelanggan/edit/{id}', 'Admin\pelangganController@edit')->name('pelanggan-edit');
+    Route::post('/pelanggan/update/{id}', 'Admin\pelangganController@update')->name('pelanggan-update');
+    Route::get('/pelanggan/delete/{id}', 'Admin\pelangganController@delete')->name('pelanggan-delete');
 
-    //Manajemen properti pengguna
-    Route::post('/properti/store', 'Admin\PenggunaController@propertiStore' )->name('admin-properti-store');
-    Route::post('/properti/update/{id}', 'Admin\PenggunaController@propertiUpdate')->name('admin-properti-update');
-    Route::get('/properti/cancel/{id}', 'Admin\PenggunaController@propertiCancel')->name('admin-properti-cancel');
-    Route::get('/properti/delete/{id}', 'Admin\PenggunaController@propertiDelete')->name('admin-properti-delete');
-    Route::post('/banjar/search', 'Admin\PenggunaController@banjarCheck')->name('banjar-search');
+    //Manajemen properti pelanggan
+    Route::post('/properti/store', 'Admin\pelangganController@propertiStore' )->name('admin-properti-store');
+    Route::post('/properti/update/{id}', 'Admin\pelangganController@propertiUpdate')->name('admin-properti-update');
+    Route::get('/properti/cancel/{id}', 'Admin\pelangganController@propertiCancel')->name('admin-properti-cancel');
+    Route::get('/properti/delete/{id}', 'Admin\pelangganController@propertiDelete')->name('admin-properti-delete');
+    Route::post('/banjar/search', 'Admin\pelangganController@banjarCheck')->name('banjar-search');
 
 
     //Manajemen Retribusi
@@ -188,9 +188,13 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user'] , function(){
     Route::get('/request/edit/{id}', 'User\RequestController@edit')->name('request-edit');
     Route::post('/request/update/{id}', 'User\RequestController@update')->name('request-update');
     Route::get('/request/cancel/{id}', 'User\RequestController@cancel')->name('request-cancel');
+    Route::get('/request/delete/{id}', 'User\RequestController@cancel')->name('request-delete');
 
     //Pembayaran
+    Route::get('/pembayaran', 'User\PembayaranController@index')->name('pembayaran-index');
     Route::post('/pembayaran/store', 'User\PembayaranController@store')->name('pembayaran-store');
+    Route::post('/Pembayaran/update', 'User\PembayaranController@update')->name('pembayaran->update');
+
 });
 
 Route::get('/home', 'HomeController@landing')->name('home');

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Pegawai;
-use App\Pengguna;
+use App\Pelanggan;
 use App\Banjar;
 use App\Kependudukan;
 use Illuminate\Support\Facades\Hash;
@@ -30,7 +30,7 @@ class PegawaiController extends Controller
 
     public function storePegawai(Request $request){
         $penduduk = Kependudukan::where('id', $request->idpeng)->first();
-        // dd($pengguna);
+        // dd($pelanggan);
         if($penduduk != null){
             $pegawai = new Pegawai;
             $pegawai->id_desa_adat = auth()->guard('admin')->user()->kependudukan->mipil->banjarAdat->desaAdat->id;
@@ -56,7 +56,7 @@ class PegawaiController extends Controller
 	// 	];
 
     //     $this->validate($request, [
-    //         'nik' => 'required|unique:tb_pengguna',
+    //         'nik' => 'required|unique:tb_pelanggan',
     //         'nama' => 'required',
     //         'no' => 'required',
     //     ],$messages);
@@ -66,29 +66,29 @@ class PegawaiController extends Controller
     //     $banjar = Banjar::where('nama_banjar_dinas', 'LIKE' , $request->banjar)->first();
     //     // $kota = Kota::where('name', 'LIKE', $request->tempat)->first();
 
-    //     $pengguna = new Pengguna;
+    //     $pelanggan = new Pelanggan;
         
 
     //     if($banjar!=null){
-    //         $pengguna->id_banjar = $banjar->id;
+    //         $pelanggan->id_banjar = $banjar->id;
     //     }
 
-    //     $pengguna->alamat = $request->alamat;
-    //     $pengguna->nik = $request->nik ;
-    //     $pengguna->nama_pengguna = $request->nama;
-    //     $pengguna->tgl_lahir = $request->tanggal ;
-    //     $pengguna->no_telp = $request->no ;
-    //     $pengguna->jenis_kelamin = $request->jenis ;
-    //     $pengguna->save();
+    //     $pelanggan->alamat = $request->alamat;
+    //     $pelanggan->nik = $request->nik ;
+    //     $pelanggan->nama = $request->nama;
+    //     $pelanggan->tgl_lahir = $request->tanggal ;
+    //     $pelanggan->no_telp = $request->no ;
+    //     $pelanggan->jenis_kelamin = $request->jenis ;
+    //     $pelanggan->save();
 
-    //     $pengguna = Pengguna::where('nik', $request->nik)->first();
+    //     $pelanggan = Pelanggan::where('nik', $request->nik)->first();
 
     //     $pegawai = new Pegawai;
     //     $pegawai->username = $request->no;
     //     $pegawai->password = Hash::make($request->no);
     //     $pegawai->save();
 
-    //     return redirect()->route('pegawai-index')->with('success','Berhasil Menambah Data Pengguna dan Menambahkan Pegawai !');
+    //     return redirect()->route('pegawai-index')->with('success','Berhasil Menambah Data Pelanggan dan Menambahkan Pegawai !');
     // }
 
     public function editPegawai($id){
@@ -110,7 +110,7 @@ class PegawaiController extends Controller
 		];
 
         $this->validate($request, [
-            'nik' => 'required|unique:tb_pengguna',
+            'nik' => 'required|unique:tb_pelanggan',
             'nama' => 'required',
             'no' => 'required',
         ],$messages);
@@ -119,10 +119,10 @@ class PegawaiController extends Controller
 
         // $kota = Kota::where('name', 'LIKE', $request->tempat)->first();
 
-        $pegawai = Pegawai::where('id_pengguna', $id)->first();
-        if($pegawai != null && $pegawai->id_pengguna != null){
+        $pegawai = Pegawai::where('id_pelanggan', $id)->first();
+        if($pegawai != null && $pegawai->id_penduduk != null){
             $data_kependudukan = Kependuduk::where('id', $pegawai->id_penduduk)->first();
-            // dd($pengguna);
+            // dd($pelanggan);
     
             // dd($request->alamat.' '.$request->nama );
             $data_kependudukan->alamat = $request->alamat;
