@@ -37,7 +37,7 @@ List Request Pengangkutan
 
     function setRequest(id){
             $('#idReq').val(id);
-            // console.log(id);
+            console.log(id);
     }
 </script>
 @endsection
@@ -112,7 +112,7 @@ List Request Pengangkutan
                             @foreach ($index as $i)
                                 <tr>
                                     <td align="center">
-                                        <a class="btn btn-success btn-sm text-white" onclick="setRequest({{$i}})" data-toggle="modal" data-target="#modal-confirm"  ><i class="fas fa-check-double"></i></a>
+                                        <a class="btn btn-success btn-sm text-white" onclick="setRequest({{$i->id}})" data-toggle="modal" data-target="#modal-confirm"  ><i class="fas fa-check-double"></i></a>
                                         <a class="btn btn-info btn-sm text-white" onclick="swal({title: 'Konfirmasi Request Pengangkutan ?', icon: 'warning', buttons:{cancel: {text: 'Tidak',value: null,visible: true,closeModal: true,},confirm: {text: 'Ya',value: true,visible: true,closeModal: true}}}).then(function(value){if(value){window.location = window.location = '{{Route('admin-request-confirm', $i->id)}}' }})" ><i class="fas fa-check"></i></a>
                                         <a href="/admin/request/edit/{{$i->id}}" class="btn btn-warning btn-sm"><i class="fas fa-pencil-alt"></i></a>
                                         <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/request/delete/{{$i->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
@@ -124,7 +124,7 @@ List Request Pengangkutan
                                         {{isset($i) ? $i->alamat : ''}}
                                     </td>
                                     <td>
-                                        {{isset($i->nominal) ? $i->nominal : 'Belum Ditetapkan !'}}
+                                        {{isset($i->nominal) ? 'Rp.'.' '.number_format($i->nominal) : 'Belum Ditetapkan !'}}
                                     </td>
                                     <td>
                                         {{isset($i) ? $i->created_at : ''}}
@@ -136,7 +136,7 @@ List Request Pengangkutan
                                         @if($i->status == "Pending")
                                             <span class="badge badge-warning">{{$i->status}}</span>
                                         @elseif($i->status == "Terkonfirmasi")
-                                            <span class="badge badge-primary">{{$i->status}}</span>
+                                            <span class="badge badge-info">{{$i->status}}</span>
                                         @elseif($i->status == "Selesai")
                                             <span class="badge badge-success">{{$i->status}}</span>
                                         @else
@@ -181,11 +181,14 @@ List Request Pengangkutan
                             <div class="col">
                                 <h6 class="m-0 font-weight-bold text-primary">Verifikasi Request Pengangkutan</h6>
                             </div>
+                        </div>
                             <form id="konfirmasi" action="{{Route('admin-request-verif')}}" method="post" enctype="multipart/form-data">
+                                @csrf
                                 <div class="row">
-                                    <div class="col mb-2">
+                                    <div class="col mt-4 mb-2">
                                         <input type="text" class="form-control @error('idReq') is-invalid @enderror" id="idReq" name="idReq" hidden>
-                                        <input type="number" class="form-control @error('nominal') is-invalid @enderror disabled" id="nominal" name="Nominal" placeholder="Tentukan Nominal !">
+                                        <label for="nominal" class="font-weight-bold text-dark">Nominal Pengangkutan</label>
+                                        <input type="number" class="form-control @error('nominal') is-invalid @enderror disabled" id="nominal" name="nominal" placeholder="Tentukan Nominal !">
                                         @error('nominal')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -194,12 +197,12 @@ List Request Pengangkutan
                                     </div>
                                 </div>
                             </form>
-                            <div class="row">
+                            <div class="row mt-3">
                                 <div class="col">
-                                    onclick="swal({title: 'Anda yakin ingin menambahkan pegawai ?', icon: 'warning', buttons:{cancel: {text: 'Tidak',value: null,visible: true,closeModal: true,},confirm: {text: 'Ya',value: true,visible: true,closeModal: true}}}).then(function(value){if(value){$('#pegawai').submit()}})"
+                                    <button class="btn btn-success" onclick="swal({title: 'Selesaikan Pengangkutan ?', icon: 'warning', buttons:{cancel: {text: 'Tidak',value: null,visible: true,closeModal: true,},confirm: {text: 'Ya',value: true,visible: true,closeModal: true}}}).then(function(value){if(value){$('#konfirmasi').submit()}})"><i class="fas fa-save"></i> Selesai</button>
+                                    <a data-dismiss="modal" class="btn btn-danger text-white"><i class="fas fa-times"></i> Close</a>
                                 </div>
                             </div>
-                        </div>
                     </div>
                 </div>
         </div>

@@ -39,20 +39,25 @@ class RequestController extends Controller
 
     public function verif(Request $request){
         $requestP = Pengangkutan::where('id', $request->idReq)->first();
-        if($requestP->status == "Pending"){
-            return redirect()->back()->with('error', "Lakukan Konfirmasi request pengangkutan terlebih dahulu !");
-        }elseif($requestP->status == "Terkonfirmasi"){
-            if($request->nominal != 0){
-                $requestP->nominal = $request->nominal;
-                $requestP->status = "Selesai";
-                if($requestP->update()){
-                    return redirect()->route('admin-request-index')->with('success', "Verifikasi Request Pengangkutan Berhasil !");
+        // dd($requestP);
+        if(isset($requestP)){
+            if($requestP->status == "Pending"){
+                return redirect()->back()->with('error', "Lakukan Konfirmasi request pengangkutan terlebih dahulu !");
+            }elseif($requestP->status == "Terkonfirmasi"){
+                if($request->nominal != 0){
+                    $requestP->nominal = $request->nominal;
+                    $requestP->status = "Selesai";
+                    if($requestP->update()){
+                        return redirect()->route('admin-request-index')->with('success', "Verifikasi Request Pengangkutan Berhasil !");
+                    }else{
+                        return redirect()->back()->with('error', "verifikasi Request Pengangkutan Gagal !");
+                    }
                 }else{
-                    return redirect()->back()->with('error', "verifikasi Request Pengangkutan Gagal !");
+                    return redirect()->back()->with('error', "Tetapkan Nominal request pengangkutan terlebih dahulu !");
                 }
-            }else{
-                return redirect()->back()->with('error', "Tetapkan Nominal request pengangkutan terlebih dahulu !");
             }
+        }else{
+            return redirect()->back()->with('error', "Data Request tidak ditemukan !");
         }
     }
 
