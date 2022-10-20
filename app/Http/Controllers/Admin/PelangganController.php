@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 use App\Pelanggan;
 use App\KramaMipil;
 use App\KramaTamiu;
@@ -39,7 +40,7 @@ class PelangganController extends Controller
             $desaAdat = DesaAdat::where('id',$banjarAdat->desa_adat_id)->first();
             $penduduk = [];
             if(isset($desaAdat)){
-                foreach($desaAdat->banjarAdat as $banjar){
+                foreach($desaAdat->banjarAdat as $loop=>$banjar){
                     $data = KramaMipil::where('banjar_adat_id', $banjar->id)->get()->toArray();
                     if(!empty($data)){
                         foreach($data as $index=>$d){
@@ -63,7 +64,10 @@ class PelangganController extends Controller
                     }
                 }
                 // dd($penduduk);
-                $index = Pelanggan::whereIn('id_penduduk', $penduduk)->get();
+                $index = Pelanggan::whereHas('properti', function (Builder $query){
+                    $query->where('id_desa_adat', auth()->guard('admin')->user()->kependudukan->mipil->banjarAdat->desaAdat->id);
+                })->orWhereIn('id_penduduk', $penduduk)->get();
+                // dd($index);
                 return view('admin.pelanggan.index',compact('index'));
             }else{
                 return view('admin.pelanggan.index')->with('error', "Desa Adat tidak ditemukan !");

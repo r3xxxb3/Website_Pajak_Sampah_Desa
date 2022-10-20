@@ -91,18 +91,24 @@ class AuthController extends Controller
 		];
 
         $this->validate($request, [
+            'username' => 'required|unique:tb_pelanggan',
             'nik' => 'required',
             'password' => 'required|min:8',
             'passcheck' => 'required|same:password'
         ],$messages);
 
         // dd($request);
-
-        $pelanggan = new Pelanggan;
-        $pelanggan->username = $request->username;
-        $pelanggan->password = Hash::make($request->no);
-        $pelanggan->save();
-        return redirect()->route('login-page')->with('success','Berhasil Mendaftarkan Data Pelanggan !');
+        $penduduk = Penduduk::where('nik', $request->nik)->first();
+        if(isset($penduduk)){
+            $pelanggan = new Pelanggan;
+            $pelanggan->id_penduduk = $penduduk->id;
+            $pelanggan->username = $request->username;
+            $pelanggan->password = Hash::make($request->no);
+            $pelanggan->save();
+            return redirect()->route('login-page')->with('success','Berhasil Mendaftarkan Data Pelanggan !');
+        }else{
+            return redirect()->route('login-page')->with('Error','Query Error !');
+        }
     }
     
     public function registerSearch(Request $request){

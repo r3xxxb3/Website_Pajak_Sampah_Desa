@@ -35,7 +35,7 @@ Edit Role
                 <div class="form-group card-header shadow">
                     <div class="row">
                         <div class="col">
-                            <h3 class="font-weight-bold text-primary"><i class="fas fa-plus"></i>Update Data Role</h3>
+                            <h3 class="font-weight-bold text-primary"><i class="fas fa-plus"></i>Update Role</h3>
                         </div>
                     </div>
                 </div>

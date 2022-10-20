@@ -123,9 +123,9 @@ function lihatProperti(properti) {
                                     <!-- {{$properti->file}} -->
                                 </td>
                                 <td>
-                                    @if($properti->status == 'Terverifikasi')
+                                    @if($properti->status == 'terverifikasi')
                                     <span class="badge badge-success">{{$properti->status}}</span>
-                                    @elseif($properti->status == 'Pending')
+                                    @elseif($properti->status == 'pending')
                                     <span class="badge badge-warning">{{$properti->status}}</span>
                                     @else
                                     <span class="badge badge-danger">{{$properti->status}}</span>

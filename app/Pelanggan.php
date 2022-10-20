@@ -27,4 +27,8 @@ class Pelanggan extends Authenticatable
     public function kependudukan(){
         return $this->belongsTo(Kependudukan::class, 'id_penduduk', 'id');
     }
+
+    public function properti(){
+        return $this->hasMany(Properti::Class, 'id_pelanggan', 'id');
+    }
 }

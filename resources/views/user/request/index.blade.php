@@ -124,7 +124,7 @@ List Request Pengangkutan
                                         {{isset($i) ? $i->alamat : ''}}
                                     </td>
                                     <td>
-                                        {{isset($i->nominal) ? $i->nominal : 'Belum Ditetapkan !'}}
+                                        {{isset($i->nominal) ? 'Rp'.number_format($i->nominal ?? 0, 0, ',', '.') : 'Belum Ditetapkan !'}}
                                     </td>
                                     <td>
                                         {{isset($i) ? $i->created_at : ''}}

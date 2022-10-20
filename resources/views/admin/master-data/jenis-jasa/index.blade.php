@@ -114,7 +114,7 @@ Index Jenis Jasa
                             <?php echo $jenis->standar->map->nominal_retribusi ?>
                             @endif -->
 
-                            Rp. {{ $hargaAtas == 0 ? '-' : number_format($hargaAtas ?? 0,0,',','.') }}
+                            Rp{{ $hargaAtas == 0 ? '-' : number_format($hargaAtas ?? 0,0,',','.') }}
 
                             <!-- {{isset($jenis->standar) ? ($jenis->standar->map->range_nominal != "[null]" ? $jenis->standar->map->range_nominal." - ".$jenis->standar->map->nominal_retribusi : $jenis->standar->map->nominal_retribusi ) : ''}} -->
                         </td>

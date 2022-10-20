@@ -35,7 +35,7 @@ Create Role
                 <div class="form-group card-header shadow">
                     <div class="row">
                         <div class="col">
-                            <h3 class="font-weight-bold text-primary"><i class="fas fa-plus"></i>Tambah Data Role</h3>
+                            <h3 class="font-weight-bold text-primary"><i class="fas fa-plus"></i>Tambah Role</h3>
                         </div>
                     </div>
                 </div>

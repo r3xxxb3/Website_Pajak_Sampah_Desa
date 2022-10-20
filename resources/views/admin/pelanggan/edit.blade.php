@@ -254,7 +254,7 @@ $('#desa_edit').on('change', function(e){
                                 @enderror
                         </div> -->
                         <div class="col mb-2">
-                            <label for="nik" class="font-weight-bold text-dark">NIK<i class="text-danger text-sm text-bold">*</i><i class="text-danger text-sm text-bold">*</i></label>
+                            <label for="nik" class="font-weight-bold text-dark">NIK<i class="text-danger text-sm text-bold">*</i></label>
                             <input type="text" class="form-control @error('nik') is-invalid @enderror" id="nik" name="nik" placeholder="Masukan No Induk Kependudukan" value="{{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->nik : old(nik)}}">
                                 @error('nik')
                                 <span class="invalid-feedback" role="alert">
@@ -263,7 +263,7 @@ $('#desa_edit').on('change', function(e){
                                 @enderror
                         </div>
                         <div class="col mb-2">
-                            <label for="nama" class="font-weight-bold text-dark">Nama Lengkap<i class="text-danger text-sm text-bold">*</i><i class="text-danger text-sm text-bold">*</i></label>
+                            <label for="nama" class="font-weight-bold text-dark">Nama Lengkap<i class="text-danger text-sm text-bold">*</i></label>
                             <input type="nama" class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama" placeholder="Masukan Nama Lengkap Pengguna" value="{{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->nama : old(nama) }}">
                                 @error('nama')
                                 <span class="invalid-feedback" role="alert">
@@ -274,11 +274,11 @@ $('#desa_edit').on('change', function(e){
                     </div>
                     <div class="row">
                         <div class='col mb-2'>
-                            <label for="jenis" class="font-weight-bold text-dark">Jenis Kelamin<i class="text-danger text-sm text-bold">*</i><i class="text-danger text-sm text-bold">*</i></label>
+                            <label for="jenis" class="font-weight-bold text-dark">Jenis Kelamin<i class="text-danger text-sm text-bold">*</i></label>
                             <select class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="jenis">
                                 <option value="" selected>Pilih Jenis Kelamin</option>
-                                    <option value="Pria" {{$pelanggan->jenis_kelamin == 'Pria' ? 'selected' : ''}}>Pria</option>
-                                    <option value="Wanita" {{$pelanggan->jenis_kelamin == 'Wanita' ? 'selected' : ''}}>Wanita</option>
+                                    <option value="Pria" {{isset($pelanggan->kependudukan) ? ($pelanggan->kependudukan->jenis_kelamin == 'laki-laki' ? 'selected' : '') : ''}}>Laki-laki</option>
+                                    <option value="Wanita" {{isset($pelanggan->kependudukan) ? ($pelanggan->kependudukan->jenis_kelamin == 'perempuan' ? 'selected' : '') : ''}}>perempuan</option>
                             </select>
                                 @error('jenis')
                                 <span class="invalid-feedback" role="alert">
@@ -288,7 +288,7 @@ $('#desa_edit').on('change', function(e){
                         </div>
                         <div class="col mb-2">
                             <label for="tanggal" class="font-weight-bold text-dark">Tanggal Lahir</label>
-                            <input type="date" class="form-control @error('tanggal') is-invalid @enderror" id="tanggal" name="tanggal" placeholder="Masukan Tanggal Lahir" value="{{$pelanggan->tgl_lahir}}">
+                            <input type="date" class="form-control @error('tanggal') is-invalid @enderror" id="tanggal" name="tanggal" placeholder="Masukan Tanggal Lahir" value="{{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->tanggal_lahir : ''}}">
                                 @error('tanggal')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -297,7 +297,7 @@ $('#desa_edit').on('change', function(e){
                         </div>
                         <div class="col mb-2">
                             <label for="alamat" class="font-weight-bold text-dark">Alamat</label>
-                            <input type="text" class="form-control @error('alamat') is-invalid @enderror"  id="alamat" name="alamat" placeholder="Masukan Alamat Penggunan" value="{{$pelanggan->alamat}}">
+                            <input type="text" class="form-control @error('alamat') is-invalid @enderror"  id="alamat" name="alamat" placeholder="Masukan Alamat Penggunan" value="{{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->alamat : ''}}">
                                 @error('alamat')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -319,7 +319,7 @@ $('#desa_edit').on('change', function(e){
                         </div> -->
                         <div class='col mb-2'>
                             <label for="no" class="font-weight-bold text-dark">No Telpon</label>
-                            <input type="text" class="form-control @error('no') is-invalid @enderror" id="no" name="no" placeholder="Masukan No Telpon Aktif" value="{{$pelanggan->no_telp}}">
+                            <input type="text" class="form-control @error('no') is-invalid @enderror" id="no" name="no" placeholder="Masukan No Telpon Aktif" value="{{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->telepon : ''}}">
                                 @error('no')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -428,7 +428,13 @@ $('#desa_edit').on('change', function(e){
                                 <!-- {{$properti->file}} -->
                             </td>
                             <td>
-                                {{$properti->status}}
+                                @if($properti->status == 'terverifikasi')
+                                <span class="badge badge-success">{{$properti->status}}</span>
+                                @elseif($properti->status == 'pending')
+                                <span class="badge badge-warning">{{$properti->status}}</span>
+                                @else
+                                <span class="badge badge-danger">{{$properti->status}}</span>
+                                @endif
                             </td>
 
                         </tr>
