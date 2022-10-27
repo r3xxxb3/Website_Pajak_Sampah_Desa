@@ -192,6 +192,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user'] , function(){
 
     //Pembayaran
     Route::get('/pembayaran', 'User\PembayaranController@index')->name('pembayaran-index');
+    Route::get('/pembayaran/create', 'User\PembayaranController@create')->name('pembayaran-create');
     Route::post('/pembayaran/store', 'User\PembayaranController@store')->name('pembayaran-store');
     Route::post('/Pembayaran/update', 'User\PembayaranController@update')->name('pembayaran->update');
 

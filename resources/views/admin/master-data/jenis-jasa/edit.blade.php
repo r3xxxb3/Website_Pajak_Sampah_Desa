@@ -279,7 +279,6 @@ Edit Jenis Jasa
                         <tr class="table-primary">
                             <th class="col-2">Action</th>
                             <th>Nominal</th>
-                            <th>Durasi</th>
                             <th>Status Aktif</th>
                         </tr>
                     </thead>
@@ -292,9 +291,6 @@ Edit Jenis Jasa
                             </td>
                             <td>
                                 {{"Rp."." ".number_format($retri->nominal_retribusi ?? 0,0, ',', '.')}}
-                            </td>
-                            <td>
-                                {{$retri->durasi." "."Bulan"}}
                             </td>
                             <div>
                                 <td style="width: fit-content;" class="text-center">
@@ -341,15 +337,6 @@ Edit Jenis Jasa
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
-                                        @enderror
-                                </div>
-                                <div class="col mb-2">
-                                    <label for="durasi" class="font-weight-bold text-dark">Durasi</label>
-                                    <input type="text" class="form-control @error('durasi') is-invalid @enderror" id="durasi" name="durasi" placeholder="Durasi Pembayaran (Bulan)">
-                                        @error('durasi')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>    
                                         @enderror
                                 </div>
                             </div>
@@ -408,15 +395,6 @@ Edit Jenis Jasa
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
-                                        @enderror
-                                </div>
-                                <div class="col mb-2">
-                                    <label for="durasi" class="font-weight-bold text-dark">Durasi</label>
-                                    <input type="text" class="form-control @error('durasi') is-invalid @enderror" id="durasi" name="durasi" placeholder="Durasi Pembayaran (Bulan)" value="{{$retri->durasi}}">
-                                        @error('durasi')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>    
                                         @enderror
                                 </div>
                             </div>

@@ -13,6 +13,13 @@ use App\Pembayaran;
 class PembayaranController extends Controller
 {
     //
+    public function index(){
+        // dd(auth()->guard('web')->user()->id);
+        $index = Pembayaran::where('id_pelanggan' ,auth()->guard('web')->user()->id)->get();
+
+        return view('user.pembayaran.index', compact('index'));
+    }
+
     public function store (Request $request){
 
         $messages = [

@@ -98,19 +98,20 @@ Pembayaran
                     <table class="table table-hover table-bordered  " id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr class="table-primary">
-                                <th class="col col-sm-2">Action</th>
+                                <th>Action</th>
                                 <th>Pelanggan</th>
                                 <th>Properti</th>
                                 <th>Bukti Bayar</th>
-                                <th class="col col-sm-2">Metode Pembayaran</th>
+                                <th>Metode Pembayaran</th>
                                 <th class="col col-sm-2">Nominal</th>
+                                <th>Tanggal Pembayaran</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
                         @foreach ($index as $pembayaran)
                             <tr>
-                                <td align="center">
+                                <td align="center" class="col col-sm-2">
                                 @if($pembayaran->status == "pending")
                                     <a href="/admin/pembayaran/verif/{{$pembayaran->id_pembayaran}}" class="btn btn-success btn-sm"><i class="fas fa-check"></i></a>
                                     <a href="/admin/pembayaran/edit/{{$pembayaran->id_pembayaran}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
@@ -143,11 +144,14 @@ Pembayaran
                                         Tidak Terdapat Foto Bukti Bayar
                                     @endif
                                 </td>
-                                <td>
+                                <td class="col col-sm-1">
                                     {{$pembayaran->media}}
                                 </td>
                                 <td>
                                     {{"Rp. ".number_format($pembayaran->nominal ?? 0,0,',','.')}}
+                                </td>
+                                <td>
+                                    {{$pembayaran->created_at->format('d M Y')}}
                                 </td>
                                 <td>
                                     @if($pembayaran->status == "pending")
