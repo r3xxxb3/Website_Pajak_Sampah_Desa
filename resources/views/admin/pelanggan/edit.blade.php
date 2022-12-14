@@ -73,8 +73,8 @@ Edit Data Pelanggan
         
         markerGroupEdit.clearLayers();
     
-        $('#lat-edit').val(e.latlng.lat);
-        $('#lng-edit').val(e.latlng.lng);
+        $('#lat_edit').val(e.latlng.lat);
+        $('#lng_edit').val(e.latlng.lng);
     
         L.marker([
             e.latlng.lat,e.latlng.lng
@@ -141,26 +141,24 @@ $("#file_edit").change(function() {
 });
 
 $(document).ready( function () {
-    $(document).ready( function () {
-        $('#dataTable').DataTable({
-            "oLanguage":{
-                "sSearch": "Cari:",
-                "sZeroRecords": "Data tidak ditemukan",
-                "sSearchPlaceholder": "Cari properti...",
-                "infoEmpty": "Menampilkan 0 data",
-                "infoFiltered": "(dari _MAX_ data)",
-                "sLengthMenu": "Tampilkan _MENU_ data",
-            },
-            "language":{
-                "paginate": {
-                        "previous": 'Sebelumnya',
-                        "next": 'Berikutnya'
-                    },
-                "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
-            },
-        });
-    } );
-    } );
+    $('#dataTable').DataTable({
+        "oLanguage":{
+            "sSearch": "Cari:",
+            "sZeroRecords": "Data tidak ditemukan",
+            "sSearchPlaceholder": "Cari properti...",
+            "infoEmpty": "Menampilkan 0 data",
+            "infoFiltered": "(dari _MAX_ data)",
+            "sLengthMenu": "Tampilkan _MENU_ data",
+        },
+        "language":{
+            "paginate": {
+                    "previous": 'Sebelumnya',
+                    "next": 'Berikutnya'
+                },
+            "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
+        },
+    });
+} );
 </script>
 
 <script>
