@@ -38,6 +38,65 @@ Pembayaran
         }
     }
 </script>
+
+<script>
+    var table = $('#dataTableModal').DataTable({
+            "oLanguage":{
+                "sSearch": "Cari:",
+                "sZeroRecords": "Data tidak ditemukan",
+                "sSearchPlaceholder": "Cari detail",
+                "infoEmpty": "Menampilkan 0 data",
+                "infoFiltered": "(dari _MAX_ data)",
+                "sLengthMenu": "Tampilkan _MENU_ data",
+            },
+            "language":{
+                "paginate": {
+                        "previous": 'Sebelumnya',
+                        "next": 'Berikutnya'
+                    },
+                "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
+            },
+            pageLength: 5,
+            lengthMenu: [[5, 10, 20, -1], [5, 10, 20, "All"]]
+        });
+
+    function detailPembayaran(detail){
+        console.log(detail);
+        console.log(detail.map(x => x.id_properti));
+        var properti = detail.map(x => x.id_properti);
+        var pelanggan = detail.map(x => x.id_pelanggan);
+
+        e.preventDefault();
+
+        $.ajax({
+                method : 'POST',
+                url : '{{route("admin-pembayaran-search")}}',
+                data : {
+                "_token" : "{{ csrf_token() }}",
+                properti : properti,
+                pelanggan : pelanggan,
+                },
+                beforeSend : function() {
+                            
+                },
+                success : (res) => {
+                    console.log(res);
+                    table.clear();
+                    jQuery.each(res, function(i, val){
+                        
+                    });
+                }
+            });
+        // foreach(detail){
+        //     table.row.add([
+        //                     '<p>'+detail.nama+'</p>',
+        //                     '<p>'+detail.nama_lain+'</p>',
+        //                     '<p>'+detail.nama_latin+'</p>',
+        //                     '<p>'+detail.habitus+'</p>',
+        //                 ]);
+        // }
+    }
+</script>
 @endsection
 
 @section('style')
@@ -117,7 +176,7 @@ Pembayaran
                                     <a href="/admin/pembayaran/edit/{{$pembayaran->id_pembayaran}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"> Ubah</i></a><br>
                                     <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/pembayaran/delete/{{$pembayaran->id_pembayaran}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"> Hapus</i></a>
                                 @elseif($pembayaran->status == "lunas")
-                                    <a class="btn btn-info text-white btn-sm col"><i class="fas fa-eye"> Lihat</i></a>
+                                    <a class="btn btn-info text-white btn-sm col" data-toggle="modal" data-target="#modal-detail" onClick="detailPembayaran({{$pembayaran->detail->map->model}})" ><i class="fas fa-eye"> Lihat</i></a>
                                 @endif
                                 </td>
                                 <td>
@@ -201,8 +260,7 @@ Pembayaran
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <a class= "btn btn-success text-white mb-2" href="{{route('admin-pembayaran-create')}}"><i class="fas fa-plus"></i> Tambah Data Pembayaran </a>
-                            <table class="table table-hover table-bordered  " id="dataTable" width="100%" cellspacing="0">
+                            <table class="table table-hover table-bordered  " id="dataTableModal" width="100%" cellspacing="0">
                                 <thead>
                                     <tr class="table-primary">
                                         <th>Jenis</th>
@@ -211,10 +269,8 @@ Pembayaran
                                         <th>Status</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td></td>
-                                    </tr>
+                                <tbody id="detail_pembayaran" name="detail_pembayaran">
+                                    
                                 </tbody>
                             </table>
                         </div>

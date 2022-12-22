@@ -1,6 +1,6 @@
 <aside id="sidebar-wrapper">
-  <div class="sidebar-brand">
-    <a href="{{ route('admin-dashboard') }}">Retribusi <br> Pengelolaan Sampah</a>
+  <div class="sidebar-brand mb-4">
+    <a href="{{ route('admin-dashboard') }}"> <p>Retribusi</p><p>Pengelolaan Sampah</p> </a>
   </div>
   <div class="sidebar-brand sidebar-brand-sm">
     <!-- <a href="index.html">{{auth()->guard('admin')->user()->kependudukan->nama[1]}}</a> -->

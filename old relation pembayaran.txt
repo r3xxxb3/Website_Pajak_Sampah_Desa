@@ -1,0 +1,17 @@
+public function retribusi(){
+        return $this->morphedByMany(Retribusi::class, 'model', 'tb_detail_pembayaran', 'id_pembayaran', 'model_id')->withTimeStamps();
+    }
+
+    public function pengangkutan(){
+        return $this->morphedByMany(Pengangkutan::class, 'model', 'tb_detail_pembayaran', 'id_pembayaran', 'model_id')->withTimeStamps();
+    }
+
+
+public function pembayaran() {
+        return $this->morphToMany(Pembayaran::class, 'model' ,'tb_detail_pembayaran' , 'model_id', 'id_pembayaran');
+    }
+
+
+public function pembayaran(){
+        return $this->morphedToMany(Pembayaran::class, 'model', 'tb_detail_pembayaran', 'model_id', 'id_pembayaran');
+    }

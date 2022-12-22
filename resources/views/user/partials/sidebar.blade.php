@@ -1,6 +1,6 @@
 <aside id="sidebar-wrapper">
-  <div class="sidebar-brand">
-    <a href="{{ route('admin-dashboard') }}">{{ env('APP_NAME') }}</a>
+  <div class="sidebar-brand mb-4">
+    <a href="{{ route('admin-dashboard') }}"> <p>Retribusi</p> <p>Pengelolaan Sampah</p> </a>
   </div>
   <div class="sidebar-brand sidebar-brand-sm">
     <a href="index.html">Lokasi Desa</a>

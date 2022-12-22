@@ -141,6 +141,7 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::get('/pembayaran/verif/{id}', 'Admin\PembayaranController@verif')->name('admin-pembayaran-verif');
     Route::post('/pembayaran/update/{id}', 'Admin\PembayaranController@update')->name('admin-pembayaran-update');
     Route::get('/pembayaran/delete/{id}', 'Admin\PembayaranController@delete')->name('admin-pembayaran-delete');
+    Route::post('/pembayaran/search', 'Admin\PembayaranController@search')->name('admin-pembayaran-search');
 
 });
 

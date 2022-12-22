@@ -15,9 +15,15 @@ class PembayaranController extends Controller
 {
     //
     public function index(){
-        $index = Pembayaran::orderByRaw("FIELD(status, 'pending', 'lunas') DESC")->get();
+        $index = Pembayaran::with('detail')->orderByRaw("FIELD(status, 'pending', 'lunas') DESC")->get();
         // foreach($index as $pembayaran){
         //     dd($pembayaran->retribusi()->get());
+        // }
+        // foreach($index as $i){
+        //     // dd($i->detail);
+        //     foreach($i->detail as $d){
+        //         dd($d->model->pelanggan);
+        //     }
         // }
         return view('admin.pembayaran.index', compact('index'));
     }
@@ -59,5 +65,9 @@ class PembayaranController extends Controller
 
     public function delete(){
 
+    }
+
+    public function search(Request $request){
+        dd($request);
     }
 }
