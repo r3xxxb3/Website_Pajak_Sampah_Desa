@@ -49,8 +49,12 @@ List Request Pengangkutan
             markerGroup.clearLayers();
 
             // console.log(e.latlng.lat,e.latlng.lng);
-            $('#lat').val(e.latlng.lat);
-            $('#lng').val(e.latlng.lng);
+            if({{$requestP->status == "Selesai"}}){
+
+            }else{
+                $('#lat').val(e.latlng.lat);
+                $('#lng').val(e.latlng.lng);
+            }
 
             //var c = L.circle([e.latlng.lat,e.latlng.lng], {radius: 15}).addTo(map);
             //   L.polygon([
@@ -128,7 +132,11 @@ List Request Pengangkutan
                 <div class="form-group card-header shadow">
                     <div class="row">
                         <div class="col">
-                            <h3 class="font-weight-bold text-primary"><i class="fas fa-plus"></i>Edit Request Pengangkutan</h3>
+                            @if($requestP->status == "Selesai")
+                            <h3 class="font-weight-bold text-primary"><i class="fas fa-eye"></i> Lihat Request Pengangkutan</h3>
+                            @else
+                            <h3 class="font-weight-bold text-primary"><i class="fas fa-pencil-alt"></i> Edit Request Pengangkutan</h3>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -139,7 +147,7 @@ List Request Pengangkutan
                             <div class="" id="map"></div>
                             <div class="row mt-3">
                                 <div class="col">
-                                    <input type="text" class="form-control @error('lat') is-invalid @enderror" id="lat" name="lat" placeholder="Latitude" value="{{isset($requestP->lat) ? $requestP->lat : old('lat')}}">
+                                    <input type="text" class="form-control @error('lat') is-invalid @enderror" id="lat" name="lat" placeholder="Latitude" value="{{isset($requestP->lat) ? $requestP->lat : old('lat')}}" {{$requestP->status == "Selesai" ? 'disabled' : ''}}>
                                     @error('lat')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -147,7 +155,7 @@ List Request Pengangkutan
                                     @enderror
                                 </div>
                                 <div class="col">
-                                    <input type="text" class="form-control @error('lng') is-invalid @enderror" id="lng" name="lng" placeholder="Longitude" value="{{isset($requestP->lng) ? $requestP->lng : old('lng')}}">
+                                    <input type="text" class="form-control @error('lng') is-invalid @enderror" id="lng" name="lng" placeholder="Longitude" value="{{isset($requestP->lng) ? $requestP->lng : old('lng')}}" {{$requestP->status == "Selesai" ? 'disabled' : ''}}>
                                     @error('lng')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -165,7 +173,7 @@ List Request Pengangkutan
                                 <img src=""  height="300px" style="object-fit:cover" class="mb-3" id="prop">
                                 @endif
                             </div>
-                            <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" accept="image/png, image/jpeg, image/jpg" placeholder="Masukan file gambar Lokasi" value="{{isset($requestP->file) ? $requestP->file : old('file')}}">
+                            <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" accept="image/png, image/jpeg, image/jpg" placeholder="Masukan file gambar Lokasi" value="{{isset($requestP->file) ? $requestP->file : old('file')}}" {{$requestP->status == "Selesai" ? 'disabled' : ''}}>
                                 @error('file')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -176,7 +184,7 @@ List Request Pengangkutan
                     <div class="row mt-2">
                         <div class="col-2">
                             <label for="desaAdat" class="font-weight-bold text-dark">Desa Adat</label>
-                            <select class="form-control" name="desaAdat" id="desaAdat">
+                            <select class="form-control" name="desaAdat" id="desaAdat" {{$requestP->status == "Selesai" ? 'disabled' : ''}}>
                                 <option value="">Pilih Desa Adat Lokasi Pengangkutan !</option>
                                 @foreach($desaAdat as $d)
                                     <option value="{{$d->id}}" {{isset($requestP->id_desa_adat) ? ($requestP->id_desa_adat == $d->id ? 'selected' : '') : ''}}>{{$d->desadat_nama}}</option>
@@ -190,7 +198,7 @@ List Request Pengangkutan
                         </div>
                         <div class="col">
                             <label for="alamat" class="font-weight-bold text-dark">Alamat Lengkap</label>
-                            <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" placeholder="Masukan Alamat Lengkap lokasi Request" value="{{isset($requestP->alamat) ? $requestP->alamat : old('alamat')}}">
+                            <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" placeholder="Masukan Alamat Lengkap lokasi Request" value="{{isset($requestP->alamat) ? $requestP->alamat : old('alamat')}}" {{$requestP->status == "Selesai" ? 'disabled' : ''}}>
                             
                             @error('alamat')
                             <span class="invalid-feedback" role="alert">
@@ -199,12 +207,20 @@ List Request Pengangkutan
                             @enderror
                         </div>
                     </div>
+                    @if($requestP->status == "Selesai")
+                    <div class="row mt-4">
+                        <div class="col">
+                            <a href="{{route('request-index')}}" class="btn btn-danger"><i class="fas fa-arrow-left"></i> Kembali</a>
+                        </div>
+                    </div>
+                    @else
                     <div class="row mt-4">
                         <div class="col">
                             <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda Yakin Ingin Menambah Data?')"><i class="fas fa-save"></i> Simpan</button>
                             <a href="{{route('request-index')}}" class="btn btn-danger"><i class="fas fa-times"></i> Cancel</a>
                         </div>
                     </div>
+                    @endif
                 </div>
             </div>
             </form>

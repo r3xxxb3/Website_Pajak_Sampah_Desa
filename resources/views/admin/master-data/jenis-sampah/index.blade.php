@@ -90,10 +90,10 @@ Index Jenis Sampah
                 @foreach ($index as $jenis)
                     <tr>
                         <td align="center">
-                            <a href="/admin/masterdata/jenis-sampah/edit/{{$jenis->id}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
-                            <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/masterdata/jenis-sampah/delete/{{$jenis->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
+                            <a href="/admin/masterdata/jenis-sampah/edit/{{$jenis->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"></i>  Ubah</a><br>
+                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/masterdata/jenis-sampah/delete/{{$jenis->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
                         </td>
-                        <td>
+                        <td style="vertical-align: middle;">
                             {{$jenis->jenis_sampah}}
                         </td>
                         <td>

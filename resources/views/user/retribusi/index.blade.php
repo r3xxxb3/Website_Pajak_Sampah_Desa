@@ -6,6 +6,23 @@ Index Retribusi
 
 @section('style')
 <style>
+    div.dataTables_wrapper div.dataTables_filter label {
+      width: 100%; 
+    }
+
+    div.dataTables_wrapper div.dataTables_filter input {
+      width: 100%; 
+    }
+
+    
+    div.dataTables_wrapper div.dataTables_length select {
+      width: 20%; 
+    }
+
+    div.dataTables_wrapper div.dataTables_length label {
+      width: 100%; 
+    }
+    
     @media (min-width: 768px) {
                 .modal-xl {
                     width: 90%;

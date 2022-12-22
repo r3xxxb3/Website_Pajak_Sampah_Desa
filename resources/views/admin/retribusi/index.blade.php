@@ -99,7 +99,7 @@ Index Retribusi
                             <tr>
                                 <td align="center">
                                     <!-- <input type="checkbox" name="id[]" id="id" value="{{$retri->id}}"> -->
-                                    <a href="#" data-toggle="modal" data-target="#modal-{{$retri->id}}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
+                                    <a href="#" data-toggle="modal" data-target="#modal-{{$retri->id}}" class="btn btn-info btn-sm col"><i class="fas fa-eye"> Lihat</i></a>
                                 </td>
                                 <td>
                                     {{isset($retri->pelanggan->kependudukan) ? $retri->pelanggan->kependudukan->nama : ''}}

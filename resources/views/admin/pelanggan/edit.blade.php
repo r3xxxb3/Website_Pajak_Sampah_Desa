@@ -80,85 +80,88 @@ Edit Data Pelanggan
             e.latlng.lat,e.latlng.lng
         ]).addTo(markerGroupEdit);
     });
-
-
-function catchProp(properti, jenis, desa, banjar){
-    console.log(properti);
-    // console.log(pelanggan);
-    console.log(jenis);
-    console.log(desa);
-    console.log(banjar);
-    // var markerGroupEdit = L.layerGroup().addTo(map_edit);
-
-    markerGroupEdit.clearLayers();
-
-    if(properti.lat != null && properti.lng != null){
-        console.log("true");
-        
-
-        L.marker([
-            properti.lat, properti.lng
-        ]).addTo(markerGroupEdit);
-    }
-    if(properti.file != null){
-        $('#propic').attr('src', "{{asset('assets/img/properti/')}}"+"/"+properti.file);
-    }else{
-        $('#propic').attr('src', "{{asset('assets/img/properti/blank.png')}}");
-    }
-    $('#cancelation').attr('href', "/admin/properti/cancel/"+properti.id);
-    $('#action-edit').attr('action', "/admin/properti/update/"+properti.id ); 
-    $('#nama_edit').val(properti.nama_properti);
-    $('#alamat_edit').val(properti.alamat);
-    $('#lat_edit').val(properti.lat);
-    $('#lng_edit').val(properti.lng);
-    $('#desa_edit').val(desa);
-    $('#banjar_edit').val(banjar);
-    $('#jenis_edit').val(properti.id_jenis);
-    $('#lat_edit').val(properti.lat);
-    $('#lng_edit').val(properti.lng);
-    $('#file_edit').change(function(){
-        readURL(properti.file);
-    });
-}
-
 </script>
 
 <script>
-  function readURL(input) {
-  if (input.files && input.files[0]) {
-    var reader = new FileReader();
-    
-    reader.onload = function(e) {
-      $('#propic').attr('src', e.target.result);
+    function catchProp(properti, jenis, desa, banjar){
+        console.log(properti.alamat);
+        // console.log(pelanggan);
+        console.log(jenis);
+        console.log(desa);
+        console.log(banjar);
+        // var markerGroupEdit = L.layerGroup().addTo(map_edit);
+
+        markerGroupEdit.clearLayers();
+
+        if(properti.lat != null && properti.lng != null){
+            // console.log("true");
+            L.marker([
+                properti.lat, properti.lng
+            ]).addTo(markerGroupEdit);
+            $('#lat_edit').val(properti.lat);
+            $('#lng_edit').val(properti.lng);
+        }
+
+        if(properti.file != null){
+            $('#propic').attr('src', "{{asset('assets/img/properti/')}}"+"/"+properti.file);
+        }else{
+            $('#propic').attr('src', "{{asset('assets/img/properti/blank.png')}}");
+        }
+        $('#cancelation').attr('href', "/admin/properti/cancel/"+properti.id);
+        $('#action-edit').attr('action', "/admin/properti/update/"+properti.id ); 
+        $('#nama_edit').val(properti.nama_properti);
+        $('#alamat_edit').val(properti.alamat);
+        $('#lat_edit').val(properti.lat);
+        $('#lng_edit').val(properti.lng);
+        if(desa != null){
+            $('#desa_edit').val(desa);
+        }
+        
+        if(banjar != null){
+            $('#banjar_edit').val(banjar);
+        }
+        $('#jenis_edit').val(properti.id_jenis);
+        
+        $('#file_edit').change(function(){
+            readURL(properti.file);
+        });
     }
-    
-    reader.readAsDataURL(input.files[0]); // convert to base64 string
-  }
-}
 
-$("#file_edit").change(function() {
-  readURL(this);
-});
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function(e) {
+            $('#propic').attr('src', e.target.result);
+            }
+            
+            reader.readAsDataURL(input.files[0]); // convert to base64 string
+        }
+    }
 
-$(document).ready( function () {
-    $('#dataTable').DataTable({
-        "oLanguage":{
-            "sSearch": "Cari:",
-            "sZeroRecords": "Data tidak ditemukan",
-            "sSearchPlaceholder": "Cari properti...",
-            "infoEmpty": "Menampilkan 0 data",
-            "infoFiltered": "(dari _MAX_ data)",
-            "sLengthMenu": "Tampilkan _MENU_ data",
-        },
-        "language":{
-            "paginate": {
-                    "previous": 'Sebelumnya',
-                    "next": 'Berikutnya'
-                },
-            "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
-        },
+    $("#file_edit").change(function() {
+    readURL(this);
     });
-} );
+
+    $(document).ready( function () {
+        $('#dataTable').DataTable({
+            "oLanguage":{
+                "sSearch": "Cari:",
+                "sZeroRecords": "Data tidak ditemukan",
+                "sSearchPlaceholder": "Cari properti...",
+                "infoEmpty": "Menampilkan 0 data",
+                "infoFiltered": "(dari _MAX_ data)",
+                "sLengthMenu": "Tampilkan _MENU_ data",
+            },
+            "language":{
+                "paginate": {
+                        "previous": 'Sebelumnya',
+                        "next": 'Berikutnya'
+                    },
+                "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
+            },
+        });
+    } );
 </script>
 
 <script>
@@ -253,7 +256,7 @@ $('#desa_edit').on('change', function(e){
                         </div> -->
                         <div class="col mb-2">
                             <label for="nik" class="font-weight-bold text-dark">NIK<i class="text-danger text-sm text-bold">*</i></label>
-                            <input type="text" class="form-control @error('nik') is-invalid @enderror" id="nik" name="nik" placeholder="Masukan No Induk Kependudukan" value="{{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->nik : old(nik)}}">
+                            <input type="text" class="form-control @error('nik') is-invalid @enderror" id="nik" name="nik" placeholder="Masukan No Induk Kependudukan" value="{{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->nik : old(nik)}}" disabled>
                                 @error('nik')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -262,7 +265,7 @@ $('#desa_edit').on('change', function(e){
                         </div>
                         <div class="col mb-2">
                             <label for="nama" class="font-weight-bold text-dark">Nama Lengkap<i class="text-danger text-sm text-bold">*</i></label>
-                            <input type="nama" class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama" placeholder="Masukan Nama Lengkap Pengguna" value="{{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->nama : old(nama) }}">
+                            <input type="nama" class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama" placeholder="Masukan Nama Lengkap Pengguna" value="{{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->nama : old(nama) }}" disabled>
                                 @error('nama')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -273,7 +276,7 @@ $('#desa_edit').on('change', function(e){
                     <div class="row">
                         <div class='col mb-2'>
                             <label for="jenis" class="font-weight-bold text-dark">Jenis Kelamin<i class="text-danger text-sm text-bold">*</i></label>
-                            <select class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="jenis">
+                            <select class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="jenis" disabled>
                                 <option value="" selected>Pilih Jenis Kelamin</option>
                                     <option value="Pria" {{isset($pelanggan->kependudukan) ? ($pelanggan->kependudukan->jenis_kelamin == 'laki-laki' ? 'selected' : '') : ''}}>Laki-laki</option>
                                     <option value="Wanita" {{isset($pelanggan->kependudukan) ? ($pelanggan->kependudukan->jenis_kelamin == 'perempuan' ? 'selected' : '') : ''}}>perempuan</option>
@@ -286,7 +289,7 @@ $('#desa_edit').on('change', function(e){
                         </div>
                         <div class="col mb-2">
                             <label for="tanggal" class="font-weight-bold text-dark">Tanggal Lahir</label>
-                            <input type="date" class="form-control @error('tanggal') is-invalid @enderror" id="tanggal" name="tanggal" placeholder="Masukan Tanggal Lahir" value="{{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->tanggal_lahir : ''}}">
+                            <input type="date" class="form-control @error('tanggal') is-invalid @enderror" id="tanggal" name="tanggal" placeholder="Masukan Tanggal Lahir" value="{{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->tanggal_lahir : ''}}" disabled>
                                 @error('tanggal')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -295,7 +298,7 @@ $('#desa_edit').on('change', function(e){
                         </div>
                         <div class="col mb-2">
                             <label for="alamat" class="font-weight-bold text-dark">Alamat</label>
-                            <input type="text" class="form-control @error('alamat') is-invalid @enderror"  id="alamat" name="alamat" placeholder="Masukan Alamat Penggunan" value="{{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->alamat : ''}}">
+                            <input type="text" class="form-control @error('alamat') is-invalid @enderror"  id="alamat" name="alamat" placeholder="Masukan Alamat Penggunan" value="{{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->alamat : ''}}" disabled>
                                 @error('alamat')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -317,7 +320,7 @@ $('#desa_edit').on('change', function(e){
                         </div> -->
                         <div class='col mb-2'>
                             <label for="no" class="font-weight-bold text-dark">No Telpon</label>
-                            <input type="text" class="form-control @error('no') is-invalid @enderror" id="no" name="no" placeholder="Masukan No Telpon Aktif" value="{{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->telepon : ''}}">
+                            <input type="text" class="form-control @error('no') is-invalid @enderror" id="no" name="no" placeholder="Masukan No Telpon Aktif" value="{{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->telepon : ''}}" disabled>
                                 @error('no')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -338,12 +341,12 @@ $('#desa_edit').on('change', function(e){
                         </div>
                     </div> -->
 
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col">
                             <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda Yakin Ingin Menambah Data?')"><i class="fas fa-save"></i> Simpan</button>
                             <a href="{{route('pelanggan-index')}}" class="btn btn-danger"><i class="fas fa-times"></i> Cancel</a>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             </form>
@@ -403,9 +406,8 @@ $('#desa_edit').on('change', function(e){
                     <tbody>
                     @foreach ($index as $properti)
                         <tr>
-                            
                             <td align="center">
-                                <a  data-toggle="modal" data-target="#modal-edit" class="btn btn-info btn-sm text-white" onClick="catchProp({{$properti}}, {{$properti->jasa}}, {{$properti->id_desa_adat}}, {{$properti->id_banjar_adat }})"><i class="fas fa-pencil-alt"></i></a>
+                                <a  data-toggle="modal" data-target="#modal-edit" class="btn btn-info btn-sm text-white" onClick="catchProp({{$properti}}, {{$properti->jasa}}, {{isset($properti->id_desa_adat) ? $properti->id_desa_adat : 'null'}}, {{isset($properti->id_banjar_adat) ? $properti->id_banjar_adat : 'null'}})"><i class="fas fa-pencil-alt"></i></a>
                                 <a style="margin-right:7px" class="btn btn-danger btn-sm" href="{{Route('admin-properti-delete', $properti->id)}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
                             </td>
                             <td>
@@ -484,7 +486,7 @@ $('#desa_edit').on('change', function(e){
                                 <div class="col">
                                     <label for="file" class="font-weight-bold text-dark">Upload Gambar Properti</label>
                                     <div class="col-12 d-flex justify-content-center">
-                                        <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
+                                        <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3" >
                                     </div>
                                     <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" accept="image/png, image/jpeg, image/jpg" placeholder="Masukan file gambar properti" value="{{old('file')}}">
                                         @error('file')
@@ -679,7 +681,7 @@ $('#desa_edit').on('change', function(e){
                             <div class="row">
                                 <div class="col">
                                     <label for="alamat" class="font-weight-bold text-dark">Alamat Properti<i class="text-danger text-sm text-bold">*</i></label>
-                                    <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" placeholder="Masukan Alamat Properti" value="{{isset($properti->alamat) ? $properti->alamat : old('alamat')}}" >
+                                    <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat_edit" name="alamat_edit" placeholder="Masukan Alamat Properti" value="" >
                                         @error('alamat')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>

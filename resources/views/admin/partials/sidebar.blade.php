@@ -1,11 +1,12 @@
 <aside id="sidebar-wrapper">
   <div class="sidebar-brand">
-    <a href="{{ route('admin-dashboard') }}">{{ env('APP_NAME') }}</a>
+    <a href="{{ route('admin-dashboard') }}">Retribusi <br> Pengelolaan Sampah</a>
   </div>
   <div class="sidebar-brand sidebar-brand-sm">
-    <a href="index.html">auth()->guard('admin')->user()->kependudukan</a>
+    <!-- <a href="index.html">{{auth()->guard('admin')->user()->kependudukan->nama[1]}}</a> -->
   </div>
   <ul class="sidebar-menu">
+    @if(auth()->guard('admin')->user()->role->role == "Admin")
       <li class="menu-header">Dashboard</li>
       <li class="{{ Request::route()->getName() == 'admin-dashboard' ? ' active' : '' }}"><a class="nav-link" href="{{ route('admin-dashboard') }}"><i class="fa fa-columns"></i> <span>Dashboard</span></a></li>
       <li class="menu-header">Master Data</li>
@@ -38,4 +39,7 @@
       <li class="menu-header">Reporting</li>
       <li class=""><a class="nav-link" href=""><i class="fa fa-chart-pie"></i> <span>Report</span></a></li>
     </ul>
+    @else
+
+    @endif
 </aside>

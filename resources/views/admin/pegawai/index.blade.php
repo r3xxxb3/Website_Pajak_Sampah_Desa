@@ -93,8 +93,8 @@ Index Data Pegawai
                 @foreach ($index as $pegawai)
                     <tr>
                         <td align="center">
-                            <a href="/admin/pegawai/edit/{{$pegawai->id_pegawai}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
-                            <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/pegawai/delete/{{$pegawai->id_pegawai}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
+                            <a href="/admin/pegawai/edit/{{$pegawai->id_pegawai}}" class="btn btn-info btn-sm col"><i class="fas fa-eye"> Lihat</i></a> <br>
+                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/pegawai/delete/{{$pegawai->id_pegawai}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"> Hapus</i></a>
                         </td>
                         <td>
                             {{isset($pegawai->role) ? $pegawai->role->role : ''}}

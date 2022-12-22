@@ -117,7 +117,7 @@ class UserController extends Controller
         $properti = Properti::where('id', $id)->first();
         $banjarAdat = BanjarAdat::all();
         $desaAdat = DesaAdat::all();
-        return view('user.properti.edit', compact('properti', 'jenis', 'desaAdat'));
+        return view('user.properti.edit', compact('properti', 'jenis', 'desaAdat', 'banjarAdat'));
     }
 
     public function propertiUpdate($id, Request $request){

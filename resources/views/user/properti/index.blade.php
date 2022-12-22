@@ -4,6 +4,28 @@
 Manajemen Properti User
 @endsection
 
+@section('style')
+<style>
+    div.dataTables_wrapper div.dataTables_filter label {
+      width: 100%; 
+    }
+
+    div.dataTables_wrapper div.dataTables_filter input {
+      width: 100%; 
+    }
+
+    
+    div.dataTables_wrapper div.dataTables_length select {
+      width: 20%; 
+    }
+
+    div.dataTables_wrapper div.dataTables_length label {
+      width: 100%; 
+    }
+    
+</style>
+@endsection
+
 @section('scripts')
 <script>
     $(document).ready( function () {
@@ -89,53 +111,53 @@ function lihatProperti(properti) {
                 </div>
                 @endif
                 <div class="table-responsive">
-                    <a class= "btn btn-success text-white mb-2" href="{{route('properti-create')}}"><i class="fas fa-plus"></i> Tambah Properti</a>
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                        <thead>
-                            <tr class="table-primary">
-                                <th class="col-2">Action</th>
-                                <th>Nama Properti</th>
-                                <th>Jenis Properti</th>
-                                <th>Alamat </th>
-                                <th>Foto </th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        @foreach ($index as $properti)
-                            <tr>
-                                <td align="center">
-                                    <a href="/user/properti/cancel/{{$properti->id}}" class="btn btn-warning btn-sm" ><i class="fas fa-ban"></i></a>
-                                    <a href="/user/properti/edit/{{$properti->id}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
-                                    <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/user/properti/delete/{{$properti->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
-                                </td>
-                                <td>
-                                    {{$properti->nama_properti}}
-                                </td>
-                                <td>
-                                    {{isset($properti->jasa)? $properti->jasa->jenis_jasa : ''}}
-                                </td>
-                                <td>
-                                    {{$properti->alamat}}
-                                </td>
-                                <td class="">
-                                    <a class= "btn btn-success text-white mb-2" data-toggle="modal" data-target="#modal-single" onClick="lihatProperti({{$properti}})"><i class="fas fa-eye"></i> Lihat Properti</a>
-                                    <!-- {{$properti->file}} -->
-                                </td>
-                                <td>
-                                    @if($properti->status == 'terverifikasi')
-                                    <span class="badge badge-success">{{$properti->status}}</span>
-                                    @elseif($properti->status == 'pending')
-                                    <span class="badge badge-warning">{{$properti->status}}</span>
-                                    @else
-                                    <span class="badge badge-danger">{{$properti->status}}</span>
-                                    @endif
-                                </td>
+                <a class= "btn btn-success text-white mb-2" href="{{route('properti-create')}}"><i class="fas fa-plus"></i> Tambah Properti</a>
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr class="table-primary">
+                            <th class="col-2">Action</th>
+                            <th>Nama Properti</th>
+                            <th>Jenis Properti</th>
+                            <th>Alamat </th>
+                            <th>Foto </th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach ($index as $properti)
+                        <tr>
+                            <td align="center">
+                                <a href="/user/properti/cancel/{{$properti->id}}" class="btn btn-warning btn-sm col" ><i class="fas fa-ban"></i> Batal</a><br>
+                                <a href="/user/properti/edit/{{$properti->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
+                                <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/user/properti/delete/{{$properti->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
+                            </td>
+                            <td style="vertical-align: middle; text-align: center;">
+                                {{$properti->nama_properti}}
+                            </td>
+                            <td style="vertical-align: middle; text-align: center;">
+                                {{isset($properti->jasa)? $properti->jasa->jenis_jasa : ''}}
+                            </td>
+                            <td style="vertical-align: middle; text-align: center;">
+                                {{$properti->alamat}}
+                            </td>
+                            <td style="vertical-align: middle; text-align: center;">
+                                <a class= "btn btn-success text-white mb-2" data-toggle="modal" data-target="#modal-single" onClick="lihatProperti({{$properti}})"><i class="fas fa-eye"></i> Lihat Properti</a>
+                                <!-- {{$properti->file}} -->
+                            </td>
+                            <td style="vertical-align: middle; text-align: center;">
+                                @if($properti->status == 'terverifikasi')
+                                <span class="badge badge-success">{{$properti->status}}</span>
+                                @elseif($properti->status == 'pending')
+                                <span class="badge badge-warning">{{$properti->status}}</span>
+                                @else
+                                <span class="badge badge-danger">{{$properti->status}}</span>
+                                @endif
+                            </td>
 
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
                 </div>
             </div>
         </div>

@@ -89,11 +89,11 @@ Index Role Pegawai
                 @foreach ($index as $role)
                     <tr>
                         <td align="center">
-                            <a href="/admin/masterdata/role/edit/{{$role->id}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
-                            <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/masterdata/role/delete/{{$role->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
+                            <a href="/admin/masterdata/role/edit/{{$role->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a>
+                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/masterdata/role/delete/{{$role->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
                         </td>
-                        <td>
-                            {{$role->role}}
+                        <td style="vertical-align: middle; text-align: center;">
+                            <h4>{{$role->role}}</h4>
                         </td>
                     </tr>
                 @endforeach

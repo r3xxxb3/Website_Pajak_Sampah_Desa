@@ -5,7 +5,24 @@ Histori pembayaran
 @endsection
 
 @section('style')
+<style>
+    div.dataTables_wrapper div.dataTables_filter label {
+      width: 100%; 
+    }
 
+    div.dataTables_wrapper div.dataTables_filter input {
+      width: 100%; 
+    }
+
+    
+    div.dataTables_wrapper div.dataTables_length select {
+      width: 20%; 
+    }
+
+    div.dataTables_wrapper div.dataTables_length label {
+      width: 100%; 
+    }
+</style>
 @endsection
 
 @section('scripts')
@@ -99,6 +116,7 @@ Histori pembayaran
                     <table class="table table-hover table-bordered  " id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr class="table-primary">
+                                <th>Action</th>
                                 <th>Properti</th>
                                 <th>Bukti Bayar</th>
                                 <th class="col col-sm-2">Metode Pembayaran</th>
@@ -110,20 +128,23 @@ Histori pembayaran
                         <tbody>
                         @foreach ($index as $pembayaran)
                             <tr>
-                                <td>
+                                <td style="vertical-align: middle; text-align: left">
+                                    <a class="btn btn-info btn-sm col text-white"><i class="fas fa-eye"></i> Lihat Detail</a>
+                                </td>
+                                <td style="vertical-align: middle; text-align: left">
                                     @if(isset($pembayaran->retribusi))
                                         @if(count($pembayaran->retribusi) > 0)
                                             @foreach($pembayaran->retribusi as $retri)
-                                                {{$retri->properti->nama_properti.", "}}
+                                                - {{$retri->properti->nama_properti}} <br>
                                             @endforeach
                                         @else
-                                            {{$pembayaran->retribusi->properti->nama_properti}}
+                                            - {{$pembayaran->retribusi->properti->nama_properti}} <br>
                                         @endif
                                     @else
                                         Error pada Hubungan Retribusi dan Pembayaran !
                                     @endif
                                 </td>
-                                <td>
+                                <td style="vertical-align: middle; text-align: center">
                                     @if(isset($pembayaran->bukti_bayar))
                                         <a class= "btn btn-success btn-sm text-white mb-2 " data-toggle="modal" data-target="#modal-single" onClick="lihatPembayaran({{$pembayaran}})"><i class="fas fa-eye"></i> Lihat bukti bayar</a>
                                         <!-- <img src="{{asset('assets/img/bukti_bayar/'.$pembayaran->bukti_bayar)}}"  height="100px" style="object-fit:cover" class="mb-3" id="prop"> -->
@@ -131,16 +152,16 @@ Histori pembayaran
                                         Tidak Terdapat Foto Bukti Bayar
                                     @endif
                                 </td>
-                                <td>
+                                <td style="vertical-align: middle; text-align: center">
                                     {{$pembayaran->media}}
                                 </td>
-                                <td>
+                                <td style="vertical-align: middle; text-align: center">
                                     {{"Rp. ".number_format($pembayaran->nominal ?? 0,0,',','.')}}
                                 </td>
-                                <td>
+                                <td style="vertical-align: middle; text-align: center">
                                     {{$pembayaran->created_at->format('d M Y')}}
                                 </td>
-                                <td>
+                                <td style="vertical-align: middle; text-align: center">
                                     @if($pembayaran->status == "pending")
                                         <span class="badge badge-warning">{{$pembayaran->status}}</span>
                                     @elseif($pembayaran->status == "lunas")

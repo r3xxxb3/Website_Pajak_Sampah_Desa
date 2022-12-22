@@ -93,22 +93,22 @@ Index Data Pelanggan
                 @foreach ($index as $pelanggan)
                     <tr>
                         <td align="center">
-                            <a href="/admin/pelanggan/edit/{{$pelanggan->id}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
-                            <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/pelanggan/delete/{{$pelanggan->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
+                            <a href="/admin/pelanggan/edit/{{$pelanggan->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
+                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/pelanggan/delete/{{$pelanggan->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"> Hapus</i></a>
                         </td>
                         <!-- <td>
                             {{$pelanggan->no_kk}}
                         </td> -->
-                        <td>
+                        <td style="vertical-align: middle; text-align: center;">
                             {{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->nik : 'Null'}}
                         </td>
-                        <td>
+                        <td style="vertical-align: middle; text-align: center;">
                             {{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->nama : 'Null'}}
                         </td>
-                        <td>
+                        <td style="vertical-align: middle; text-align: center;">
                             {{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->jenis_kelamin : 'Null'}}
                         </td>
-                        <td>
+                        <td style="vertical-align: middle; text-align: center;">
                             {{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->telepon : 'Null'}}
                         </td>
                     </tr>

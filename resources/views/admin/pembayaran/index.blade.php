@@ -111,26 +111,26 @@ Pembayaran
                         <tbody>
                         @foreach ($index as $pembayaran)
                             <tr>
-                                <td align="center" class="col col-sm-2">
+                                <td style="vertical-align: middle; text-align: center;" class="col-2">
                                 @if($pembayaran->status == "pending")
-                                    <a href="/admin/pembayaran/verif/{{$pembayaran->id_pembayaran}}" class="btn btn-success btn-sm"><i class="fas fa-check"></i></a>
-                                    <a href="/admin/pembayaran/edit/{{$pembayaran->id_pembayaran}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
-                                    <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/pembayaran/delete/{{$pembayaran->id_pembayaran}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
+                                    <a href="/admin/pembayaran/verif/{{$pembayaran->id_pembayaran}}" class="btn btn-success btn-sm col"><i class="fas fa-check"> Verifikasi</i></a><br>
+                                    <a href="/admin/pembayaran/edit/{{$pembayaran->id_pembayaran}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"> Ubah</i></a><br>
+                                    <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/pembayaran/delete/{{$pembayaran->id_pembayaran}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"> Hapus</i></a>
                                 @elseif($pembayaran->status == "lunas")
-                                    <a class="btn btn-info text-white btn-sm"><i class="fas fa-eye"></i></a>
+                                    <a class="btn btn-info text-white btn-sm col"><i class="fas fa-eye"> Lihat</i></a>
                                 @endif
                                 </td>
                                 <td>
                                     {{$pembayaran->pelanggan->kependudukan->nama}}
                                 </td>
-                                <td>
+                                <td class="col-2">
                                     @if(isset($pembayaran->retribusi))
                                         @if(count($pembayaran->retribusi) > 0)
                                             @foreach($pembayaran->retribusi as $retri)
-                                                {{$retri->properti->nama_properti.", "}}
+                                                - {{$retri->properti->nama_properti}} <br>
                                             @endforeach
                                         @else
-                                            {{$pembayaran->retribusi->properti->nama_properti}}
+                                            - {{$pembayaran->retribusi->properti->nama_properti}} <br>
                                         @endif
                                     @else
                                         Error pada Hubungan Retribusi dan Pembayaran !
@@ -182,6 +182,41 @@ Pembayaran
                                 <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3 rounded mx-auto d-block" id="bayar">
                                 <h1 id="ket" hidden>Tidak terdapat bukti pembayaran</h1>
                             </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modal-detail">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div id="myDIV" style="display: block">
+                        <div class="row justify-content-between mb-3">
+                            <div class="col">
+                                <h6 class="m-0 font-weight-bold text-primary">Detail Pembayaran</h6>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <a class= "btn btn-success text-white mb-2" href="{{route('admin-pembayaran-create')}}"><i class="fas fa-plus"></i> Tambah Data Pembayaran </a>
+                            <table class="table table-hover table-bordered  " id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr class="table-primary">
+                                        <th>Jenis</th>
+                                        <th>Nama</th>
+                                        <th class="col col-sm-2">Nominal</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

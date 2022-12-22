@@ -255,8 +255,8 @@ $("#file").change(function() {
                             </div>
                         <div class="col">
                             <label for="banjar" class="font-weight-bold text-dark">Banjar Adat</label>
-                                <select class="form-control @error('banjar') is-invalid @enderror" id="banjar" name="banjar" disabled>
-                                    <option value="" selected>Pilih Banjar Adat</option>
+                                <select class="form-control @error('banjar') is-invalid @enderror" id="banjar" name="banjar" {{isset($properti->id_banjar_adat) ? '' : 'disabled' }}>
+                                    <option value="" selected>Pilih Desa Adat Terleih Dahulu !</option>
                                     @if(isset($properti->id_banjar_adat))
                                         @foreach($banjarAdat as $b)
                                             <option value="{{$b->id}}" {{isset($properti->id_banjar_adat) ? ($properti->banjarAdat->id == $b->id ? 'selected' : '') : '' }}>{{$b->nama_banjar_adat}}</option>

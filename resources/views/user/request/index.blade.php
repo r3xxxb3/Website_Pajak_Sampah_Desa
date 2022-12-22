@@ -4,6 +4,28 @@
 List Request Pengangkutan
 @endsection
 
+@section('style')
+<style>
+    div.dataTables_wrapper div.dataTables_filter label {
+      width: 100%; 
+    }
+
+    div.dataTables_wrapper div.dataTables_filter input {
+      width: 100%; 
+    }
+
+    
+    div.dataTables_wrapper div.dataTables_length select {
+      width: 20%; 
+    }
+
+    div.dataTables_wrapper div.dataTables_length label {
+      width: 100%; 
+    }
+    
+</style>
+@endsection
+
 @section('scripts')
 
 <script>
@@ -110,11 +132,15 @@ List Request Pengangkutan
                                 @foreach ($index as $i)
                                 <tr>
                                     <td align="center">
-                                        <a href="/user/request/edit/{{$i->id}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
+                                        @if($i->status == "Selesai")
+                                            <a href="/user/request/edit/{{$i->id}}" class="btn btn-info btn-sm col"><i class="fas fa-eye"> Lihat</i></a><br>
+                                        @else
+                                            <a href="/user/request/edit/{{$i->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"> Ubah</i></a><br>
+                                        @endif
                                         @if($i->status == "Batal")
-                                            <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/user/request/delete/{{$i->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
+                                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/user/request/delete/{{$i->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"> Hapus</i></a><br>
                                         @elseif($i->status != "Selesai" && $i->status != "Terkonfirmasi")
-                                            <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/user/request/cancel/{{$i->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-times"></i></a>
+                                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/user/request/cancel/{{$i->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-times"> Batal</i></a><br>
                                         @endif
                                     </td>
                                     <td>
