@@ -68,6 +68,23 @@ class PembayaranController extends Controller
     }
 
     public function search(Request $request){
-        dd($request);
+        // echo($request->pembayaran);
+        $pembayaran = Pembayaran::where('id_pembayaran', $request->pembayaran)->first();
+        // echo($pembayaran);
+        $detail = $pembayaran->detail;
+        // echo($detail->map->model->map->pelanggan->map->kependudukan);
+        $model = $detail;
+        foreach($model as $m){
+            if($m->model_type == "App\\Retribusi"){
+                $m->pelanggan = $m->model->pelanggan->kependudukan->nama;
+                $m->properti = $m->model->properti->nama_properti;
+            }elseif($m->model_type == "App\\Pengangkutan"){
+                $m->pelanggan = $m->model->pelanggan->kependudukan->nama;
+                $m->properti = $m->model->pengangkutan->alamat;
+            }
+        }
+        $data = $model;
+        // echo($model->map->model_type."-".$model->map->pelanggan."-".$model->map->properti);
+        return response()->json($data, 200);
     }
 }

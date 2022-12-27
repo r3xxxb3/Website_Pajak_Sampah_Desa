@@ -59,48 +59,65 @@ Pembayaran
             pageLength: 5,
             lengthMenu: [[5, 10, 20, -1], [5, 10, 20, "All"]]
         });
+    $(document).ready( function(){
+        $('.detail').on('click', function(e){
+            e.preventDefault();
+            var id = event.target.id;
+            console.log(id);
+    
+            var idNum = id.split("-");
+            console.log(idNum[1]);
+            
+            var pembayaran = idNum[1];$.ajax({
+                    method : 'POST',
+                    url : '{{route("admin-pembayaran-search")}}',
+                    data : {
+                    "_token" : "{{ csrf_token() }}",
+                    pembayaran : pembayaran,
+                    },
+                    beforeSend : function() {
+                                
+                    },
+                    success : (res) => {
+                        console.log(res);
+                        table.clear();
+                        jQuery.each(res, function(i, val){
+                            var jenis = val.model_type.split('\\');
+                            console.log(jenis);
+                            if(val.model.status == "lunas"){
+                                table.row.add([
+                                    jenis[1],
+                                    val.properti+" ("+val.pelanggan+")",
+                                    val.model.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR',}),
+                                    '<span class="badge badge-success text-capitalize">'+val.model.status+'</span>'
+                                ]);
+                            }else{
+                                table.row.add([
+                                    jenis[1],
+                                    val.properti+" ("+val.pelanggan+")",
+                                    val.model.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR',}),
+                                    '<span class="badge badge-warning text-capitalize">'+val.model.status+'</span>'
+                                ]);
+                            }
+                        });
+                        table.draw();
+                    }
+                });
+        });
+    });
 
-    function detailPembayaran(detail){
-        console.log(detail);
-        console.log(detail.map(x => x.id_properti));
-        var properti = detail.map(x => x.id_properti);
-        var pelanggan = detail.map(x => x.id_pelanggan);
-
-        e.preventDefault();
-
-        $.ajax({
-                method : 'POST',
-                url : '{{route("admin-pembayaran-search")}}',
-                data : {
-                "_token" : "{{ csrf_token() }}",
-                properti : properti,
-                pelanggan : pelanggan,
-                },
-                beforeSend : function() {
-                            
-                },
-                success : (res) => {
-                    console.log(res);
-                    table.clear();
-                    jQuery.each(res, function(i, val){
-                        
-                    });
-                }
-            });
-        // foreach(detail){
-        //     table.row.add([
-        //                     '<p>'+detail.nama+'</p>',
-        //                     '<p>'+detail.nama_lain+'</p>',
-        //                     '<p>'+detail.nama_latin+'</p>',
-        //                     '<p>'+detail.habitus+'</p>',
-        //                 ]);
-        // }
-    }
 </script>
 @endsection
 
 @section('style')
-
+<style>
+    @media (min-width: 768px) {
+            .modal-xl {
+                width: 90%;
+            max-width:1200px;
+            }
+        }
+</style>
 @endsection
 
 @section('content')
@@ -159,7 +176,8 @@ Pembayaran
                             <tr class="table-primary">
                                 <th>Action</th>
                                 <th>Pelanggan</th>
-                                <th>Properti</th>
+                                <th>Jenis</th>
+                                <!-- <th>Properti</th> -->
                                 <th>Bukti Bayar</th>
                                 <th>Metode Pembayaran</th>
                                 <th class="col col-sm-2">Nominal</th>
@@ -176,14 +194,38 @@ Pembayaran
                                     <a href="/admin/pembayaran/edit/{{$pembayaran->id_pembayaran}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"> Ubah</i></a><br>
                                     <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/pembayaran/delete/{{$pembayaran->id_pembayaran}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"> Hapus</i></a>
                                 @elseif($pembayaran->status == "lunas")
-                                    <a class="btn btn-info text-white btn-sm col" data-toggle="modal" data-target="#modal-detail" onClick="detailPembayaran({{$pembayaran->detail->map->model}})" ><i class="fas fa-eye"> Lihat</i></a>
+                                    <a class="btn btn-info text-white btn-sm col detail" id="detail-{{$pembayaran->id_pembayaran}}" data-toggle="modal" data-target="#modal-detail" ><i class="fas fa-eye"></i>Lihat</a>
                                 @endif
                                 </td>
                                 <td>
                                     {{$pembayaran->pelanggan->kependudukan->nama}}
                                 </td>
                                 <td class="col-2">
-                                    @if(isset($pembayaran->retribusi))
+                                    @if(count($pembayaran->detail) != 0)
+                                        <?php $v = 'null' ?>
+                                        @foreach($pembayaran->detail as $m)
+                                            @if($m->model_type == "App\Retribusi")
+                                                @if($v == "null")
+                                                    {{$v = "Retribusi"}}
+                                                @elseif($m->model_type == "App\Pengangkutan")
+                                                    {{$v}}." & Request Pengangkutan"
+                                                @else
+                                                    @continue
+                                                @endif
+                                            @elseif($m->model_type == "App\Pengangkutan")
+                                                @if($v == "null")
+                                                    $v = "Request Pengangkutan"
+                                                @elseif($m->model_type == "App\Retribusi")
+                                                    {{$v}}." & Retribusi"
+                                                @else
+                                                    @continue
+                                                @endif
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                </td>
+                                <!-- <td class="col-2"> -->
+                                    <!-- @if(isset($pembayaran->retribusi))
                                         @if(count($pembayaran->retribusi) > 0)
                                             @foreach($pembayaran->retribusi as $retri)
                                                 - {{$retri->properti->nama_properti}} <br>
@@ -193,8 +235,13 @@ Pembayaran
                                         @endif
                                     @else
                                         Error pada Hubungan Retribusi dan Pembayaran !
+                                    @endif -->
+                                    <!-- @if(count($pembayaran->detail->map->model) != 0)
+                                        @foreach($pembayaran->detail->map->model as $m)
+                                            - {{isset($m->properti) ? $m->properti->nama_properti : ''}} <br>
+                                        @endforeach
                                     @endif
-                                </td>
+                                </td> -->
                                 <td>
                                     @if(isset($pembayaran->bukti_bayar))
                                         <a class= "btn btn-success btn-sm text-white mb-2 " data-toggle="modal" data-target="#modal-single" onClick="lihatPembayaran({{$pembayaran}})"><i class="fas fa-eye"></i> Lihat bukti bayar</a>
@@ -250,7 +297,7 @@ Pembayaran
 
 
 <div class="modal fade" id="modal-detail">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-body">
                 <div id="myDIV" style="display: block">
@@ -266,7 +313,7 @@ Pembayaran
                                         <th>Jenis</th>
                                         <th>Nama</th>
                                         <th class="col col-sm-2">Nominal</th>
-                                        <th>Status</th>
+                                        <th >Status</th>
                                     </tr>
                                 </thead>
                                 <tbody id="detail_pembayaran" name="detail_pembayaran">
