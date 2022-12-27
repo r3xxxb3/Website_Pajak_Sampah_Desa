@@ -89,6 +89,7 @@ Pembayaran
                                     jenis[1],
                                     val.properti+" ("+val.pelanggan+")",
                                     val.model.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR',}),
+                                    val.tanggal,
                                     '<span class="badge badge-success text-capitalize">'+val.model.status+'</span>'
                                 ]);
                             }else{
@@ -96,6 +97,7 @@ Pembayaran
                                     jenis[1],
                                     val.properti+" ("+val.pelanggan+")",
                                     val.model.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR',}),
+                                    val.tanggal,
                                     '<span class="badge badge-warning text-capitalize">'+val.model.status+'</span>'
                                 ]);
                             }
@@ -174,7 +176,7 @@ Pembayaran
                     <table class="table table-hover table-bordered  " id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr class="table-primary">
-                                <th>Action</th>
+                                <th class="col-1">Action</th>
                                 <th>Pelanggan</th>
                                 <th>Jenis</th>
                                 <!-- <th>Properti</th> -->
@@ -194,7 +196,7 @@ Pembayaran
                                     <a href="/admin/pembayaran/edit/{{$pembayaran->id_pembayaran}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"> Ubah</i></a><br>
                                     <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/pembayaran/delete/{{$pembayaran->id_pembayaran}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"> Hapus</i></a>
                                 @elseif($pembayaran->status == "lunas")
-                                    <a class="btn btn-info text-white btn-sm col detail" id="detail-{{$pembayaran->id_pembayaran}}" data-toggle="modal" data-target="#modal-detail" ><i class="fas fa-eye"></i>Lihat</a>
+                                    <a class="btn btn-info text-white btn-sm col detail" id="detail-{{$pembayaran->id_pembayaran}}" data-toggle="modal" data-target="#modal-detail" ><i class="fas fa-eye"></i> Lihat Detail</a>
                                 @endif
                                 </td>
                                 <td>
@@ -313,6 +315,7 @@ Pembayaran
                                         <th>Jenis</th>
                                         <th>Nama</th>
                                         <th class="col col-sm-2">Nominal</th>
+                                        <th>Tanggal</th>
                                         <th >Status</th>
                                     </tr>
                                 </thead>

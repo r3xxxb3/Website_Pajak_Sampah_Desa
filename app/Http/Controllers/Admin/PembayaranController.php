@@ -75,6 +75,7 @@ class PembayaranController extends Controller
         // echo($detail->map->model->map->pelanggan->map->kependudukan);
         $model = $detail;
         foreach($model as $m){
+            $m->tanggal = $m->model->created_at->format('d M Y');
             if($m->model_type == "App\\Retribusi"){
                 $m->pelanggan = $m->model->pelanggan->kependudukan->nama;
                 $m->properti = $m->model->properti->nama_properti;
