@@ -21,7 +21,11 @@ class Retribusi extends Model
         return $this->belongsTo(Pelanggan::class, 'id_pelanggan', 'id');
     }
 
-    public function pembayaran() {
-        return $this->morphToMany(DetailPembayaran::class, 'model');
+    public function Dpembayaran() {
+        return $this->morphMany(DetailPembayaran::Class, 'model');
     }
+
+    // public function pembayaran() {
+    //     return $this->morphMany(DetailPembayaran::class, 'model', 'tb_retribusi', 'model_type', 'id', 'model_id');
+    // }
 }

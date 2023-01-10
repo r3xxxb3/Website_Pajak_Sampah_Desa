@@ -65,8 +65,8 @@ class PelangganController extends Controller
                 }
                 // dd($penduduk);
                 $index = Pelanggan::whereHas('properti', function (Builder $query){
-                    $query->where('id_desa_adat', auth()->guard('admin')->user()->kependudukan->mipil->banjarAdat->desaAdat->id);
-                })->orWhereIn('id_penduduk', $penduduk)->get();
+                    $query->where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat);
+                })->get();
                 // dd($index);
                 return view('admin.pelanggan.index',compact('index'));
             }else{
@@ -87,7 +87,7 @@ class PelangganController extends Controller
         }
         $banjarAdat = BanjarAdat::where('id',$checkKrama->banjar_adat_id)->first();
         if(isset($banjarAdat)){
-            $desaAdat = DesaAdat::where('id',$banjarAdat->desa_adat_id)->first();
+            $desaAdat = DesaAdat::where('id',auth()->guard('admin')->user()->id_desa_adat)->first();
             $penduduk = [];
             if(isset($desaAdat)){
                 foreach($desaAdat->banjarAdat as $banjar){
@@ -194,9 +194,9 @@ class PelangganController extends Controller
         $banjarAdat = BanjarAdat::all();
         $pelanggan = Pelanggan::where('id', $id)->first();
         $jenis = JenisJasa::all();
-        $index = Properti::where('id_pelanggan', $pelanggan->id)->get();
+        $index = Properti::where('id_pelanggan', $pelanggan->id)->where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->get();
         if($pelanggan != null){
-            // dd($pelanggan);
+            // dd(auth()->guard('admin')->user());
             return view('admin.pelanggan.edit', compact('pelanggan', 'index', 'jenis', 'desaAdat', 'banjarAdat'));
         }else{
             return redirect()->route('pelanggan-index')->with('error', 'Data Pelanggan Tidak Ditemukan !');

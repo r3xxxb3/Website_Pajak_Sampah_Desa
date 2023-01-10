@@ -44,15 +44,15 @@ class RetribusiCommand extends Command
      */
     public function handle()
     {
-        $properti = Properti::where('status', 'Terverifikasi')->get();
+        $properti = Properti::where('status', 'terverifikasi')->get();
+        // $this->info("test");
         foreach($properti as $prop){
-            print_r($prop->nama_properti);
             $retribusi = Retribusi::where('id_properti', $prop->id)->orderBy('created_at', 'DESC')->first();
-            $standar = StandarRetribusi::where('id_jenis_jasa', $prop->id_jenis)->where(function ($query){
+            $standar = StandarRetribusi::where('id_jenis_jasa', $prop->id_jenis)->where('id_desa_adat', $prop->id_desa_adat)->where(function ($query){
                 $query->where('tanggal_berlaku', '<=', now())->orWhere('tanggal_selesai', '>=', now())->orWhere('active', 1);
             })->first();
             // $stanres = $standar->where('tanggal_berlaku', '<=', now())->where('tanggal_selesai', '>=', now())->Where('active', 1)->first();
-            // dd($standar);
+            // dd($properti);
             if(!isset($retribusi)){
                 if(isset($standar)){
                     $retribusi = new Retribusi;
@@ -64,7 +64,7 @@ class RetribusiCommand extends Command
                 }else{
                     continue;
                 }
-            }elseif($retribusi->created_at->format('m') != now()->format('m') && $retribusi->created_at->format('m') < now()->format('m') ){
+            }elseif($retribusi->created_at->format('m') != now()->format('m') && $retribusi->created_at->format('y') < now()->format('y') ){
                 if(isset($standar)){
                     $retribusi = new Retribusi;
                     $retribusi->id_pelanggan = $prop->id_pelanggan;
@@ -79,7 +79,7 @@ class RetribusiCommand extends Command
                 continue;
             }
         }
-        // Log::info("Testing Scheduler");
+        Log::info("Testing Scheduler");
         // return 0;
 
     }

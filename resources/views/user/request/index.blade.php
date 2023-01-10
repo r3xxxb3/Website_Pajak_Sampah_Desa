@@ -132,15 +132,14 @@ List Request Pengangkutan
                                 @foreach ($index as $i)
                                 <tr>
                                     <td align="center">
-                                        @if($i->status == "Selesai")
+                                        @if($i->status == "Selesai" || $i->status == "Terkonfirmasi" )
                                             <a href="/user/request/edit/{{$i->id}}" class="btn btn-info btn-sm col"><i class="fas fa-eye"> Lihat</i></a><br>
-                                        @else
-                                            <a href="/user/request/edit/{{$i->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"> Ubah</i></a><br>
-                                        @endif
-                                        @if($i->status == "Batal")
+                                        @elseif($i->status == "Batal")
                                             <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/user/request/delete/{{$i->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"> Hapus</i></a><br>
                                         @elseif($i->status != "Selesai" && $i->status != "Terkonfirmasi")
                                             <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/user/request/cancel/{{$i->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-times"> Batal</i></a><br>
+                                        @else
+                                            <a href="/user/request/edit/{{$i->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"> Ubah</i></a><br>
                                         @endif
                                     </td>
                                     <td>
@@ -150,7 +149,7 @@ List Request Pengangkutan
                                         {{isset($i) ? $i->alamat : ''}}
                                     </td>
                                     <td>
-                                        {{isset($i->nominal) ? 'Rp'.number_format($i->nominal ?? 0, 0, ',', '.') : 'Belum Ditetapkan !'}}
+                                        {{isset($i->nominal) ? 'Rp'.number_format($i->nominal ?? 0, 2, '.',',') : 'Belum Ditetapkan !'}}
                                     </td>
                                     <td>
                                         {{isset($i) ? $i->created_at : ''}}

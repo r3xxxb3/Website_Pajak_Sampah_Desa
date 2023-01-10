@@ -16,7 +16,7 @@ class RetribusiController extends Controller
     //
     public function index(){
         $index = Retribusi::whereHas('properti', function (Builder $query){
-            $query->where('id_desa_adat', auth()->guard('admin')->user()->kependudukan->mipil->banjarAdat->desaAdat->id);
+            $query->where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat);
         })->where('status', 'pending')->get();
         // dd($retribusi);
         // foreach($retribusi as $i){
@@ -30,7 +30,7 @@ class RetribusiController extends Controller
 
     public function history(){
         $index = Retribusi::whereHas('properti', function (Builder $query){
-            $query->where('id_desa_adat', auth()->guard('admin')->user()->kependudukan->mipil->banjarAdat->desaAdat->id);
+            $query->where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat);
         })->where('status', 'lunas')->get();
     }
 

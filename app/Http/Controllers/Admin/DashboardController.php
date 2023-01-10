@@ -80,7 +80,7 @@ class DashboardController extends Controller
                     }
                 }
                 // dd($properti);
-                $indexPr = Properti::whereIn('id_pelanggan', $indexPl->map->id)->where('status', "pending")->get();
+                $indexPr = Properti::where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->where('status', "pending")->get();
                 $jenis = JenisJasa::all();
                 $desaAdat = DesaAdat::all();
                 $banjarAdat = BanjarAdat::All();

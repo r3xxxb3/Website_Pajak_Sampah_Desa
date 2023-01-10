@@ -102,8 +102,8 @@ Index Jenis Jasa
                         </td>
                         <td style="vertical-align: middle;">
                             <?php 
-                                $standarHarga = $jenis->standar->first(); 
-
+                                $standarHarga = $jenis->standar->where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->first(); 
+                                // dd($jenis->standar->where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->first());
                                 $hargaAtas = 0;
 
                                 if (isset($standarHarga)) {
@@ -114,8 +114,8 @@ Index Jenis Jasa
                             <?php echo $jenis->standar->map->nominal_retribusi ?>
                             @endif -->
 
-                            Rp{{ $hargaAtas == 0 ? '-' : number_format($hargaAtas ?? 0,0,',','.') }}
-
+                            Rp. {{ $hargaAtas == 0 ? '-' : number_format($hargaAtas ?? 0,2,',','.') }}
+                            
                             <!-- {{isset($jenis->standar) ? ($jenis->standar->map->range_nominal != "[null]" ? $jenis->standar->map->range_nominal." - ".$jenis->standar->map->nominal_retribusi : $jenis->standar->map->nominal_retribusi ) : ''}} -->
                         </td>
                     </tr>

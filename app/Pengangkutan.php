@@ -16,7 +16,7 @@ class Pengangkutan extends Model
         return $this->belongsTo(Pelanggan::class, 'id_pelanggan', 'id');
     }
 
-    public function pembayaran(){
+    public function Dpembayaran(){
         return $this->morphMany(DetailPembayaran::class, 'model');
     }
 

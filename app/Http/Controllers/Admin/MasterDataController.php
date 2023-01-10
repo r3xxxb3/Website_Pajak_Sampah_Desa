@@ -171,7 +171,7 @@ class MasterDataController extends Controller
 
     public function indexJadwal ()
     {
-        $index  =  Jadwal::all();
+        $index  =  Jadwal::where('id_desa', auth()->guard('admin')->user()->id_desa_adat)->get();
         return view('admin.master-data.jadwal.index', compact('index'));
     }
 
@@ -267,15 +267,16 @@ class MasterDataController extends Controller
 
         $this->validate($request, [
             'standar' => 'required',
-            'durasi' => 'required',
+            // 'durasi' => 'required',
         ],$messages);
 
         $standar = new StandarRetribusi;
         $standar->nominal_retribusi = $request->standar;
         $standar->id_jenis_jasa = $request->id;
         $standar->tanggal_berlaku = $request->mulai;
+        $standar->id_desa_adat = auth()->guard('admin')->user()->id_desa_adat;
         $standar->tanggal_selesai = $request->selesai;
-        $standar->durasi = $request->durasi;
+        // $standar->durasi = $request->durasi;
         $standar->save();
         return redirect()->back()->with('success','Berhasil Menambah Data Standar Retribusi !');
     }
@@ -421,7 +422,7 @@ class MasterDataController extends Controller
 
     public function indexJenisJasa(){
         $index = JenisJasa::with(['standar' => function($query){
-            $query->where('active', '1')->get();
+            $query->where('tanggal_berlaku', '<=', now())->where('tanggal_selesai', '>=', now())->orWhere('active', '1')->get();
         }])->get();
         // dd($index);
         return view('admin.master-data.jenis-jasa.index', compact('index'));
@@ -444,6 +445,7 @@ class MasterDataController extends Controller
         $jenis = new JenisJasa;
         $jenis->jenis_jasa = $request->jenis;
         $jenis->deskripsi = $request->deskripsi;
+        $jenis->id_desa_adat = auth()->guard('admin')->user()->id_desa_adat;
         if($jenis->save()){
             return redirect()->route('masterdata-jenisjasa-index')->with('success','Berhasil Menambah Data Jenis Jasa !');    
         }else{
@@ -454,7 +456,7 @@ class MasterDataController extends Controller
     }
 
     public function editJenisJasa($id){
-        $index = StandarRetribusi::where('id_jenis_jasa', $id)->get();
+        $index = StandarRetribusi::where('id_jenis_jasa', $id)->where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->get();
         $jenis = JenisJasa::where('id', $id)->first();
         return view('admin.master-data.jenis-jasa.edit', compact('jenis', 'index'));
     }
@@ -473,6 +475,7 @@ class MasterDataController extends Controller
         if($jenis != []){
             $jenis->jenis_jasa = $request->jenis;
             $jenis->deskripsi = $request->deskripsi;
+            $jenis->id_desa_adat = auth()->guard('admin')->user()->id_desa_adat;
             $jenis->save();
             return redirect()->route('masterdata-jenisjasa-index')->with('success', 'Berhasil Mengubah Data Jenis Jasa !');
         }else{

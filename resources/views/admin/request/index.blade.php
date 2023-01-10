@@ -112,10 +112,10 @@ List Request Pengangkutan
                             @foreach ($index as $i)
                                 <tr>
                                     <td align="center">
-                                        <a class="btn btn-success btn-sm text-white col" onclick="setRequest({{$i->id}})" data-toggle="modal" data-target="#modal-confirm"  ><i class="fas fa-check-double"> Verifikasi</i></a> <br>
-                                        <a class="btn btn-info btn-sm text-white col" onclick="swal({title: 'Konfirmasi Request Pengangkutan ?', icon: 'warning', buttons:{cancel: {text: 'Tidak',value: null,visible: true,closeModal: true,},confirm: {text: 'Ya',value: true,visible: true,closeModal: true}}}).then(function(value){if(value){window.location = window.location = '{{Route('admin-request-confirm', $i->id)}}' }})" ><i class="fas fa-check"> Konfirmasi</i></a> <br>
-                                        <a href="/admin/request/edit/{{$i->id}}" class="btn btn-warning btn-sm col"><i class="fas fa-pencil-alt"> Ubah</i></a> <br>
-                                        <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/request/delete/{{$i->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"> Hapus</i></a>
+                                        <a class="btn btn-success btn-sm text-white col" onclick="setRequest({{$i->id}})" data-toggle="modal" data-target="#modal-confirm"  ><i class="fas fa-check-double"></i> Verifikasi</a><br>
+                                        <a class="btn btn-info btn-sm text-white col" onclick="swal({title: 'Konfirmasi Request Pengangkutan ?', icon: 'warning', buttons:{cancel: {text: 'Tidak',value: null,visible: true,closeModal: true,},confirm: {text: 'Ya',value: true,visible: true,closeModal: true}}}).then(function(value){if(value){window.location = window.location = '{{Route('admin-request-confirm', $i->id)}}' }})" ><i class="fas fa-check"></i>Konfirmasi</a><br>
+                                        <a href="/admin/request/edit/{{$i->id}}" class="btn btn-warning btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a> <br>
+                                        <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/request/delete/{{$i->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
                                     </td>
                                     <td style="vertical-align: middle; text-align: center;">
                                         {{isset($i->pelanggan) ? $i->pelanggan->kependudukan->nama : ''}}

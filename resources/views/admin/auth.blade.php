@@ -9,7 +9,7 @@
     @csrf
       <div class="form-group">
         <label for="username">Username<i class="text-danger text-sm text-bold">*</i></label>
-        <input  id="username" type="username" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" name="username" placeholder="Registered Username" tabindex="1" value="{{ old('username') }}" autofocus>
+        <input  id="username" type="username" class="form-control{{ $errors->login->has('username') ? ' is-invalid' : '' }}" name="username" placeholder="Registered Username" tabindex="1" value="{{ old('username') }}" autofocus>
         <div class="invalid-feedback">
           {{ $errors->login->first('username') }}
         </div>
@@ -31,7 +31,7 @@
         </div>
         <input aria-describedby="passwordHelpBlock" id="password" type="password" placeholder="Your account password" class="form-control{{ $errors->has('password') ? ' is-invalid': '' }}" name="password" tabindex="2">
         <div class="invalid-feedback">
-          {{ $errors->login->first('password') }}
+          {{ $errors->first('password') }}
         </div>
         @if(App::environment('demo'))
         <small id="passwordHelpBlock" class="form-text text-muted">

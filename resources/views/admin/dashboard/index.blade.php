@@ -187,17 +187,6 @@ Dashboard
                                         </span>    
                                         @enderror
                                 </div>
-                                @if(isset($prop) && $prop->jasa->jenis_jasa == "Kos-kosan")
-                                <div class="col mb-2" id="additional" >
-                                    <label for="kamar_edit" class="font-weight-bold text-dark">Jumlah Kamar</label>
-                                    <input type="number" class="form-control @error('kamar') is-invalid @enderror" id="kamar_edit" name="kamar_edit" placeholder="Masukan Jumlah Kamar terisi (Kos)" value="" disabled>
-                                        @error('kamar_edit')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>    
-                                        @enderror
-                                </div>
-                                @endif
                             </div>
                             <div class="row">
                                 <div class='col mb-2'>
@@ -219,9 +208,7 @@ Dashboard
                                         <select class="form-control @error('banjar_edit') is-invalid @enderror" id="banjar_edit" name="banjar_edit" >
                                             <option value="" selected>Pilih Desa Adat terlebih dahulu !</option>
                                                 @foreach($banjarAdat as $b)
-                                                  @if($b->id_desa_adat == $prop->id_desa_adat)
                                                     <option value="{{$b->id}}">{{$b->nama_banjar_adat}}</option>
-                                                  @endif
                                                 @endforeach
                                         </select>
                                         @error('banjar_edit')
@@ -263,7 +250,7 @@ Dashboard
                 crossorigin=""/>
     <style>
         #prop{height: 50px;}
-        #map-edit { height: 300px; }
+        #map-edit { height: 300px;}
         @media (min-width: 768px) {
             .modal-xl {
                 width: 90%;

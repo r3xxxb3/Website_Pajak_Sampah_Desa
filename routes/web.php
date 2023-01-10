@@ -201,4 +201,4 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user'] , function(){
 
 Route::get('/home', 'HomeController@landing')->name('home');
 
-route::get('/test', 'TestingController@test')->name('test');
+route::get('/test/{id}', 'TestingController@test')->name('test');

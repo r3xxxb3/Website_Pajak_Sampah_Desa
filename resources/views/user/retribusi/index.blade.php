@@ -163,7 +163,7 @@ $("#file-single").change(function() {
                 @endif
                 <div class="table-responsive">
                     <a class= "btn btn-success text-white mb-2" data-toggle="modal" data-target="#modal-choose"><i class="fas fa-cash-register"></i> Bayar Tagihan Retribusi</a>
-                    <a class= "btn btn-info text-white mb-2" data-toggle="modal" data-target="#modal-cicil"><i class="fas fa-cash-register"></i> Cicil Tagihan Retribusi</a>
+                    <!-- <a class= "btn btn-info text-white mb-2" data-toggle="modal" data-target="#modal-cicil"><i class="fas fa-cash-register"></i> Cicil Tagihan Retribusi</a> -->
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr class="table-primary">
@@ -178,21 +178,22 @@ $("#file-single").change(function() {
                         <tbody>
                             @foreach ($index as $retri)
                             <tr>
+                                @if($retri->Dpembayaran->map->pembayaran->isEmpty())
                                 <td align="center">
-                                    @if($retri->pembayaran->isEmpty())
+                                    @if($retri->Dpembayaran->map->pembayaran->isEmpty())
                                         <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-single" onClick="calculateNom_b({{$retri}})"><i class="fas fa-cart-plus"></i></a>
                                     @else
                                         <a href="#" class="btn btn-info btn-md" data-toggle="" data-target=""><i class="fas fa-exclamation"></i></a>
                                     @endif
                                 </td>
                                 <td>
-                                    {{isset($retri->properti) ? $retri->properti->nama_properti : ''}}
+                                    {{isset($retri->properti) ? $retri->properti->nama_properti : 'Error Data Kosong !'}}
                                 </td>
                                 <td>
-                                    {{isset($retri->properti->jasa)? $retri->properti->jasa->jenis_jasa : ''}}
+                                    {{isset($retri->properti->jasa)? $retri->properti->jasa->jenis_jasa : 'Error Data Kosong !'}}
                                 </td>
                                 <td>
-                                    Rp. {{number_format($retri->nominal)}}
+                                    Rp. {{number_format($retri->nominal ?? 0,2,',','.')}}
                                 </td>
                                 <td>
                                     {{$retri->created_at->format('d M Y')}}
@@ -204,6 +205,7 @@ $("#file-single").change(function() {
                                     <span class="badge badge-success">{{$retri->status}}</span>
                                 @endif
                                 </td>
+                                @endif
                             </tr>
                             @endforeach
                         </tbody>
@@ -287,7 +289,7 @@ $("#file-single").change(function() {
                                     <div class="d-flex justify-content-center">
                                         <img src=""  height="300px" style="object-fit:cover" class="mb-3" id="prop">
                                     </div>
-                                    <input type="file" class="form-control @error('file') is-invalid @enderror" id="file-multi" name="file" accept="image/png, image/jpeg, image/jpg" placeholder="File/Foto Bukti bayar"  value="{{is_null($retri->pembayaran) ? $retri->pembayaran->bukti_bayar : old('file')}}" >
+                                    <input type="file" class="form-control @error('file') is-invalid @enderror" id="file-multi" name="file" accept="image/png, image/jpeg, image/jpg" placeholder="File/Foto Bukti bayar"  value="{{old('file')}}" >
                                         @error('file')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -341,13 +343,13 @@ $("#file-single").change(function() {
                 <div id="myDIV" style="display: block">
                         <div class="row justify-content-between mb-3">
                             <div class="col">
-                                <h6 class="m-0 font-weight-bold text-primary">Pembayaran Retribusi {{$retri->properti->nama_properti}}</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Pembayaran Retribusi {{isset($retri->properti) ? $retri->properti->nama_properti : ''}}</h6>
                             </div>
                         </div>
                         <form method="POST" enctype="multipart/form-data" action="{{route('pembayaran-store')}}">
                         @csrf
                                 <div class='col mb-2' hidden>
-                                    <input type="text" class="form-control @error('id') is-invalid @enderror" id="id" name="id[]" placeholder="" value="{{is_null($retri->id) ? $retri->id : old('id[]')}}" >
+                                    <input type="text" class="form-control @error('id') is-invalid @enderror" id="id" name="id[]" placeholder="" value="{{isset($retri->id) ? $retri->id : old('id[]')}}" >
                                     <input type="text" class="form-control @error('type') is-invalid @enderror" id="type" name="type" placeholder="" value="retribusi" >
                                 </div>
                             <div class="row">
@@ -356,7 +358,7 @@ $("#file-single").change(function() {
                                     <div class="col-12 d-flex justify-content-center">
                                         <img src=""  height="300px" style="object-fit:cover" class="mb-3" id="photo">
                                     </div>
-                                    <input type="file" class="form-control @error('file') is-invalid @enderror" id="file-single" name="file" accept="image/png, image/jpeg, image/jpg" placeholder="File/Foto Bukti bayar" value="{{is_null($retri->pembayaran) ? $retri->pembayaran->bukti_bayar : old('file')}}"  >
+                                    <input type="file" class="form-control @error('file') is-invalid @enderror" id="file-single" name="file" accept="image/png, image/jpeg, image/jpg" placeholder="File/Foto Bukti bayar" value="{{isset($retri->Dpembayaran->map->pembayaran) ? $retri->Dpembayaran->map->pembayaran->bukti_bayar : old('file')}}"  >
                                         @error('file')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -380,7 +382,7 @@ $("#file-single").change(function() {
                                 </div>
                                 <div class="col mb-2">
                                 <label for="nominal" class="font-weight-bold text-dark">Konfirmasi Nominal Bayar<i class="text-danger text-sm text-bold">*</i></label>
-                                    <input type="number" class="form-control @error('nominal') is-invalid @enderror" id="nominal" name="nominal" placeholder="Konfirmasi Nominal Pembayaran" value="{{is_null($retri->pembayaran) ? $properti->pembayaran : old('nominal')}}" >
+                                    <input type="number" class="form-control @error('nominal') is-invalid @enderror" id="nominal" name="nominal" placeholder="Konfirmasi Nominal Pembayaran" value="{{isset($retri->Dpembayaran->map->pembayaran) ? $properti->Dpembayaran->map->pembayaran->nominal : old('nominal')}}" >
                                         @error('nominal')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>

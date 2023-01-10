@@ -16,7 +16,7 @@ class RequestController extends Controller
 {
     //
     public function index(){
-        $index = Pengangkutan::where('id_desa_adat', auth()->guard('admin')->user()->kependudukan->mipil->banjarAdat->desaAdat->id)->get();
+        $index = Pengangkutan::where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->get();
         // dd($index);
         return view('admin.request.index', compact('index'));
     }

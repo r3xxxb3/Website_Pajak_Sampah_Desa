@@ -68,8 +68,12 @@ class PembayaranController extends Controller
         $pembayaran->jenis = $request->type;
         if($pembayaran->save()){
             if(is_array($request->id)){
-                foreach($request->id as $id){
-                    $pembayaran->retribusi()->attach($id);
+                if(array_unique($request->id)->count() > 1){
+                    return redirect()->back()->with('warning', 'Pembayaran sekaligus hanya dapat dilakukan untuk properti dengan Desa Adat yang sama !');
+                }else{
+                    foreach($request->id as $id){
+                        $pembayaran->retribusi()->attach($id);
+                    }
                 }
             }else{
                 $pembayaran->retribusi()->attach($request->id); 

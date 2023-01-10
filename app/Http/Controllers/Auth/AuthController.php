@@ -43,7 +43,7 @@ class AuthController extends Controller
         ]);
         // dd(auth()->guard('web')->attempt($request->only(['no_telp', 'password'])));
         $checkus = Pelanggan::where('username', $request->username)->first();
-        if(!is_null($checkus)){
+        if(isset($checkus)){
             if(auth()->guard('web')->attempt($request->only(['username', 'password']))) {
                 $request->session()->regenerate();
                 // $user = Pelanggan::where('no_telp', $request->no_telp)->first();

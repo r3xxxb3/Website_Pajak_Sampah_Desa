@@ -15,7 +15,7 @@ class PegawaiController extends Controller
 {
     //
     public function indexPegawai(){
-        $index = Pegawai::all();
+        $index = Pegawai::where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->get();
         return view('admin.pegawai.index',compact('index'));
     }
 

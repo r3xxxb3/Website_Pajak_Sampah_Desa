@@ -132,13 +132,13 @@ Histori pembayaran
                                     <a class="btn btn-info btn-sm col text-white"><i class="fas fa-eye"></i> Lihat Detail</a>
                                 </td>
                                 <td style="vertical-align: middle; text-align: left">
-                                    @if(isset($pembayaran->retribusi))
-                                        @if(count($pembayaran->retribusi) > 0)
-                                            @foreach($pembayaran->retribusi as $retri)
-                                                - {{$retri->properti->nama_properti}} <br>
+                                    @if(isset($pembayaran->detail))
+                                        @if(count($pembayaran->detail) > 0)
+                                            @foreach($pembayaran->detail as $detail)
+                                                - {{$detail->model->properti->nama_properti}} <br>
                                             @endforeach
                                         @else
-                                            - {{$pembayaran->retribusi->properti->nama_properti}} <br>
+                                            - {{$pembayaran->detail->model->properti->nama_properti}} <br>
                                         @endif
                                     @else
                                         Error pada Hubungan Retribusi dan Pembayaran !

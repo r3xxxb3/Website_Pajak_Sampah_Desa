@@ -241,7 +241,7 @@ $("#file").change(function() {
                                     <option value="">Pilih Desa Adat !</option>
                                     @if($desaAdat != [])
                                         @foreach($desaAdat as $d)
-                                            <option value="{{$d->id}}">{{$d->desadat_nama}}</option>
+                                            <option value="{{$d->id}}" {{isset(auth()->guard('web')->user()->kependudukan->mipil->banjarAdat) ? (auth()->guard('web')->user()->kependudukan->mipil->banjarAdat->desaAdat->id == $d->id ? 'selected' : '') : (isset(auth()->guard('web')->user()->kependudukan->kTamiu->banjarAdat) ? (auth()->guard('web')->user()->kependudukan->kTamiu->banjarAdat->desaAdat->id == $d->id ? 'selected' : '') : (isset(auth()->guard('web')->user()->kependudukan->tamiu->banjarAdat) ? (auth()->guard('web')->user()->kependudukan->tamiu->banjarAdat->desaAdat->id == $d->id ? 'selected' : '') : '')) }}>{{$d->desadat_nama}}</option>
                                         @endforeach
                                     @endif
                                 </select>

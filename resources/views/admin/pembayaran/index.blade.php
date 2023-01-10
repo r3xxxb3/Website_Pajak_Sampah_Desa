@@ -88,7 +88,7 @@ Pembayaran
                                 table.row.add([
                                     jenis[1],
                                     val.properti+" ("+val.pelanggan+")",
-                                    val.model.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR',}),
+                                    val.model.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}),
                                     val.tanggal,
                                     '<span class="badge badge-success text-capitalize">'+val.model.status+'</span>'
                                 ]);
@@ -96,7 +96,7 @@ Pembayaran
                                 table.row.add([
                                     jenis[1],
                                     val.properti+" ("+val.pelanggan+")",
-                                    val.model.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR',}),
+                                    val.model.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}),
                                     val.tanggal,
                                     '<span class="badge badge-warning text-capitalize">'+val.model.status+'</span>'
                                 ]);
@@ -256,7 +256,7 @@ Pembayaran
                                     {{$pembayaran->media}}
                                 </td>
                                 <td>
-                                    {{"Rp. ".number_format($pembayaran->nominal ?? 0,0,',','.')}}
+                                    {{"Rp. ".number_format($pembayaran->nominal ?? 0,2,',','.')}}
                                 </td>
                                 <td>
                                     {{$pembayaran->created_at->format('d M Y')}}

@@ -49,12 +49,12 @@ List Request Pengangkutan
             markerGroup.clearLayers();
 
             // console.log(e.latlng.lat,e.latlng.lng);
-            if({{$requestP->status == "Selesai"}}){
+            @if($requestP->status == "Selesai" || $requestP->status == "Terkonfirmasi" )
 
-            }else{
+            @else
                 $('#lat').val(e.latlng.lat);
                 $('#lng').val(e.latlng.lng);
-            }
+            @endif
 
             //var c = L.circle([e.latlng.lat,e.latlng.lng], {radius: 15}).addTo(map);
             //   L.polygon([
@@ -207,7 +207,7 @@ List Request Pengangkutan
                             @enderror
                         </div>
                     </div>
-                    @if($requestP->status == "Selesai")
+                    @if($requestP->status == "Selesai" || $requestP->status == "Terkonfirmasi" )
                     <div class="row mt-4">
                         <div class="col">
                             <a href="{{route('request-index')}}" class="btn btn-danger"><i class="fas fa-arrow-left"></i> Kembali</a>
