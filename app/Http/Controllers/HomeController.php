@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\DesaAdat;
+use App\Jadwal;
+use App\JenisSampah;
 
 class HomeController extends Controller
 {
@@ -23,6 +26,20 @@ class HomeController extends Controller
     }
 
     public function landing(){
-        return view('layouts.landing');
+        $desa = DesaAdat::all();
+        $jenis = JenisSampah::all();
+        return view('layouts.landing', compact('desa', 'jenis'));
+    }
+
+    public function searchJadwal(Request $request){
+        $jadwal = Jadwal::where('id_desa', $request->id)->get();
+        foreach($jadwal as $j){
+            if($j->jenis != null){
+                $j->jenis_sampah = $j->jenis->jenis_sampah;  
+            }else{
+                $j->jenis_sampah = "Umum";
+            }
+        }
+        return response()->json($jadwal, 200);
     }
 }

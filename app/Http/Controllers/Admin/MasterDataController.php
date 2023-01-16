@@ -171,7 +171,8 @@ class MasterDataController extends Controller
 
     public function indexJadwal ()
     {
-        $index  =  Jadwal::where('id_desa', auth()->guard('admin')->user()->id_desa_adat)->get();
+        $index  =  Jadwal::where('id_desa', auth()->guard('admin')->user()->id_desa_adat)->with('jenis')->get();
+        // dd($index);
         return view('admin.master-data.jadwal.index', compact('index'));
     }
 
@@ -196,6 +197,7 @@ class MasterDataController extends Controller
         $jadwal = new Jadwal;
         $jadwal->mulai = $request->mulai;
         $jadwal->selesai = $request->selesai;
+        $jadwal->id_desa = auth()->guard('admin')->user()->id_desa_adat;
         $jadwal->hari = $request->hari;
         $jadwal->save();
         return redirect()->route('masterdata-jadwal-index')->with('success','Berhasil Menambah Data Jadwal Pengangkutan !');

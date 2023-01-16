@@ -59,6 +59,7 @@ Pembayaran
             pageLength: 5,
             lengthMenu: [[5, 10, 20, -1], [5, 10, 20, "All"]]
         });
+        
     $(document).ready( function(){
         $('.detail').on('click', function(e){
             e.preventDefault();
@@ -176,33 +177,24 @@ Pembayaran
                     <table class="table table-hover table-bordered  " id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr class="table-primary">
-                                <th class="col-1">Action</th>
                                 <th>Pelanggan</th>
                                 <th>Jenis</th>
                                 <!-- <th>Properti</th> -->
                                 <th>Bukti Bayar</th>
-                                <th>Metode Pembayaran</th>
-                                <th class="col col-sm-2">Nominal</th>
+                                <th class="col-1">Metode Pembayaran</th>
+                                <th class="col-1">Nominal</th>
                                 <th>Tanggal Pembayaran</th>
                                 <th>Status</th>
+                                <th >Action</th>
                             </tr>
                         </thead>
                         <tbody>
                         @foreach ($index as $pembayaran)
                             <tr>
-                                <td style="vertical-align: middle; text-align: center;" class="col-2">
-                                @if($pembayaran->status == "pending")
-                                    <a href="/admin/pembayaran/verif/{{$pembayaran->id_pembayaran}}" class="btn btn-success btn-sm col"><i class="fas fa-check"> Verifikasi</i></a><br>
-                                    <a href="/admin/pembayaran/edit/{{$pembayaran->id_pembayaran}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"> Ubah</i></a><br>
-                                    <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/pembayaran/delete/{{$pembayaran->id_pembayaran}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"> Hapus</i></a>
-                                @elseif($pembayaran->status == "lunas")
-                                    <a class="btn btn-info text-white btn-sm col detail" id="detail-{{$pembayaran->id_pembayaran}}" data-toggle="modal" data-target="#modal-detail" ><i class="fas fa-eye"></i> Lihat Detail</a>
-                                @endif
-                                </td>
-                                <td>
+                                <td style="vertical-align:middle;">
                                     {{$pembayaran->pelanggan->kependudukan->nama}}
                                 </td>
-                                <td class="col-2">
+                                <td style="vertical-align:middle;" >
                                     @if(count($pembayaran->detail) != 0)
                                         <?php $v = 'null' ?>
                                         @foreach($pembayaran->detail as $m)
@@ -226,25 +218,8 @@ Pembayaran
                                         @endforeach
                                     @endif
                                 </td>
-                                <!-- <td class="col-2"> -->
-                                    <!-- @if(isset($pembayaran->retribusi))
-                                        @if(count($pembayaran->retribusi) > 0)
-                                            @foreach($pembayaran->retribusi as $retri)
-                                                - {{$retri->properti->nama_properti}} <br>
-                                            @endforeach
-                                        @else
-                                            - {{$pembayaran->retribusi->properti->nama_properti}} <br>
-                                        @endif
-                                    @else
-                                        Error pada Hubungan Retribusi dan Pembayaran !
-                                    @endif -->
-                                    <!-- @if(count($pembayaran->detail->map->model) != 0)
-                                        @foreach($pembayaran->detail->map->model as $m)
-                                            - {{isset($m->properti) ? $m->properti->nama_properti : ''}} <br>
-                                        @endforeach
-                                    @endif
-                                </td> -->
-                                <td>
+                                
+                                <td style="vertical-align:middle;">
                                     @if(isset($pembayaran->bukti_bayar))
                                         <a class= "btn btn-success btn-sm text-white mb-2 " data-toggle="modal" data-target="#modal-single" onClick="lihatPembayaran({{$pembayaran}})"><i class="fas fa-eye"></i> Lihat bukti bayar</a>
                                         <!-- <img src="{{asset('assets/img/bukti_bayar/'.$pembayaran->bukti_bayar)}}"  height="100px" style="object-fit:cover" class="mb-3" id="prop"> -->
@@ -252,20 +227,29 @@ Pembayaran
                                         Tidak Terdapat Foto Bukti Bayar
                                     @endif
                                 </td>
-                                <td class="col col-sm-1">
+                                <td style="vertical-align:middle;" >
                                     {{$pembayaran->media}}
                                 </td>
-                                <td>
-                                    {{"Rp. ".number_format($pembayaran->nominal ?? 0,2,',','.')}}
-                                </td>
+                                <td style="vertical-align:middle;">
+                                    {{"Rp".number_format($pembayaran->nominal ?? 0,2,',','.')}}
+                                </td style="vertical-align:middle;">
                                 <td>
                                     {{$pembayaran->created_at->format('d M Y')}}
                                 </td>
-                                <td>
+                                <td style="vertical-align:middle;">
                                     @if($pembayaran->status == "pending")
                                         <span class="badge badge-warning">{{$pembayaran->status}}</span>
                                     @elseif($pembayaran->status == "lunas")
                                         <span class="badge badge-success">{{$pembayaran->status}}</span>
+                                    @endif
+                                </td>
+                                <td style="vertical-align: middle; text-align: center;">
+                                    @if($pembayaran->status == "pending")
+                                        <a href="/admin/pembayaran/verif/{{$pembayaran->id_pembayaran}}" class="btn btn-success btn-sm col"><i class="fas fa-check"> Verifikasi</i></a><br>
+                                        <a href="/admin/pembayaran/edit/{{$pembayaran->id_pembayaran}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"> Ubah</i></a><br>
+                                        <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/pembayaran/delete/{{$pembayaran->id_pembayaran}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"> Hapus</i></a>
+                                    @elseif($pembayaran->status == "lunas")
+                                        <a class="btn btn-info text-white btn-sm col detail" id="detail-{{$pembayaran->id_pembayaran}}" data-toggle="modal" data-target="#modal-detail" ><i class="fas fa-eye"></i> Lihat Detail</a>
                                     @endif
                                 </td>
                             </tr>

@@ -116,29 +116,28 @@ Histori pembayaran
                     <table class="table table-hover table-bordered  " id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr class="table-primary">
-                                <th>Action</th>
                                 <th>Properti</th>
                                 <th>Bukti Bayar</th>
                                 <th class="col col-sm-2">Metode Pembayaran</th>
                                 <th class="col col-sm-2">Nominal</th>
                                 <th>Tanggal Pembayaran</th>
                                 <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                         @foreach ($index as $pembayaran)
                             <tr>
                                 <td style="vertical-align: middle; text-align: left">
-                                    <a class="btn btn-info btn-sm col text-white"><i class="fas fa-eye"></i> Lihat Detail</a>
-                                </td>
-                                <td style="vertical-align: middle; text-align: left">
                                     @if(isset($pembayaran->detail))
                                         @if(count($pembayaran->detail) > 0)
                                             @foreach($pembayaran->detail as $detail)
                                                 - {{$detail->model->properti->nama_properti}} <br>
                                             @endforeach
-                                        @else
+                                        @elseif(!$pembayaran->detail->isEmpty())
                                             - {{$pembayaran->detail->model->properti->nama_properti}} <br>
+                                        @else
+                                            <h6>Error !</h6>
                                         @endif
                                     @else
                                         Error pada Hubungan Retribusi dan Pembayaran !
@@ -167,6 +166,9 @@ Histori pembayaran
                                     @elseif($pembayaran->status == "lunas")
                                         <span class="badge badge-success">{{$pembayaran->status}}</span>
                                     @endif
+                                </td>
+                                <td style="vertical-align: middle; text-align: left">
+                                    <a class="btn btn-info btn-sm col text-white"><i class="fas fa-eye"></i> Lihat Detail</a>
                                 </td>
                             </tr>
                         @endforeach

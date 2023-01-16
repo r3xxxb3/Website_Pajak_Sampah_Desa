@@ -81,19 +81,16 @@ Index Jadwal
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr class="table-primary">
-                        <th >Action</th>
                         <th>Hari</th>
                         <th>Mulai</th>
                         <th>Selesai</th>
+                        <th>Jenis Sampah</th>
+                        <th >Action</th>
                     </tr>
                 </thead>
                 <tbody>
                 @foreach ($index as $jadwal)
                     <tr>
-                        <td align="center" class="col-2">
-                            <a href="/admin/masterdata/jadwal/edit/{{$jadwal->id_jadwal}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
-                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/masterdata/jadwal/delete/{{$jadwal->id_jadwal}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
-                        </td>
                         <td style="vertical-align: middle;">
                             {{$jadwal->hari}}
                         </td>
@@ -102,6 +99,17 @@ Index Jadwal
                         </td>
                         <td style="vertical-align: middle;">
                             {{$jadwal->selesai}}
+                        </td>
+                        <td style="vertical-align: middle;">
+                        @if($jadwal->jenis != null)
+                            {{$jadwal->jenis->jenis_sampah}}
+                        @else
+                            Semua Jenis Sampah
+                        @endif
+                        </td>
+                        <td align="center" class="col-2">
+                            <a href="/admin/masterdata/jadwal/edit/{{$jadwal->id_jadwal}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
+                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/masterdata/jadwal/delete/{{$jadwal->id_jadwal}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
                         </td>
                     </tr>
                 @endforeach

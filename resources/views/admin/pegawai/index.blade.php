@@ -81,32 +81,32 @@ Index Data Pegawai
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr class="table-primary">
-                        <th class="col-2">Action</th>
                         <!-- <th>No Kartu Keluarga</th> -->
                         <th>Role</th>
                         <th>Nama Lengkap</th>
                         <th>Jenis Kelamin</th>
                         <th>No Telp</th>
+                        <th class="col-2">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                 @foreach ($index as $pegawai)
                     <tr>
-                        <td align="center">
-                            <a href="/admin/pegawai/edit/{{$pegawai->id_pegawai}}" class="btn btn-info btn-sm col"><i class="fas fa-eye"> Lihat</i></a> <br>
-                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/pegawai/delete/{{$pegawai->id_pegawai}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"> Hapus</i></a>
-                        </td>
-                        <td>
+                        <td style="vertical-align: middle; ">
                             {{isset($pegawai->role) ? $pegawai->role->role : ''}}
                         </td>
-                        <td>
+                        <td style="vertical-align: middle; ">
                             {{isset($pegawai->kependudukan) ? $pegawai->kependudukan->nama : ''}}
                         </td>
-                        <td>
-                        {{isset($pegawai->kependudukan) ? $pegawai->kependudukan->jenis_kelamin : ''}}
+                        <td style="vertical-align: middle; ">
+                            {{isset($pegawai->kependudukan) ? $pegawai->kependudukan->jenis_kelamin : ''}}
                         </td>
-                        <td>
-                        {{isset($pegawai->kependudukan) ? $pegawai->kependudukan->telepon : ''}}
+                        <td style="vertical-align: middle; ">
+                            {{isset($pegawai->kependudukan) ? $pegawai->kependudukan->telepon : ''}}
+                        </td>
+                        <td align="center">
+                            <a href="/admin/pegawai/edit/{{$pegawai->id_pegawai}}" class="btn btn-info btn-sm col"><i class="fas fa-eye"></i> Lihat</a> <br>
+                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/pegawai/delete/{{$pegawai->id_pegawai}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
                         </td>
                     </tr>
                 @endforeach

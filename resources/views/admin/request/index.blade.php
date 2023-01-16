@@ -99,24 +99,18 @@ List Request Pengangkutan
                         <table class="table table-bordered " id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr class="table-primary">
-                                    <th class="col-2 text-center">Action</th>
                                     <th>Nama Pelanggan</th>
                                     <th>Alamat</th>
                                     <th>Nominal </th>
                                     <th>Tanggal Request </th>
                                     <th>Lokasi</th>
                                     <th>Status</th>
+                                    <th class="col-2 text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody >
                             @foreach ($index as $i)
                                 <tr>
-                                    <td align="center">
-                                        <a class="btn btn-success btn-sm text-white col" onclick="setRequest({{$i->id}})" data-toggle="modal" data-target="#modal-confirm"  ><i class="fas fa-check-double"></i> Verifikasi</a><br>
-                                        <a class="btn btn-info btn-sm text-white col" onclick="swal({title: 'Konfirmasi Request Pengangkutan ?', icon: 'warning', buttons:{cancel: {text: 'Tidak',value: null,visible: true,closeModal: true,},confirm: {text: 'Ya',value: true,visible: true,closeModal: true}}}).then(function(value){if(value){window.location = window.location = '{{Route('admin-request-confirm', $i->id)}}' }})" ><i class="fas fa-check"></i>Konfirmasi</a><br>
-                                        <a href="/admin/request/edit/{{$i->id}}" class="btn btn-warning btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a> <br>
-                                        <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/request/delete/{{$i->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
-                                    </td>
                                     <td style="vertical-align: middle; text-align: center;">
                                         {{isset($i->pelanggan) ? $i->pelanggan->kependudukan->nama : ''}}
                                     </td>
@@ -124,23 +118,34 @@ List Request Pengangkutan
                                         {{isset($i) ? $i->alamat : ''}}
                                     </td>
                                     <td style="vertical-align: middle; text-align: center;" >
-                                        {{isset($i->nominal) ? 'Rp'.number_format($i->nominal ?? 0, 0, ',', '.') : 'Belum Ditetapkan !'}}
+                                        {{isset($i->nominal) ? 'Rp'.number_format($i->nominal ?? 0, 2, ',', '.') : 'Belum Ditetapkan !'}}
                                     </td>
                                     <td style="vertical-align: middle; text-align: center;" >
-                                        {{isset($i) ? $i->created_at : ''}}
+                                        {{isset($i) ? $i->created_at->format('d M Y') : ''}}
                                     </td>
                                     <td style="vertical-align: middle; text-align: center;" >
                                         <a class= "btn btn-success text-white mb-2" data-toggle="modal" data-target="#modal-single" onClick="lihatLokasi({{$i}})"><i class="fas fa-eye"></i> Lihat Lokasi</a>
                                     </td>
                                     <td style="vertical-align: middle; text-align: center;">
                                         @if($i->status == "Pending")
-                                            <span class="badge badge-warning">{{$i->status}}</span>
+                                        <span class="badge badge-warning">{{$i->status}}</span>
                                         @elseif($i->status == "Terkonfirmasi")
-                                            <span class="badge badge-info">{{$i->status}}</span>
+                                        <span class="badge badge-info">{{$i->status}}</span>
                                         @elseif($i->status == "Selesai")
-                                            <span class="badge badge-success">{{$i->status}}</span>
+                                        <span class="badge badge-success">{{$i->status}}</span>
                                         @else
-                                            <span class="badge badge-danger">{{$i->status}}</span>
+                                        <span class="badge badge-danger">{{$i->status}}</span>
+                                        @endif
+                                    </td>
+                                    <td align="center">
+                                        @if($i->status == "Pending")
+                                            <a class="btn btn-info btn-sm text-white col" onclick="swal({title: 'Konfirmasi Request Pengangkutan ?', icon: 'warning', buttons:{cancel: {text: 'Tidak',value: null,visible: true,closeModal: true,},confirm: {text: 'Ya',value: true,visible: true,closeModal: true}}}).then(function(value){if(value){window.location = window.location = '{{Route('admin-request-confirm', $i->id)}}' }})" ><i class="fas fa-check"></i> Konfirmasi</a><br>
+                                            <a href="/admin/request/edit/{{$i->id}}" class="btn btn-warning btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a> <br>
+                                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/request/delete/{{$i->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
+                                        @elseif($i->status == "Terkonfirmasi")
+                                            <a class="btn btn-success btn-sm text-white col" onclick="setRequest({{$i->id}})" data-toggle="modal" data-target="#modal-confirm"  ><i class="fas fa-check-double"></i> Verifikasi</a><br>
+                                        @elseif($i->status == "Selesai")
+                                            <a href="/admin/request/edit/{{$i->id}}" class="btn btn-info btn-sm col"><i class="fas fa-eye"></i> Lihat</a> <br>
                                         @endif
                                     </td>
                                 </tr>

@@ -56,7 +56,7 @@ Dashboard User
   </div>
   <div class="section-body">
     <div class="row">
-          <div class="col">
+          <div class="col properti" onClick="window.location='{{route('properti-index')}}';">
               <div class="card card-statistic-2">
                   <div class="card-icon shadow-primary bg-primary">
                       <i class="fas fa-building"></i>
@@ -71,8 +71,8 @@ Dashboard User
                   </div>
               </div>
           </div>
-          <div class="col">
-            <div class="card card-statistic-2">
+          <div class="col retribusi" onClick="window.location='{{route('retribusi-index')}}';">
+            <div class="card card-statistic-2" >
             <div class="card-icon shadow-primary bg-primary">
                       <i class="fas fa-receipt"></i>
                   </div>
@@ -86,7 +86,7 @@ Dashboard User
                   </div>
             </div>
           </div>
-          <div class="col">
+          <div class="col request" onClick="window.location='{{route('request-index')}}';">
               <div class="card card-statistic-2">
                 <div class="card-icon shadow-primary bg-primary">
                   <i class="fas fa-truck"></i>
@@ -101,7 +101,7 @@ Dashboard User
                   </div>
               </div>
           </div>
-          <div class="col">
+          <div class="col pembayaran" onClick="window.location='{{route('pembayaran-index')}}';">
             <div class="card card-statistic-2">
             <div class="card-icon shadow-primary bg-primary">
                   <i class="fas fa-money-check-alt"></i>
@@ -129,21 +129,29 @@ Dashboard User
                           <th>Hari</th>
                           <th>Mulai</th>
                           <th>Selesai</th>
+                          <th>Jenis Sampah</th>
                           <!-- <th>Jenis</th> -->
                       </tr>
                   </thead>
                   <tbody>
+                    @if(isset($jadwal))
+                    @foreach($jadwal as $j)
                       <tr>
                           <td>
-                            
+                            {{$j->hari}}
                           </td>
                           <td>
-                            
+                            {{$j->mulai}}
                           </td>
                           <td>
-                              
+                            {{$j->selesai}}
+                          </td>
+                          <td>
+                            {{$j->jenis != null ? $j->jenis->jenis_sampah : 'Umum'}}
                           </td>
                       </tr>
+                    @endforeach
+                    @endif
                   </tbody>
               </table>
           </div>

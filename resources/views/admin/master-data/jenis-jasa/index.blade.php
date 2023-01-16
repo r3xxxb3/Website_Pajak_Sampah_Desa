@@ -81,19 +81,15 @@ Index Jenis Jasa
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr class="table-primary">
-                        <th class="col-2">Action</th>
                         <th>Jenis Jasa</th>
                         <th>Deskripsi</th>
                         <th>Nominal</th>
+                        <th class="col-2">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                 @foreach ($index as $jenis)
                     <tr>
-                        <td align="center">
-                            <a href="/admin/masterdata/jenis-jasa/edit/{{$jenis->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a>
-                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/masterdata/jenis-jasa/delete/{{$jenis->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
-                        </td>
                         <td style="vertical-align: middle;">
                             {{$jenis->jenis_jasa}}
                         </td>
@@ -105,18 +101,22 @@ Index Jenis Jasa
                                 $standarHarga = $jenis->standar->where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->first(); 
                                 // dd($jenis->standar->where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->first());
                                 $hargaAtas = 0;
-
+                                
                                 if (isset($standarHarga)) {
                                     $hargaAtas = $standarHarga->nominal_retribusi;
                                 }
-                            ?>
+                                ?>
                             <!-- @if($loop->first)
                             <?php echo $jenis->standar->map->nominal_retribusi ?>
                             @endif -->
-
-                            Rp. {{ $hargaAtas == 0 ? '-' : number_format($hargaAtas ?? 0,2,',','.') }}
+                            
+                            Rp{{ $hargaAtas == 0 ? '-' : number_format($hargaAtas ?? 0,2,',','.') }}
                             
                             <!-- {{isset($jenis->standar) ? ($jenis->standar->map->range_nominal != "[null]" ? $jenis->standar->map->range_nominal." - ".$jenis->standar->map->nominal_retribusi : $jenis->standar->map->nominal_retribusi ) : ''}} -->
+                        </td>
+                        <td align="center">
+                            <a href="/admin/masterdata/jenis-jasa/edit/{{$jenis->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a>
+                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/masterdata/jenis-jasa/delete/{{$jenis->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
                         </td>
                     </tr>
                 @endforeach

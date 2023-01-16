@@ -449,48 +449,25 @@
 
         <!-- Right Column -->
         <div class="right-column d-flex flex-column align-items-lg-start align-items-center text-lg-start text-center">
-          <h2 class="title-text">Index informasi</h2>
+          <h2 class="title-text">Jenis Sampah</h2>
           <ul style="padding: 0; margin: 0">
           <!-- Kustomisasi cms untuk user` -->
+            @foreach($jenis as $j)
             <li class="list-unstyled" style="margin-bottom: 2rem">
-              <h4
-                class="title-caption d-flex flex-lg-row flex-column align-items-center justify-content-lg-start justify-content-center">
-                <span class="circle text-white d-flex align-items-center justify-content-center">
-                  1
-                </span>
-                Trusted Mentor
-              </h4>
-              <p class="text-caption">
-                We have provided highly experienced mentors<br class="d-sm-inline d-none" />
-                for several years.
-              </p>
+                <h4
+                  class="title-caption d-flex flex-lg-row flex-column align-items-center justify-content-lg-start justify-content-center">
+                  <span class="circle text-white d-flex align-items-center justify-content-center">
+                    {{$loop->index + 1}}
+                  </span>
+                  {{$j->jenis_sampah}}
+                </h4>
+                <p class="text-caption">
+                  {{$j->deskripsi}}
+                  <!-- We have provided highly experienced mentors<br class="d-sm-inline d-none" />
+                  for several years. -->
+                </p>
             </li>
-            <li class="list-unstyled" style="margin-bottom: 2rem">
-              <h4
-                class="title-caption d-flex flex-lg-row flex-column align-items-center justify-content-lg-start justify-content-center">
-                <span class="circle text-white d-flex align-items-center justify-content-center">
-                  2
-                </span>
-                Access Forever
-              </h4>
-              <p class="text-caption">
-                Are you busy at work so it's hard to consult? don't<br class="d-sm-inline d-none" />
-                worry because you can access anytime.
-              </p>
-            </li>
-            <li class="list-unstyled" style="margin-bottom: 4rem">
-              <h4
-                class="title-caption d-flex flex-lg-row flex-column align-items-center justify-content-lg-start justify-content-center">
-                <span class="circle text-white d-flex align-items-center justify-content-center">
-                  3
-                </span>
-                Halfpenny
-              </h4>
-              <p class="text-caption">
-                We provide economical packages for those of you<br class="d-sm-inline d-none" />
-                who are still in school or workers.
-              </p>
-            </li>
+            @endforeach
           </ul>
           <button class="btn btn-learn text-white">Learn More</button>
         </div>
@@ -627,9 +604,12 @@
 
         <!-- Right Column -->
         <div class="right-column d-flex flex-column align-items-lg-start align-items-center text-lg-start text-center">
-          <select class="form-control @error('desa') is-invalid @enderror" id="desa" name="desa" >
+          <select class="form-control desa @error('desa') is-invalid @enderror" id="desa" name="desa" >
               <option value="">Pilih Desa Adat</option>
+                @foreach($desa as $d)
                   <!--  -->
+                <option value="{{$d->id}}">{{$d->desadat_nama}}</option>
+                @endforeach
           </select>
         </div>
         <div class= "content-3-2 flex-column align-items-center">
@@ -643,30 +623,33 @@
   <div class="modal fade" id="modal-single">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
-            <div class="modal-body">
-                <div id="myDIV" style="display: block">
-                        <div class="row justify-content-between mb-3">
-                            <div class="col">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr class="table-primary">
-                                        <th>Hari</th>
-                                        <th>Mulai</th>
-                                        <th>Selesai</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          <div class="modal-header">
+            <h5 class="modal-title namaDesa" id="namaDesa" name="namaDesa"></h5>
           </div>
+          <div class="modal-body">
+            <div id="myDIV" style="display: block">
+              <div class="row justify-content-between mb-3">
+                <div class="col">
+                  <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                      <thead>
+                          <tr class="table-primary">
+                              <th>Hari</th>
+                              <th>Mulai</th>
+                              <th>Selesai</th>
+                              <th>Jenis Sampah</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                      </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
   </div>
   </section>
-
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
       <script src="{{ route('js.dynamic') }}"></script>
       <script src="{{ asset('js/app.js') }}?{{ uniqid() }}"></script>
@@ -679,28 +662,65 @@
       <script src="{{ asset('assets/js/stisla.js') }}"></script>
       <script src="{{ asset('assets/js/scripts.js') }}"></script>
       <script>
-        $(document).ready( function () {
-            $('#dataTable').DataTable({
-                "oLanguage":{
-                    "sSearch": "Cari:",
-                    "sZeroRecords": "Data tidak ditemukan",
-                    "sSearchPlaceholder": "Cari properti...",
-                    "infoEmpty": "Menampilkan 0 data",
-                    "infoFiltered": "(dari _MAX_ data)",
-                    "sLengthMenu": "Tampilkan _MENU_ data",
-                },
-                "language":{
-                    "paginate": {
-                            "previous": 'Sebelumnya',
-                            "next": 'Berikutnya'
-                        },
-                    "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
-                },
+        var table = $('#dataTable').DataTable({
+            "oLanguage":{
+                "sSearch": "Cari:",
+                "sZeroRecords": "Data tidak ditemukan",
+                "sSearchPlaceholder": "Cari jadwal",
+                "infoEmpty": "Menampilkan 0 data",
+                "infoFiltered": "(dari _MAX_ data)",
+                "sLengthMenu": "Tampilkan _MENU_ data",
+            },
+            "language":{
+                "paginate": {
+                        "previous": 'Sebelumnya',
+                        "next": 'Berikutnya'
+                    },
+                "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
+            },
+            pageLength: 5,
+            lengthMenu: [[5, 10, 20, -1], [5, 10, 20, "All"]]
+        });
+        $(document).ready( function(){
+            $('.filter').on('click', function(e){
+                e.preventDefault();
+                var id = $('#desa').val();
+                console.log(id);
+                var desa = $('#desa :selected').val();
+                console.log(desa);
+                if(desa != []){
+                  $('#namaDesa').html("Desa Adat "+ $('#desa :selected').text());
+                }else{
+                  $('#namaDesa').html($('#desa :selected').text())
+                }
+                
+                $.ajax({
+                    method : 'POST',
+                    url : '{{route("jadwal-search")}}',
+                    data : {
+                    "_token" : "{{ csrf_token() }}",
+                    id : id,
+                    },
+                    beforeSend : function() {
+                                
+                    },
+                    success : (res) => {
+                        console.log(res);
+                        table.clear();
+                        jQuery.each(res, function(i, val){
+                            console.log(val);
+                            table.row.add([
+                              val.hari,
+                              val.mulai,
+                              val.selesai,
+                              val.jenis_sampah
+                            ]);
+                        });
+                        table.draw();
+                    }
+                });
             });
         });
-      </script>
-      <script>
-
       </script>
     </body>
   </html>

@@ -11,8 +11,8 @@ Dashboard
   </div>
   <!-- {{Auth::guard('admin')->user()}} -->
   <div class="section-body">
-    <div class="row">
-        <div class="col">
+    <div class="row" >
+        <div class="col pelanggan" onClick="window.location='{{Route('pelanggan-index')}}'">
             <div class="card card-statistic-2">
                 <div class="card-icon shadow-primary bg-primary">
                     <i class="fas fa-user"></i>
@@ -27,7 +27,7 @@ Dashboard
                 </div>
             </div>
         </div>
-        <div class="col">
+        <div class="col properti" >
             <div class="card card-statistic-2">
               <div class="card-icon shadow-primary bg-primary">
                 <i class="fas fa-building"></i>
@@ -42,7 +42,7 @@ Dashboard
                 </div>
             </div>
         </div>
-        <div class="col">
+        <div class="col pegawai" onClick="window.location='{{Route('pegawai-index')}}'">
           <div class="card card-statistic-2">
           <div class="card-icon shadow-primary bg-primary">
                     <i class="fas fa-user-cog"></i>
@@ -67,43 +67,42 @@ Dashboard
               <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                       <tr class="table-primary">
-                          <th class="col-2">Action</th>
                           <th>Nama Properti</th>
                           <th>Pemilik Properti</th>
                           <th>Jenis Properti</th>
                           <th>Alamat </th>
                           <th>Status</th>
+                          <th class="col-2">Action</th>
                       </tr>
                   </thead>
                   <tbody>
                   @foreach ($indexPr as $prop)
                       <tr>
-                          <td align="center">
-                                <a  data-toggle="modal" data-target="#modal-edit" class="btn btn-info btn-sm text-white" onClick="catchProp({{$prop}}, {{$prop->jasa}}, {{$prop->id_desa_adat}}, {{$prop->id_banjar_adat }})"><i class="fas fa-pencil-alt"></i></a>
-                                <a style="margin-right:7px" class="btn btn-danger btn-sm" href="{{Route('admin-properti-delete', $prop->id)}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
-                          </td>
                           <td>
                               {{$prop->nama_properti}}
-                          </td>
-                          <td>
-                              {{$prop->pelanggan->kependudukan->nama}}
-                          </td>
-                          <td>
-                              {{isset($prop->jasa)? $prop->jasa->jenis_jasa : ''}}
-                          </td>
-                          <td>
-                              {{$prop->alamat}}
-                          </td>
-                          <td>
-                              @if($prop->status == 'terverifikasi')
-                              <span class="badge badge-success">{{$prop->status}}</span>
-                              @elseif($prop->status == 'pending')
-                              <span class="badge badge-warning">{{$prop->status}}</span>
-                              @else
-                              <span class="badge badge-danger">{{$prop->status}}</span>
-                              @endif
-                          </td>
-
+                            </td>
+                            <td>
+                                {{$prop->pelanggan->kependudukan->nama}}
+                            </td>
+                            <td>
+                                {{isset($prop->jasa)? $prop->jasa->jenis_jasa : ''}}
+                            </td>
+                            <td>
+                                {{$prop->alamat}}
+                            </td>
+                            <td>
+                                @if($prop->status == 'terverifikasi')
+                                <span class="badge badge-success">{{$prop->status}}</span>
+                                @elseif($prop->status == 'pending')
+                                <span class="badge badge-warning">{{$prop->status}}</span>
+                                @else
+                                <span class="badge badge-danger">{{$prop->status}}</span>
+                                @endif
+                            </td>
+                            <td align="center">
+                                  <a  data-toggle="modal" data-target="#modal-edit" class="btn btn-info btn-sm text-white" onClick="catchProp({{$prop}}, {{$prop->jasa}}, {{$prop->id_desa_adat}}, {{$prop->id_banjar_adat }})"><i class="fas fa-pencil-alt"></i></a>
+                                  <a style="margin-right:7px" class="btn btn-danger btn-sm" href="{{Route('admin-properti-delete', $prop->id)}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
+                            </td>
                       </tr>
                   @endforeach
                   </tbody>

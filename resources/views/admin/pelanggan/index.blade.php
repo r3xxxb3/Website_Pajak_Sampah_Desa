@@ -81,21 +81,17 @@ Index Data Pelanggan
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr class="table-primary">
-                        <th class="col-2">Action</th>
                         <!-- <th>No Kartu Keluarga</th> -->
                         <th>NIK</th>
                         <th>Nama Lengkap</th>
                         <th>Jenis Kelamin</th>
                         <th>No Telp</th>
+                        <th class="col-2">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                 @foreach ($index as $pelanggan)
                     <tr>
-                        <td align="center">
-                            <a href="/admin/pelanggan/edit/{{$pelanggan->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
-                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/pelanggan/delete/{{$pelanggan->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"> Hapus</i></a>
-                        </td>
                         <!-- <td>
                             {{$pelanggan->no_kk}}
                         </td> -->
@@ -110,6 +106,10 @@ Index Data Pelanggan
                         </td>
                         <td style="vertical-align: middle; text-align: center;">
                             {{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->telepon : 'Null'}}
+                        </td>
+                        <td align="center">
+                            <a href="/admin/pelanggan/edit/{{$pelanggan->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
+                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/pelanggan/delete/{{$pelanggan->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
                         </td>
                     </tr>
                 @endforeach

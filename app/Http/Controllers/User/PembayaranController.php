@@ -68,14 +68,19 @@ class PembayaranController extends Controller
         $pembayaran->jenis = $request->type;
         if($pembayaran->save()){
             if(is_array($request->id)){
-                if(array_unique($request->id)->count() > 1){
-                    return redirect()->back()->with('warning', 'Pembayaran sekaligus hanya dapat dilakukan untuk properti dengan Desa Adat yang sama !');
+                // dd(count(array_unique($request->id)));
+                $retribusi = Retribusi::whereIn('id', $request->id)->get();
+                $properti = Properti::whereIn('id', $retribusi->map->id_properti)->get();
+                // dd(count(array_unique($properti->map->id_desa_adat->toArray())));
+                if(count(array_unique($properti->map->id_desa_adat->toArray())) > 1){
+                    return redirect()->back()->with('error', 'Pembayaran sekaligus hanya dapat dilakukan untuk properti dengan Desa Adat yang sama !');
                 }else{
-                    foreach($request->id as $id){
-                        $pembayaran->retribusi()->attach($id);
+                    foreach($retribusi as $ret){
+                        $pembayaran->retribusi()->attach($ret);
                     }
                 }
             }else{
+                $retribusi = Retribusi::whereIn('id', $request->id)->get();
                 $pembayaran->retribusi()->attach($request->id); 
             }
             return redirect()->back()->with('success', 'Berhasil Melakukan Pembayaran untuk Retribusi !');

@@ -162,30 +162,23 @@ $("#file-single").change(function() {
                 </div>
                 @endif
                 <div class="table-responsive">
-                    <a class= "btn btn-success text-white mb-2" data-toggle="modal" data-target="#modal-choose"><i class="fas fa-cash-register"></i> Bayar Tagihan Retribusi</a>
+                    <a class= "btn btn-warning text-white mb-2" data-toggle="modal" data-target="#modal-choose"><i class="fas fa-eye"></i> Lihat Keranjang Retribusi</a>
                     <!-- <a class= "btn btn-info text-white mb-2" data-toggle="modal" data-target="#modal-cicil"><i class="fas fa-cash-register"></i> Cicil Tagihan Retribusi</a> -->
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr class="table-primary">
-                                <th class="col-2">Action</th>
                                 <th>Nama Properti</th>
                                 <th>Jenis Properti</th>
                                 <th>Nominal </th>
                                 <th>Tanggal Retribusi </th>
                                 <th>Status</th>
+                                <th class="col-2">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($index as $retri)
                             <tr>
                                 @if($retri->Dpembayaran->map->pembayaran->isEmpty())
-                                <td align="center">
-                                    @if($retri->Dpembayaran->map->pembayaran->isEmpty())
-                                        <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-single" onClick="calculateNom_b({{$retri}})"><i class="fas fa-cart-plus"></i></a>
-                                    @else
-                                        <a href="#" class="btn btn-info btn-md" data-toggle="" data-target=""><i class="fas fa-exclamation"></i></a>
-                                    @endif
-                                </td>
                                 <td>
                                     {{isset($retri->properti) ? $retri->properti->nama_properti : 'Error Data Kosong !'}}
                                 </td>
@@ -193,7 +186,7 @@ $("#file-single").change(function() {
                                     {{isset($retri->properti->jasa)? $retri->properti->jasa->jenis_jasa : 'Error Data Kosong !'}}
                                 </td>
                                 <td>
-                                    Rp. {{number_format($retri->nominal ?? 0,2,',','.')}}
+                                    Rp{{number_format($retri->nominal ?? 0,2,'.',',')}}
                                 </td>
                                 <td>
                                     {{$retri->created_at->format('d M Y')}}
@@ -206,6 +199,13 @@ $("#file-single").change(function() {
                                 @endif
                                 </td>
                                 @endif
+                                <td align="center">
+                                    @if($retri->Dpembayaran->map->pembayaran->isEmpty())
+                                        <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-single" onClick="calculateNom_b({{$retri}})"><i class="fas fa-cart-plus"></i> Keranjang</a>
+                                    @else
+                                        <a href="#" class="btn btn-info btn-md" data-toggle="" data-target=""><i class="fas fa-exclamation"></i></a>
+                                    @endif
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>

@@ -20,5 +20,8 @@ class Pengangkutan extends Model
         return $this->morphMany(DetailPembayaran::class, 'model');
     }
 
+    public function pembayaran() {
+        return $this->morphToMany(Pembayaran::class, 'detail', 'tb_detail_pembayaran');
+    }
     
 }

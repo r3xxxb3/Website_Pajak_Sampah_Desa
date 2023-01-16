@@ -119,29 +119,18 @@ List Request Pengangkutan
                         <table class="table table-bordered " id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr class="table-primary">
-                                    <th class="col-2 text-center">Action</th>
                                     <th>Nama Pelanggan</th>
                                     <th>Alamat</th>
                                     <th>Nominal </th>
                                     <th>Tanggal Request </th>
                                     <th>Lokasi</th>
                                     <th>Status</th>
+                                    <th class="col-2 text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody >
                                 @foreach ($index as $i)
                                 <tr>
-                                    <td align="center">
-                                        @if($i->status == "Selesai" || $i->status == "Terkonfirmasi" )
-                                            <a href="/user/request/edit/{{$i->id}}" class="btn btn-info btn-sm col"><i class="fas fa-eye"> Lihat</i></a><br>
-                                        @elseif($i->status == "Batal")
-                                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/user/request/delete/{{$i->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"> Hapus</i></a><br>
-                                        @elseif($i->status != "Selesai" && $i->status != "Terkonfirmasi")
-                                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/user/request/cancel/{{$i->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-times"> Batal</i></a><br>
-                                        @else
-                                            <a href="/user/request/edit/{{$i->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"> Ubah</i></a><br>
-                                        @endif
-                                    </td>
                                     <td>
                                         {{isset($i->pelanggan) ? $i->pelanggan->kependudukan->nama : ''}}
                                     </td>
@@ -159,13 +148,24 @@ List Request Pengangkutan
                                     </td>
                                     <td>
                                         @if($i->status == "Pending")
-                                            <span class="badge badge-warning">{{$i->status}}</span>
+                                        <span class="badge badge-warning">{{$i->status}}</span>
                                         @elseif($i->status == "Terkonfirmasi")
-                                            <span class="badge badge-info">{{$i->status}}</span>
+                                        <span class="badge badge-info">{{$i->status}}</span>
                                         @elseif($i->status == "Selesai")
-                                            <span class="badge badge-success">{{$i->status}}</span>
+                                        <span class="badge badge-success">{{$i->status}}</span>
                                         @else
-                                            <span class="badge badge-danger">{{$i->status}}</span>
+                                        <span class="badge badge-danger">{{$i->status}}</span>
+                                        @endif
+                                    </td>
+                                    <td align="center">
+                                        @if($i->status == "Selesai" || $i->status == "Terkonfirmasi" )
+                                            <a href="/user/request/edit/{{$i->id}}" class="btn btn-info btn-sm col"><i class="fas fa-eye"></i> Lihat</a><br>
+                                        @elseif($i->status == "Batal")
+                                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/user/request/delete/{{$i->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a><br>
+                                        @elseif($i->status != "Selesai" && $i->status != "Terkonfirmasi")
+                                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/user/request/cancel/{{$i->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-times"></i> Batal</a><br>
+                                        @else
+                                            <a href="/user/request/edit/{{$i->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"> Ubah</i></a><br>
                                         @endif
                                     </td>
                                 </tr>

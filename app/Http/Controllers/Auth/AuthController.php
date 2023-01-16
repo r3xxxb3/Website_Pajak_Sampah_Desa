@@ -53,7 +53,7 @@ class AuthController extends Controller
                 // dd(session());  
                 $this->clearLoginAttempts($request);
                 // dd(Auth::guard('admin')->user()->nama); 
-                return redirect()->route('home');
+                return redirect()->route('user-dashboard');
             }else{
                 $this->incrementLoginAttempts($request);
                 return redirect()

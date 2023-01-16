@@ -115,22 +115,17 @@ function lihatProperti(properti) {
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr class="table-primary">
-                            <th class="col-2">Action</th>
                             <th>Nama Properti</th>
                             <th>Jenis Properti</th>
                             <th>Alamat </th>
                             <th>Foto </th>
                             <th>Status</th>
+                            <th class="col-2">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                     @foreach ($index as $properti)
                         <tr>
-                            <td align="center">
-                                <a href="/user/properti/cancel/{{$properti->id}}" class="btn btn-warning btn-sm col" ><i class="fas fa-ban"></i> Batal</a><br>
-                                <a href="/user/properti/edit/{{$properti->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
-                                <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/user/properti/delete/{{$properti->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
-                            </td>
                             <td style="vertical-align: middle; text-align: center;">
                                 {{$properti->nama_properti}}
                             </td>
@@ -153,7 +148,11 @@ function lihatProperti(properti) {
                                 <span class="badge badge-danger">{{$properti->status}}</span>
                                 @endif
                             </td>
-
+                            <td align="center">
+                                <a href="/user/properti/cancel/{{$properti->id}}" class="btn btn-warning btn-sm col" ><i class="fas fa-ban"></i> Batal</a><br>
+                                <a href="/user/properti/edit/{{$properti->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
+                                <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/user/properti/delete/{{$properti->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
+                            </td>
                         </tr>
                     @endforeach
                     </tbody>

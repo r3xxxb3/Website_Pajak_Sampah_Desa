@@ -18,7 +18,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/admin/login', 'Admin\AuthController@Login')->name('admin-login');
+Route::get('/   login', 'Admin\AuthController@Login')->name('admin-login');
 Route::get('/admin/logout', 'Admin\AuthController@Logout')->name('admin-logout');
 Route::post('/admin/auth', 'Admin\AuthController@Auth')->name('admin-authenticate');
 
@@ -200,5 +200,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user'] , function(){
 });
 
 Route::get('/home', 'HomeController@landing')->name('home');
+Route::post('/jadwal', 'HomeController@searchJadwal')->name('jadwal-search');
+
 
 route::get('/test/{id}', 'TestingController@test')->name('test');

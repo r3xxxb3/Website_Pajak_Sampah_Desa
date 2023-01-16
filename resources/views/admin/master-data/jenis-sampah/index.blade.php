@@ -81,23 +81,23 @@ Index Jenis Sampah
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr class="table-primary">
-                        <th class="col-2">Action</th>
                         <th>Jenis Sampah</th>
                         <th>Deskripsi</th>
+                        <th class="col-2">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                 @foreach ($index as $jenis)
                     <tr>
-                        <td align="center">
-                            <a href="/admin/masterdata/jenis-sampah/edit/{{$jenis->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"></i>  Ubah</a><br>
-                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/masterdata/jenis-sampah/delete/{{$jenis->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
-                        </td>
                         <td style="vertical-align: middle;">
                             {{$jenis->jenis_sampah}}
                         </td>
                         <td>
                             {{$jenis->deskripsi}}
+                        </td>
+                        <td align="center">
+                            <a href="/admin/masterdata/jenis-sampah/edit/{{$jenis->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"></i>  Ubah</a><br>
+                            <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/masterdata/jenis-sampah/delete/{{$jenis->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
                         </td>
                     </tr>
                 @endforeach

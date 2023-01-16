@@ -81,19 +81,19 @@ Index Role Pegawai
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr class="table-primary">
-                        <th class="col-2">Action</th>
                         <th>Role</th>
+                        <th class="col-2">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                 @foreach ($index as $role)
                     <tr>
+                        <td style="vertical-align: middle; text-align: center;">
+                            <h4>{{$role->role}}</h4>
+                        </td>
                         <td align="center">
                             <a href="/admin/masterdata/role/edit/{{$role->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a>
                             <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/masterdata/role/delete/{{$role->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
-                        </td>
-                        <td style="vertical-align: middle; text-align: center;">
-                            <h4>{{$role->role}}</h4>
                         </td>
                     </tr>
                 @endforeach

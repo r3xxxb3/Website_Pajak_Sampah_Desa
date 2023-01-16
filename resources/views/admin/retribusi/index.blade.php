@@ -85,43 +85,43 @@ Index Retribusi
                     <table class="table table-bordered " id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr class="table-primary">
-                                <th class="col-2 text-center">Action</th>
                                 <th>Nama Pelanggan</th>
                                 <th>Nama Properti</th>
                                 <th>Jenis Properti</th>
                                 <th>Nominal </th>
                                 <th>Tanggal Retribusi </th>
                                 <th>Status</th>
+                                <th class="col-1 text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody >
                         @foreach ($index as $retri)
                             <tr>
-                                <td align="center">
-                                    <!-- <input type="checkbox" name="id[]" id="id" value="{{$retri->id}}"> -->
-                                    <a href="#" data-toggle="modal" data-target="#modal-{{$retri->id}}" class="btn btn-info btn-sm col"><i class="fas fa-eye"> Lihat</i></a>
-                                </td>
-                                <td>
+                                <td style="vertical-align: middle; text-align: center;" >
                                     {{isset($retri->pelanggan->kependudukan) ? $retri->pelanggan->kependudukan->nama : ''}}
                                 </td>
-                                <td>
+                                <td style="vertical-align: middle; text-align: center;" >
                                     {{isset($retri->properti) ? $retri->properti->nama_properti : ''}}
                                 </td>
-                                <td>
+                                <td style="vertical-align: middle; text-align: center;" >
                                     {{isset($retri->properti->jasa)? $retri->properti->jasa->jenis_jasa : ''}}
                                 </td>
-                                <td>
-                                    {{"Rp. ".number_format($retri->nominal ?? 0,0,',','.')}}
+                                <td style="vertical-align: middle; text-align: center;" >
+                                    {{"Rp".number_format($retri->nominal ?? 0,2,',','.')}}
                                 </td>
-                                <td>
+                                <td style="vertical-align: middle; text-align: center;" >
                                     {{$retri->created_at->format('d M Y')}}
                                 </td>
                                 <td >
-                                @if($retri->status == "pending")
+                                    @if($retri->status == "pending")
                                     <span class="badge badge-warning">{{$retri->status}}</span>
-                                @elseif($retri->status == "lunas")
+                                    @elseif($retri->status == "lunas")
                                     <span class="badge badge-success">{{$retri->status}}</span>
-                                @endif
+                                    @endif
+                                </td>
+                                <td align="center">
+                                    <!-- <input type="checkbox" name="id[]" id="id" value="{{$retri->id}}"> -->
+                                    <a href="#" data-toggle="modal" data-target="#modal-{{$retri->id}}" class="btn btn-info btn-sm col"><i class="fas fa-eye"></i> Lihat</a>
                                 </td>
         
                             </tr>

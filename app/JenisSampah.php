@@ -14,4 +14,8 @@ class JenisSampah extends Model
     protected $table = 'tb_jenis_sampah';
 
     protected $fillable = ['jenis_sampah', 'deskripsi'];
+
+    public function Jadwal(){
+        return $this->hasMany(Jadwal::class, 'id', 'id_jenis_sampah');
+    }
 }

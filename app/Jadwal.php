@@ -14,4 +14,8 @@ class Jadwal extends Model
 
     protected $fillable = ['mulai', 'selesai', 'hari'];
     //
+
+    public function jenis(){
+        return $this->belongsTo(JenisSampah::class, 'id_jenis_sampah', 'id');
+    }
 }
