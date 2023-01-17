@@ -18,7 +18,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/   login', 'Admin\AuthController@Login')->name('admin-login');
+Route::get('/admin/login', 'Admin\AuthController@Login')->name('admin-login');
 Route::get('/admin/logout', 'Admin\AuthController@Logout')->name('admin-logout');
 Route::post('/admin/auth', 'Admin\AuthController@Auth')->name('admin-authenticate');
 

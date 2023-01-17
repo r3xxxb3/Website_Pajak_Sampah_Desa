@@ -2,14 +2,14 @@
 
 @section('content')
 <div class="card card-success">
-  <div class="card-header"><h4>Login</h4></div>
+  <div class="card-header"><h4>Masuk</h4></div>
 
   <div class="card-body">
     <form method="POST" action="{{ route('admin-authenticate') }}">
     @csrf
       <div class="form-group">
-        <label for="username">Username<i class="text-danger text-sm text-bold">*</i></label>
-        <input  id="username" type="username" class="form-control{{ $errors->login->has('username') ? ' is-invalid' : '' }}" name="username" placeholder="Registered Username" tabindex="1" value="{{ old('username') }}" autofocus>
+        <label for="username">Username/No telp/NIK<i class="text-danger text-sm text-bold">*</i></label>
+        <input  id="username" type="username" class="form-control{{ $errors->login->has('username') ? ' is-invalid' : '' }}" name="username" placeholder="Masukan Username\No telp\NIK" tabindex="1" value="{{ old('username') }}" autofocus>
         <div class="invalid-feedback">
           {{ $errors->login->first('username') }}
         </div>
@@ -25,11 +25,11 @@
             <label for="password" class="control-label">Password<i class="text-danger text-sm text-bold">*</i></label>
           <div class="float-right">
             <a href="{{ route('password.request') }}" class="text-small">
-              Forgot Password?
+              Lupa Password?
             </a>
           </div>
         </div>
-        <input aria-describedby="passwordHelpBlock" id="password" type="password" placeholder="Your account password" class="form-control{{ $errors->has('password') ? ' is-invalid': '' }}" name="password" tabindex="2">
+        <input aria-describedby="passwordHelpBlock" id="password" type="password" placeholder="Masukan password" class="form-control{{ $errors->has('password') ? ' is-invalid': '' }}" name="password" tabindex="2">
         <div class="invalid-feedback">
           {{ $errors->first('password') }}
         </div>
@@ -43,13 +43,13 @@
       <div class="form-group">
         <div class="custom-control custom-checkbox">
           <input type="checkbox" name="remember" class="custom-control-input" tabindex="3" id="remember"{{ old('remember') ? ' checked': '' }}>
-          <label class="custom-control-label" for="remember">Remember Me</label>
+          <label class="custom-control-label" for="remember">Ingat Saya</label>
         </div>
       </div>
 
       <div class="form-group">
         <button type="submit" class="btn btn-success btn-lg btn-block" tabindex="4">
-          Login
+          Masuk
         </button>
       </div>
     </form>

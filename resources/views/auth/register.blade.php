@@ -43,6 +43,7 @@
                         $("#tanggal").val(res.tanggal_lahir);
                         $("#jenis").val(res.jenis_kelamin);
                         $("#alamat").val(res.alamat);
+                        $("#tempat").val(res.tempat_lahir);
                         $("#username").val(res.telepon);
                     })
                 }else{
@@ -54,6 +55,7 @@
                         $("#tanggal").val(null);
                         $("#jenis").val(null);
                         $("#alamat").val(null);
+                        $("#tempat").val(null); 
                         $("#username").val(null);
                         $("#password").val(null);
                         $("#passcheck").val(null);
@@ -65,6 +67,12 @@
     })
 
 </script>
+@endsection
+
+@section('style')
+<style>
+    
+</style>
 @endsection
 
 @section('content')
@@ -136,10 +144,9 @@
                                     @enderror
                             </div>
                             <div class="col mb-2">
-                                <label for="alamat" class="font-weight-bold text-dark">Alamat</label>
-                                <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" placeholder="Masukan Alamat Tinggal" value="{{old('alamat')}}" {{!is_null(old('alamat')) ? '' : 'disabled'  }}>
-                                    
-                                    @error('alamat')
+                                <label for="tempat" class="font-weight-bold text-dark">Tempat Lahir</label>
+                                <input type="text" class="form-control @error('Tempat') is-invalid @enderror" id="tempat" name="tempat" placeholder="Masukan tempat Lahir" value="{{old('tempat')}}" {{!is_null(old('tempat')) ? '' : 'disabled'  }}>
+                                    @error('tempat')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>    
@@ -165,12 +172,13 @@
                                     @enderror
                             </div>
                             <div class='col mb-2'>
-                                <label for="no" class="font-weight-bold text-dark">Nomor Telepon</label>
-                                <input type="text" class="form-control @error('no') is-invalid @enderror" id="no" name="no" placeholder="Masukan No Telpon Aktif" value="{{old('no')}}" {{!is_null(old('no')) ? '' : 'disabled'  }}>
-                                    @error('no')
+                                <label for="alamat" class="font-weight-bold text-dark">Alamat</label>
+                                <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" placeholder="Masukan Alamat Tinggal" value="{{old('alamat')}}" {{!is_null(old('alamat')) ? '' : 'disabled'  }}>
+                                    
+                                    @error('alamat')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
-                                    </span>
+                                    </span>    
                                     @enderror
                             </div>
                         </div>
@@ -186,9 +194,9 @@
                                     @enderror
                             </div>
                             <div class='col mb-2'>
-                                <label for="password" class="font-weight-bold text-dark">Buat Password<i class="text-danger text-sm text-bold">*</i></label>
-                                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Buat Password akun anda !" value="{{old('password')}}" {{!is_null(old('nama')) ? '' : 'disabled'  }}>
-                                    @error('password')
+                                <label for="no" class="font-weight-bold text-dark">Nomor Telepon</label>
+                                <input type="text" class="form-control @error('no') is-invalid @enderror" id="no" name="no" placeholder="Masukan No Telpon Aktif" value="{{old('no')}}" {{!is_null(old('no')) ? '' : 'disabled'  }}>
+                                    @error('no')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -198,6 +206,19 @@
 
 
                         <div class="row mb-3">
+                            <!-- <div class="col pt-3" align="center">
+                                <button type="submit" class="btn btn-success disabled" id="sub" onclick="return confirm('Apakah Anda Yakin Ingin Menambah Data?')"><i class="fas fa-save"></i> Simpan</button>
+                                <a href="{{route('home')}}" class="btn btn-danger"><i class="fas fa-times"></i> Cancel</a>
+                            </div> -->
+                            <div class="col">
+                                <label for="password" class="font-weight-bold text-dark">Buat Password<i class="text-danger text-sm text-bold">*</i></label>
+                                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Buat Password akun anda !" value="{{old('password')}}" {{!is_null(old('nama')) ? '' : 'disabled'  }}>
+                                    @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                            </div>
                             <div class="col mb-2">
                                 <label for="passcheck" class="font-weight-bold text-dark">Konfirmasi Password<i class="text-danger text-sm text-bold">*</i></label>
                                 <input type="password" class="form-control @error('pass') is-invalid @enderror" id="passcheck" name="passcheck" placeholder="Konfirmasi Password akun anda !" value="{{old('passcheck')}}" {{!is_null(old('nama')) ? '' : 'disabled'  }}>
@@ -212,6 +233,9 @@
 
                         <div class="row">
                             <div class="col">
+
+                            </div>
+                            <div class="col" align="end">
                                 <button type="submit" class="btn btn-success disabled" id="sub" onclick="return confirm('Apakah Anda Yakin Ingin Menambah Data?')"><i class="fas fa-save"></i> Simpan</button>
                                 <a href="{{route('home')}}" class="btn btn-danger"><i class="fas fa-times"></i> Cancel</a>
                             </div>

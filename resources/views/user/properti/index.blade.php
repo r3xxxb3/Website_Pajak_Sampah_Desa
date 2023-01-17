@@ -117,6 +117,7 @@ function lihatProperti(properti) {
                         <tr class="table-primary">
                             <th>Nama Properti</th>
                             <th>Jenis Properti</th>
+                            <th>Desa Adat</th>
                             <th>Alamat </th>
                             <th>Foto </th>
                             <th>Status</th>
@@ -131,6 +132,9 @@ function lihatProperti(properti) {
                             </td>
                             <td style="vertical-align: middle; text-align: center;">
                                 {{isset($properti->jasa)? $properti->jasa->jenis_jasa : ''}}
+                            </td>
+                            <td style="vertical-align: middle; text-align: center;">
+                                {{isset($properti->desaAdat) ? $properti->desaAdat->desadat_nama : 'Desa Adat tidak ditemukan !'}}
                             </td>
                             <td style="vertical-align: middle; text-align: center;">
                                 {{$properti->alamat}}

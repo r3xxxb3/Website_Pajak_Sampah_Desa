@@ -47,7 +47,7 @@ class UserController extends Controller
 
     public function properti(){
         // dd(Auth::guard('web')->user()->id);
-        $index = Properti::where('id_pelanggan', Auth::guard('web')->user()->id)->get();
+        $index = Properti::where('id_pelanggan', Auth::guard('web')->user()->id)->orderByRaw("FIELD(status, 'terverifikasi', 'pending', 'batal') DESC")->get();
         $banjarAdat = BanjarAdat::all();
         $desaAdat = DesaAdat::all();
         return view('user.properti.index', compact('index', 'banjarAdat', 'desaAdat'));
