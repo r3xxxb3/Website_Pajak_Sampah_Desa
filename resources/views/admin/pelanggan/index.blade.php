@@ -108,7 +108,7 @@ Index Data Pelanggan
                             {{isset($pelanggan->kependudukan) ? $pelanggan->kependudukan->telepon : 'Null'}}
                         </td>
                         <td align="center">
-                            <a href="/admin/pelanggan/edit/{{$pelanggan->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
+                            <a href="/admin/pelanggan/edit/{{$pelanggan->id}}" class="btn btn-info btn-sm col mb-1"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
                             <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/pelanggan/delete/{{$pelanggan->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
                         </td>
                     </tr>

@@ -1,7 +1,7 @@
 @extends('layouts.admin-master')
 
 @section('title')
-Index Retribusi
+History Retribusi
 @endsection
 
 @section('scripts')
@@ -31,6 +31,7 @@ Index Retribusi
 @endsection
 
 @section('content')
+
 <section class="section">
     <div class="section-header">
         <h1>Manajemen Retribusi</h1>
@@ -43,7 +44,10 @@ Index Retribusi
         <!-- Copy drisini -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">List Retribusi</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Histori Retribusi</h6>
+                <div class="col pt-3" align="end">
+                    <a class= "btn btn-danger text-white mb-2" href="{{route('admin-retribusi-index')}}" ><i class="fas fa-arrow-left"></i> Kembali</a>
+                </div>
             </div>
             <div class="card-body">
             @if (Session::has('error'))
@@ -81,7 +85,6 @@ Index Retribusi
             <div class="table-responsive">
                 <form action="/admin/retribusi/verif-many" method="post">
                     @csrf
-                    <a class= "btn btn-warning text-white mb-2"  href="{{Route('admin-retribusi-history')}}"><i class="fas fa-history"></i> Lihat Histori Retribusi</a>
                     <table class="table table-bordered " id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr class="table-primary">
@@ -148,7 +151,7 @@ Index Retribusi
                         <div class="row justify-content-between mb-3">
                             <div class="col">
                                 <h6 class="m-0 font-weight-bold text-primary">Detail Retribusi {{$retri->created_at->format('M Y')}}
-                                    <span class="badge badge-warning">{{$retri->status}}</span>
+                                    <span class="badge badge-success">{{$retri->status}}</span>
                                 </h6>
                             </div>
                         </div>
@@ -194,7 +197,7 @@ Index Retribusi
                                 <div class="col">
                                     <!-- nominal -->
                                     <label for="nominal" class="font-weight-bold text-dark">Nominal</label>
-                                    <input type="text" class="form-control @error('nominal') is-invalid @enderror" id="nominal" name="nominal" placeholder="Masukan Nominal Retribusi" value="{{isset($retri->nominal) ? $retri->nominal : old('keterangan')}}" >
+                                    <input type="text" class="form-control @error('nominal') is-invalid @enderror" id="nominal" name="nominal" placeholder="Masukan Nominal Retribusi" value="{{isset($retri->nominal) ? $retri->nominal : old('keterangan')}}" disabled>
                                         @error('nominal')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -203,10 +206,10 @@ Index Retribusi
                                 </div>
                             </div>
                             <div class="row mt-4">
-                                <div class="col">
+                                <!-- <div class="col">
                                     <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda Yakin Ingin Mengubah Data?')"><i class="fas fa-check"></i> Lunas</button>
                                     <a data-dismiss="modal" class="btn btn-danger text-white"><i class="fas fa-times"></i> Close</a>
-                                </div>
+                                </div> -->
                             </div>
                         </form>
                     </div>
@@ -216,6 +219,4 @@ Index Retribusi
 </div>
 @endforeach
 
-
 @endsection
-

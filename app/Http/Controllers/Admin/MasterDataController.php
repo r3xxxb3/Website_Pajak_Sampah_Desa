@@ -171,14 +171,15 @@ class MasterDataController extends Controller
 
     public function indexJadwal ()
     {
-        $index  =  Jadwal::where('id_desa', auth()->guard('admin')->user()->id_desa_adat)->with('jenis')->get();
+        $index  =  Jadwal::where('id_desa', auth()->guard('admin')->user()->id_desa_adat)->orderByRaw("FIELD(hari, \"Senin\", \"Selasa\", \"Rabu\", \"Kamis\", \"Jumat\", \"Sabtu\", \"Minggu\")")->with('jenis')->get();
         // dd($index);
         return view('admin.master-data.jadwal.index', compact('index'));
     }
 
     public function createJadwal ()
     {
-        return view('admin.master-data.jadwal.create');
+        $jenis = JenisSampah::all();
+        return view('admin.master-data.jadwal.create', compact('jenis'));
     }
 
     public function storeJadwal (Request $request)
@@ -190,15 +191,20 @@ class MasterDataController extends Controller
 
         $this->validate($request, [
             'mulai' => 'required',
-            'selesai' => 'required',
             'hari' => 'required',
+            'jenis' => 'required',
         ],$messages);
 
         $jadwal = new Jadwal;
         $jadwal->mulai = $request->mulai;
-        $jadwal->selesai = $request->selesai;
+        if(!is_null($request->selesai)){
+            $jadwal->selesai = $request->selesai;
+        }
         $jadwal->id_desa = auth()->guard('admin')->user()->id_desa_adat;
         $jadwal->hari = $request->hari;
+        if($request->jenis != "umum"){
+            $jadwal->id_jenis_sampah = $request->jenis; 
+        }
         $jadwal->save();
         return redirect()->route('masterdata-jadwal-index')->with('success','Berhasil Menambah Data Jadwal Pengangkutan !');
     }

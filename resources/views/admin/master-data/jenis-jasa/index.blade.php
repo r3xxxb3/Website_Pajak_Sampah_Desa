@@ -115,7 +115,7 @@ Index Jenis Jasa
                             <!-- {{isset($jenis->standar) ? ($jenis->standar->map->range_nominal != "[null]" ? $jenis->standar->map->range_nominal." - ".$jenis->standar->map->nominal_retribusi : $jenis->standar->map->nominal_retribusi ) : ''}} -->
                         </td>
                         <td align="center">
-                            <a href="/admin/masterdata/jenis-jasa/edit/{{$jenis->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a>
+                            <a href="/admin/masterdata/jenis-jasa/edit/{{$jenis->id}}" class="btn btn-info btn-sm col mb-1"><i class="fas fa-pencil-alt"></i> Ubah</a>
                             <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/masterdata/jenis-jasa/delete/{{$jenis->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
                         </td>
                     </tr>

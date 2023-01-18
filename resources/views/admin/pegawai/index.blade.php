@@ -105,7 +105,7 @@ Index Data Pegawai
                             {{isset($pegawai->kependudukan) ? $pegawai->kependudukan->telepon : ''}}
                         </td>
                         <td align="center">
-                            <a href="/admin/pegawai/edit/{{$pegawai->id_pegawai}}" class="btn btn-info btn-sm col"><i class="fas fa-eye"></i> Lihat</a> <br>
+                            <a href="/admin/pegawai/edit/{{$pegawai->id_pegawai}}" class="btn btn-info btn-sm col mb-1"><i class="fas fa-eye"></i> Lihat</a> <br>
                             <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/pegawai/delete/{{$pegawai->id_pegawai}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
                         </td>
                     </tr>

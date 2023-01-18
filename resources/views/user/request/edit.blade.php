@@ -147,7 +147,7 @@ List Request Pengangkutan
                             <div class="" id="map"></div>
                             <div class="row mt-3">
                                 <div class="col">
-                                    <input type="text" class="form-control @error('lat') is-invalid @enderror" id="lat" name="lat" placeholder="Latitude" value="{{isset($requestP->lat) ? $requestP->lat : old('lat')}}" {{$requestP->status == "Selesai" ? 'disabled' : ''}}>
+                                    <input type="text" class="form-control @error('lat') is-invalid @enderror" id="lat" name="lat" placeholder="Latitude" value="{{isset($requestP->lat) ? $requestP->lat : old('lat')}}" {{$requestP->status == "Selesai" || $requestP->status == "Terkonfirmasi" ? 'disabled' : ''}}>
                                     @error('lat')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -155,7 +155,7 @@ List Request Pengangkutan
                                     @enderror
                                 </div>
                                 <div class="col">
-                                    <input type="text" class="form-control @error('lng') is-invalid @enderror" id="lng" name="lng" placeholder="Longitude" value="{{isset($requestP->lng) ? $requestP->lng : old('lng')}}" {{$requestP->status == "Selesai" ? 'disabled' : ''}}>
+                                    <input type="text" class="form-control @error('lng') is-invalid @enderror" id="lng" name="lng" placeholder="Longitude" value="{{isset($requestP->lng) ? $requestP->lng : old('lng')}}" {{$requestP->status == "Selesai" || $requestP->status == "Terkonfirmasi" ? 'disabled' : ''}}>
                                     @error('lng')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -173,7 +173,7 @@ List Request Pengangkutan
                                 <img src=""  height="300px" style="object-fit:cover" class="mb-3" id="prop">
                                 @endif
                             </div>
-                            <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" accept="image/png, image/jpeg, image/jpg" placeholder="Masukan file gambar Lokasi" value="{{isset($requestP->file) ? $requestP->file : old('file')}}" {{$requestP->status == "Selesai" ? 'disabled' : ''}}>
+                            <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" accept="image/png, image/jpeg, image/jpg" placeholder="Masukan file gambar Lokasi" value="{{isset($requestP->file) ? $requestP->file : old('file')}}" {{$requestP->status == "Selesai" || $requestP->status == "Terkonfirmasi" ? 'disabled' : ''}}>
                                 @error('file')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -184,7 +184,7 @@ List Request Pengangkutan
                     <div class="row mt-2">
                         <div class="col-2">
                             <label for="desaAdat" class="font-weight-bold text-dark">Desa Adat</label>
-                            <select class="form-control" name="desaAdat" id="desaAdat" {{$requestP->status == "Selesai" ? 'disabled' : ''}}>
+                            <select class="form-control" name="desaAdat" id="desaAdat" {{$requestP->status == "Selesai" || $requestP->status == "Terkonfirmasi" ? 'disabled' : ''}}>
                                 <option value="">Pilih Desa Adat Lokasi Pengangkutan !</option>
                                 @foreach($desaAdat as $d)
                                     <option value="{{$d->id}}" {{isset($requestP->id_desa_adat) ? ($requestP->id_desa_adat == $d->id ? 'selected' : '') : ''}}>{{$d->desadat_nama}}</option>
@@ -198,7 +198,7 @@ List Request Pengangkutan
                         </div>
                         <div class="col">
                             <label for="alamat" class="font-weight-bold text-dark">Alamat Lengkap</label>
-                            <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" placeholder="Masukan Alamat Lengkap lokasi Request" value="{{isset($requestP->alamat) ? $requestP->alamat : old('alamat')}}" {{$requestP->status == "Selesai" ? 'disabled' : ''}}>
+                            <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" placeholder="Masukan Alamat Lengkap lokasi Request" value="{{isset($requestP->alamat) ? $requestP->alamat : old('alamat')}}" {{$requestP->status == "Selesai" || $requestP->status == "Terkonfirmasi" ? 'disabled' : ''}}>
                             
                             @error('alamat')
                             <span class="invalid-feedback" role="alert">

@@ -32,6 +32,7 @@ class RetribusiController extends Controller
         $index = Retribusi::whereHas('properti', function (Builder $query){
             $query->where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat);
         })->where('status', 'lunas')->get();
+        return view('admin.retribusi.history', compact('index'));
     }
 
     public function update(){

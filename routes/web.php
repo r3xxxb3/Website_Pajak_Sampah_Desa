@@ -121,6 +121,7 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
 
     //Manajemen Retribusi
     Route::get('/retribusi', 'Admin\RetribusiController@index')->name('admin-retribusi-index');
+    Route::get('/retribusi/history', 'Admin\RetribusiController@history')->name('admin-retribusi-history');
     Route::post('/retribusi/verif-many', 'Admin\RetribusiController@verifMany')->name('admin-retribusi-verif-many');
     Route::post('/retribusi/update/{id}', 'Admin\RetribusiController@update')->name('admin-retribusi-update');
     Route::get('/retribusi/verif/{id}', 'Admin\RetribusiController@verif')->name('admin-retribusi-verif');
@@ -129,10 +130,12 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::get('/request', 'Admin\RequestController@index')->name('admin-request-index');
     Route::get('/request/create', 'Admin\RequestController@create')->name('admin-request-create');
     Route::post('/request/store', 'Admin\RequestController@store')->name('admin-request-store');
-    Route::get('/request/edit', 'Admin\RequestController@edit')->name('admin-request-store');
+    Route::get('/request/edit/{id}', 'Admin\RequestController@edit')->name('admin-request-store');
     Route::get('/request/update/{id}', 'Admin\RequestController@update')->name('admin-request-update');
     Route::get('/request/confirm/{id}', 'Admin\RequestController@confirm')->name('admin-request-confirm');
+    Route::get('/request/cancel/{id}', 'Admin\RequestController@cancel')->name('admin-request-cancel');
     Route::post('/request/verif', 'Admin\RequestController@verif')->name('admin-request-verif');
+    Route::get('/request/delete/{id}', 'Admin\RequestController@delete')->name('admin-request-delete');
     // Route::post('/request/verif-many', 'Admin\RequestController@verifMany')->name('admin-request-verif-many');
 
     //Manajemen Pembayaran

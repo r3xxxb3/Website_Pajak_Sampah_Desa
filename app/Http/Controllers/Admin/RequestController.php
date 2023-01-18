@@ -10,6 +10,7 @@ use App\Properti;
 use App\JenisJasa;
 use App\Retribusi;
 use App\Pembayaran;
+use App\DesaAdat;
 
 
 class RequestController extends Controller
@@ -30,7 +31,9 @@ class RequestController extends Controller
     }
 
     public function edit($id){
-
+        $requestP = Pengangkutan::where('id', $id)->first();
+        $desaAdat = DesaAdat::all();
+        return view('admin.request.edit', compact('requestP', 'desaAdat'));
     }
 
     public function update(Request $request, $id){
@@ -75,8 +78,27 @@ class RequestController extends Controller
         }
     }
 
-    public function delete($id){
+    public function cancel($id){
+        $requestP = Pengangkutan::where('id', $id)->first();
+        if($requestP->status == 'Pending'){
+            $requestP->status = "Batal";
+            $requestP->update();
+            return redirect()->route('admin-request-index')->with('success', 'Berhasil membatalkan request pengangkutan !');  
+        }else{
+            return redirect()->back()->with('error', 'Proses pembatalan request pengangkutan tidak dapat dilakukan !');
+        }
+    }
 
+    public function delete($id){
+        $requestP = Pengangkutan::where('id', $id)->first();
+        if($requestP->status != "Selesai" || $requestP->status != "Terkonfirmasi" ){
+            if($requestP->status == null){
+                $requestP->delete();
+                return redirect()->route('admin-request-index')->with('success', 'Berhasil menghapus request pengangkutan !');  
+            }else{
+                return redirect()->back()->with('error', 'Proses penghapusan request pengangkutan tidak dapat dilakukan !');
+            }
+        }
     }
 
 

@@ -41,24 +41,6 @@ Create Jadwal
                 </div>
                 <div class="form-group card-body">    
                     <div class="row">
-                        <div class='col mb-2'>
-                            <label for="mulai" class="font-weight-bold text-dark">Jadwal Mulai<i class="text-danger text-sm text-bold">*</i></label>
-                            <input type="time" class="form-control @error('mulai') is-invalid @enderror" id="mulai" name="mulai" placeholder="Masukan waktu mulai (Standar waktu 24 Jam)">
-                                @error('mulai')
-                                <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                        </div>
-                        <div class="col mb-2">
-                            <label for="selesai" class="font-weight-bold text-dark">Jadwal Selesai</label>
-                            <input type="time" class="form-control @error('selesai') is-invalid @enderror" id="selesai" name="selesai" placeholder="Masukan Waktu Selesai (Standar Waktu 24 jam)">
-                                @error('selesai')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                        </div>
                         <div class="col mb-4">
                             <label for="alamat" class="font-weight-bold text-dark">Hari<i class="text-danger text-sm text-bold">*</i></label>
                             <select class="form-control @error('hari') is-invalid @enderror" id="hari" name="hari">
@@ -74,6 +56,41 @@ Create Jadwal
                                 @error('hari')
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                        </div>
+                        <div class='col mb-2'>
+                            <label for="mulai" class="font-weight-bold text-dark">Jadwal Mulai<i class="text-danger text-sm text-bold">*</i></label>
+                            <input type="time" class="form-control @error('mulai') is-invalid @enderror" id="mulai" name="mulai" placeholder="Masukan waktu mulai (Standar waktu 24 Jam)">
+                                @error('mulai')
+                                <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                        </div>
+                        
+                    </div>
+                    <div class="row">
+                        <div class="col mb-4">
+                            <label for="jenis" class="font-weight-bold text-dark">Jenis Sampah<i class="text-danger text-sm text-bold">*</i></label>
+                            <select class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="jenis">
+                                <option value="umum" selected>Umum</option>
+                                    @foreach($jenis as $jen)
+                                        <option value="{{$jen->id}}" >{{$jen->jenis_sampah}}</option>
+                                    @endforeach
+                            </select>
+                                @error('hari')
+                                <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                        </div>
+                        <div class="col mb-2">
+                            <label for="selesai" class="font-weight-bold text-dark">Jadwal Selesai</label>
+                            <input type="time" class="form-control @error('selesai') is-invalid @enderror" id="selesai" name="selesai" placeholder="Masukan Waktu Selesai (Standar Waktu 24 jam)">
+                                @error('selesai')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
                         </div>

@@ -59,7 +59,7 @@ Pembayaran
             pageLength: 5,
             lengthMenu: [[5, 10, 20, -1], [5, 10, 20, "All"]]
         });
-        
+
     $(document).ready( function(){
         $('.detail').on('click', function(e){
             e.preventDefault();
@@ -185,7 +185,7 @@ Pembayaran
                                 <th class="col-1">Nominal</th>
                                 <th>Tanggal Pembayaran</th>
                                 <th>Status</th>
-                                <th >Action</th>
+                                <th class="col-2" >Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -233,7 +233,7 @@ Pembayaran
                                 <td style="vertical-align:middle;">
                                     {{"Rp".number_format($pembayaran->nominal ?? 0,2,',','.')}}
                                 </td style="vertical-align:middle;">
-                                <td>
+                                <td style="vertical-align:middle;">
                                     {{$pembayaran->created_at->format('d M Y')}}
                                 </td>
                                 <td style="vertical-align:middle;">
@@ -245,8 +245,9 @@ Pembayaran
                                 </td>
                                 <td style="vertical-align: middle; text-align: center;">
                                     @if($pembayaran->status == "pending")
-                                        <a href="/admin/pembayaran/verif/{{$pembayaran->id_pembayaran}}" class="btn btn-success btn-sm col"><i class="fas fa-check"> Verifikasi</i></a><br>
-                                        <a href="/admin/pembayaran/edit/{{$pembayaran->id_pembayaran}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"> Ubah</i></a><br>
+                                        <a class="btn btn-info text-white btn-sm col detail mb-1" id="detail-{{$pembayaran->id_pembayaran}}" data-toggle="modal" data-target="#modal-detail" ><i class="fas fa-eye"></i> Lihat Detail</a>
+                                        <a href="/admin/pembayaran/verif/{{$pembayaran->id_pembayaran}}" class="btn btn-success btn-sm col mb-1"><i class="fas fa-check"> Verifikasi</i></a><br>
+                                        <a href="/admin/pembayaran/edit/{{$pembayaran->id_pembayaran}}" class="btn btn-info btn-sm col mb-1"><i class="fas fa-pencil-alt"> Ubah</i></a><br>
                                         <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/pembayaran/delete/{{$pembayaran->id_pembayaran}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"> Hapus</i></a>
                                     @elseif($pembayaran->status == "lunas")
                                         <a class="btn btn-info text-white btn-sm col detail" id="detail-{{$pembayaran->id_pembayaran}}" data-toggle="modal" data-target="#modal-detail" ><i class="fas fa-eye"></i> Lihat Detail</a>

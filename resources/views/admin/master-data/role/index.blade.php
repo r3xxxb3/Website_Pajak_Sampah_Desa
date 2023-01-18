@@ -92,7 +92,7 @@ Index Role Pegawai
                             <h4>{{$role->role}}</h4>
                         </td>
                         <td align="center">
-                            <a href="/admin/masterdata/role/edit/{{$role->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a>
+                            <a href="/admin/masterdata/role/edit/{{$role->id}}" class="btn btn-info btn-sm col mb-1"><i class="fas fa-pencil-alt"></i> Ubah</a>
                             <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/masterdata/role/delete/{{$role->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
                         </td>
                     </tr>

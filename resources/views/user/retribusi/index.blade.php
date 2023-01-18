@@ -177,8 +177,8 @@ $("#file-single").change(function() {
                         </thead>
                         <tbody>
                             @foreach ($index as $retri)
+                            @if($retri->Dpembayaran->map->pembayaran->isEmpty())
                             <tr>
-                                @if($retri->Dpembayaran->map->pembayaran->isEmpty())
                                 <td>
                                     {{isset($retri->properti) ? $retri->properti->nama_properti : 'Error Data Kosong !'}}
                                 </td>
@@ -198,7 +198,6 @@ $("#file-single").change(function() {
                                     <span class="badge badge-success">{{$retri->status}}</span>
                                 @endif
                                 </td>
-                                @endif
                                 <td align="center">
                                     @if($retri->Dpembayaran->map->pembayaran->isEmpty())
                                         <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-single" onClick="calculateNom_b({{$retri}})"><i class="fas fa-cart-plus"></i> Keranjang</a>
@@ -207,6 +206,7 @@ $("#file-single").change(function() {
                                     @endif
                                 </td>
                             </tr>
+                            @endif
                             @endforeach
                         </tbody>
                     </table>

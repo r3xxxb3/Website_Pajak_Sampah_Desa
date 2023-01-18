@@ -96,7 +96,7 @@ Index Jenis Sampah
                             {{$jenis->deskripsi}}
                         </td>
                         <td align="center">
-                            <a href="/admin/masterdata/jenis-sampah/edit/{{$jenis->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"></i>  Ubah</a><br>
+                            <a href="/admin/masterdata/jenis-sampah/edit/{{$jenis->id}}" class="btn btn-info btn-sm col mb-1"><i class="fas fa-pencil-alt"></i>  Ubah</a><br>
                             <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/masterdata/jenis-sampah/delete/{{$jenis->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
                         </td>
                     </tr>

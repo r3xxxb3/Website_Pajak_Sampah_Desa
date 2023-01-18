@@ -132,7 +132,13 @@ class RequestController extends Controller
 
     public function cancel($id){
         $requestP = Pengangkutan::where('id', $id)->first();
-        
+        if($requestP->status == 'Pending'){
+            $requestP->status = "Batal";
+            $requestP->update();
+            return redirect()->route('request-index')->with('success', 'Berhasil membatalkan request pengangkutan !');  
+        }else{
+            return redirect()->back()->with('error', 'Proses pembatalan request pengangkutan tidak dapat dilakukan !');
+        }
     }
 
 
