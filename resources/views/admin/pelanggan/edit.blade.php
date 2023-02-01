@@ -395,39 +395,35 @@ $('#desa_edit').on('change', function(e){
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr class="table-primary">
-                            <th class="col-2">Action</th>
                             <th>Nama Properti</th>
                             <th>Jenis Properti</th>
                             <th>Alamat </th>
                             <th>Foto </th>
                             <th>Status</th>
+                            <th class="col-2">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                     @foreach ($index as $properti)
                         <tr>
-                            <td align="center">
-                                <a  data-toggle="modal" data-target="#modal-edit" class="btn btn-info btn-sm text-white" onClick="catchProp({{$properti}}, {{$properti->jasa}}, {{isset($properti->id_desa_adat) ? $properti->id_desa_adat : 'null'}}, {{isset($properti->id_banjar_adat) ? $properti->id_banjar_adat : 'null'}})"><i class="fas fa-pencil-alt"></i></a>
-                                <a style="margin-right:7px" class="btn btn-danger btn-sm" href="{{Route('admin-properti-delete', $properti->id)}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
-                            </td>
-                            <td>
+                            <td style="vertical-align: middle; text-align: center;">
                                 {{$properti->nama_properti}}
                             </td>
-                            <td>
+                            <td style="vertical-align: middle; text-align: center;">
                                 {{isset($properti->jasa) ? $properti->jasa->jenis_jasa : ''}}
                             </td>
-                            <td>
+                            <td style="vertical-align: middle; text-align: center;">
                                 {{$properti->alamat}}
                             </td>
-                            <td class="">
-                                    @if(!isset($properti->file))
-                                    <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
-                                    @else
-                                    <img src="{{asset('assets/img/properti/'.$properti->file)}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
-                                    @endif
+                            <td style="vertical-align: middle; text-align: center;">
+                                @if(!isset($properti->file))
+                                <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
+                                @else
+                                <img src="{{asset('assets/img/properti/'.$properti->file)}}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
+                                @endif
                                 <!-- {{$properti->file}} -->
                             </td>
-                            <td>
+                            <td style="vertical-align: middle; text-align: center;">
                                 @if($properti->status == 'terverifikasi')
                                 <span class="badge badge-success">{{$properti->status}}</span>
                                 @elseif($properti->status == 'pending')
@@ -435,6 +431,10 @@ $('#desa_edit').on('change', function(e){
                                 @else
                                 <span class="badge badge-danger">{{$properti->status}}</span>
                                 @endif
+                            </td>
+                            <td style="vertical-align: middle; text-align: center;">
+                                <a  data-toggle="modal" data-target="#modal-edit" class="btn btn-warning btn-sm text-white col mb-1" onClick="catchProp({{$properti}}, {{$properti->jasa}}, {{isset($properti->id_desa_adat) ? $properti->id_desa_adat : 'null'}}, {{isset($properti->id_banjar_adat) ? $properti->id_banjar_adat : 'null'}})"><i class="fas fa-pencil-alt"></i> Ubah</a>
+                                <a style="margin-right:7px" class="btn btn-danger btn-sm col " href="{{Route('admin-properti-delete', $properti->id)}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
                             </td>
 
                         </tr>

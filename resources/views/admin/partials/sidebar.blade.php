@@ -36,6 +36,9 @@
       <li class="{{ request()->segment(2) == 'request' ? 'active' : '' }}"><a class="nav-link" href="{{ route('admin-request-index') }}"><i class="fa fa-truck"></i> <span>Request Pengangkutan</span ></a></li>
       <li class="menu-header">Pembayaran</li>
       <li class="{{ request()->segment(2) == 'pembayaran' ? 'active' : '' }}"><a class="nav-link" href="{{Route('admin-pembayaran-index')}}"><i class="fa fa-money-bill-wave-alt"></i> <span>Manajemen Pembayaran</span></a></li>
+      <li class="menu-header">Customer Service</li>
+      <li class="{{ request()->segment(2) == 'Penilaian' ? ' active' : '' }}"><a class="nav-link" href=""><i class="fa fa-star"></i> <span>Penilaian Layanan</span></a></li>
+      <li class="{{ request()->segment(2) == 'kritik' ? ' active' : '' }}"><a class="nav-link" href=""><i class="fa fa-comments"></i> <span>Kritik & Saran</span></a></li>
       <li class="menu-header">Reporting</li>
       <li class=""><a class="nav-link" href=""><i class="fa fa-chart-pie"></i> <span>Report</span></a></li>
     </ul>

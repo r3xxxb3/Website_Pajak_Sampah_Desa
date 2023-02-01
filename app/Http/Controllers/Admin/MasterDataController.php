@@ -280,6 +280,7 @@ class MasterDataController extends Controller
 
         $standar = new StandarRetribusi;
         $standar->nominal_retribusi = $request->standar;
+        // dd($request->id);
         $standar->id_jenis_jasa = $request->id;
         $standar->tanggal_berlaku = $request->mulai;
         $standar->id_desa_adat = auth()->guard('admin')->user()->id_desa_adat;

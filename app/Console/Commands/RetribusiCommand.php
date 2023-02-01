@@ -64,7 +64,7 @@ class RetribusiCommand extends Command
                 }else{
                     continue;
                 }
-            }elseif($retribusi->created_at->format('m') != now()->format('m') && $retribusi->created_at->format('y') < now()->format('y') ){
+            }elseif($retribusi->created_at->format('m') != now()->format('m') || $retribusi->created_at->format('y') < now()->format('y') ){
                 if(isset($standar)){
                     $retribusi = new Retribusi;
                     $retribusi->id_pelanggan = $prop->id_pelanggan;

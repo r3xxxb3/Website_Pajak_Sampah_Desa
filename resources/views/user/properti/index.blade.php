@@ -153,9 +153,15 @@ function lihatProperti(properti) {
                                 @endif
                             </td>
                             <td align="center">
-                                <a href="/user/properti/cancel/{{$properti->id}}" class="btn btn-warning btn-sm col" ><i class="fas fa-ban"></i> Batal</a><br>
-                                <a href="/user/properti/edit/{{$properti->id}}" class="btn btn-info btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
+                                @if($properti->status == "terverifikasi")
+                                <a href="/user/properti/cancel/{{$properti->id}}" class="btn btn-danger btn-sm mb-1 col" ><i class="fas fa-ban"></i> Batal</a><br>
+                                <a href="/user/properti/edit/{{$properti->id}}" class="btn btn-warning btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
+                                @elseif($properti->status == "pending")
+                                <a style="margin-right:7px" class="btn btn-danger btn-sm mb-1 col" href="/user/properti/delete/{{$properti->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
+                                <a href="/user/properti/edit/{{$properti->id}}" class="btn btn-warning btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
+                                @elseif($properti->status == "batal")
                                 <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/user/properti/delete/{{$properti->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

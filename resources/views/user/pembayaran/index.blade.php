@@ -59,6 +59,75 @@ Histori pembayaran
             $('#ket').attr('hidden', false);
         }
     }
+
+    var table = $('#dataTableModal').DataTable({
+            "oLanguage":{
+                "sSearch": "Cari:",
+                "sZeroRecords": "Data tidak ditemukan",
+                "sSearchPlaceholder": "Cari detail",
+                "infoEmpty": "Menampilkan 0 data",
+                "infoFiltered": "(dari _MAX_ data)",
+                "sLengthMenu": "Tampilkan _MENU_ data",
+            },
+            "language":{
+                "paginate": {
+                        "previous": 'Sebelumnya',
+                        "next": 'Berikutnya'
+                    },
+                "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
+            },
+            pageLength: 5,
+            lengthMenu: [[5, 10, 20, -1], [5, 10, 20, "All"]]
+        });
+
+    $(document).ready( function(){
+        $('.detail').on('click', function(e){
+            e.preventDefault();
+            var id = event.target.id;
+            console.log(id);
+    
+            var idNum = id.split("-");
+            console.log(idNum[1]);
+            
+            var pembayaran = idNum[1];$.ajax({
+                    method : 'POST',
+                    url : '{{route("pembayaran-search")}}',
+                    data : {
+                    "_token" : "{{ csrf_token() }}",
+                    pembayaran : pembayaran,
+                    },
+                    beforeSend : function() {
+                                
+                    },
+                    success : (res) => {
+                        console.log(res);
+                        table.clear();
+                        jQuery.each(res, function(i, val){
+                            var jenis = val.model_type.split('\\');
+                            console.log(jenis);
+                            if(val.model.status == "lunas"){
+                                table.row.add([
+                                    jenis[1],
+                                    val.properti+" ("+val.pelanggan+")",
+                                    val.model.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}),
+                                    val.tanggal,
+                                    '<span class="badge badge-success text-capitalize">'+val.model.status+'</span>'
+                                ]);
+                            }else{
+                                table.row.add([
+                                    jenis[1],
+                                    val.properti+" ("+val.pelanggan+")",
+                                    val.model.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}),
+                                    val.tanggal,
+                                    '<span class="badge badge-warning text-capitalize">'+val.model.status+'</span>'
+                                ]);
+                            }
+                        });
+                        table.draw();
+                    }
+                });
+        });
+    });
 </script>
 @endsection
 
@@ -116,13 +185,13 @@ Histori pembayaran
                     <table class="table table-hover table-bordered  " id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr class="table-primary">
-                                <th>Properti</th>
-                                <th>Bukti Bayar</th>
-                                <th class="col col-sm-2">Metode Pembayaran</th>
-                                <th class="col col-sm-2">Nominal</th>
+                                <th class="col-3">Properti / Alamat</th>
+                                <th class="col-2">Bukti Bayar</th>
+                                <th>Metode Pembayaran</th>
+                                <th class="col-2">Nominal</th>
                                 <th>Tanggal Pembayaran</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th class="col-1">Status</th>
+                                <th class="col-2">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -132,7 +201,7 @@ Histori pembayaran
                                     @if(isset($pembayaran->detail))
                                         @if(count($pembayaran->detail) > 0)
                                             @foreach($pembayaran->detail as $detail)
-                                                - {{$detail->model->properti->nama_properti}} <br>
+                                                - {{isset($detail->model->properti) ? $detail->model->properti->nama_properti : "Pengangkutan Sampah (".$detail->model->alamat.")"}} <br>
                                             @endforeach
                                         @elseif(!$pembayaran->detail->isEmpty())
                                             - {{$pembayaran->detail->model->properti->nama_properti}} <br>
@@ -155,7 +224,7 @@ Histori pembayaran
                                     {{$pembayaran->media}}
                                 </td>
                                 <td style="vertical-align: middle; text-align: center">
-                                    {{"Rp. ".number_format($pembayaran->nominal ?? 0,0,',','.')}}
+                                    {{"Rp ".number_format($pembayaran->nominal ?? 0, 2,',','.')}}
                                 </td>
                                 <td style="vertical-align: middle; text-align: center">
                                     {{$pembayaran->created_at->format('d M Y')}}
@@ -168,7 +237,13 @@ Histori pembayaran
                                     @endif
                                 </td>
                                 <td style="vertical-align: middle; text-align: left">
-                                    <a class="btn btn-info btn-sm col text-white"><i class="fas fa-eye"></i> Lihat Detail</a>
+                                @if($pembayaran->status == "pending")
+                                    <a class="btn btn-info btn-sm col text-white detail mb-1" id="detail-{{$pembayaran->id_pembayaran}}" data-toggle="modal" data-target="#modal-detail" ><i class="fas fa-eye"></i> Lihat Detail</a>
+                                    <a href="/user/pembayaran/edit/{{$pembayaran->id_pembayaran}}" class="btn btn-warning btn-sm col mb-1"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
+                                    <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/user/pembayaran/delete/{{$pembayaran->id_pembayaran}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
+                                @elseif($pembayaran->status == "lunas")
+                                    <a class="btn btn-info btn-sm col text-white detail" id="detail-{{$pembayaran->id_pembayaran}}" data-toggle="modal" data-target="#modal-detail" ><i class="fas fa-eye"></i> Lihat Detail</a>
+                                @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -192,6 +267,38 @@ Histori pembayaran
                                 <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3 rounded mx-auto d-block" id="bayar">
                                 <h1 id="ket" hidden>Tidak terdapat bukti pembayaran</h1>
                             </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-detail">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div id="myDIV" style="display: block">
+                        <div class="row justify-content-between mb-3">
+                            <div class="col">
+                                <h6 class="m-0 font-weight-bold text-primary">Detail Pembayaran</h6>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered  " id="dataTableModal" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr class="table-primary">
+                                        <th>Jenis</th>
+                                        <th>Nama</th>
+                                        <th class="col col-sm-2">Nominal</th>
+                                        <th>Tanggal</th>
+                                        <th >Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="detail_pembayaran" name="detail_pembayaran">
+                                    
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

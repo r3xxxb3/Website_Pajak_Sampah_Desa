@@ -202,12 +202,12 @@ class UserController extends Controller
         $properti = Properti::where('id', $id)->where('id_pelanggan', Auth::guard('web')->user()->id)->first();
         // dd($properti);
         if(isset($properti)){
-            if($properti->status == 'Cancelled'){
+            if($properti->status == 'batal'){
                 $properti->delete();
                 return redirect()->route('properti-index')->with('success', 'Data Properti berhasil dihapus !');
-            }elseif($properti->status == 'Pending'){
+            }elseif($properti->status == 'pending'){
                 return redirect()->route('properti-index')->with('error', 'Data Properti belum diperiksa Admin !');
-            }elseif($properti->status == 'Verified'){
+            }elseif($properti->status == 'terverifikasi'){
                 return redirect()->route('properti-index')->with('error', 'Data Properti telah Terdaftar, Ajukan Pembatalan Properti Terlebih Dahulu !');
             }else{
                 $properti->delete();

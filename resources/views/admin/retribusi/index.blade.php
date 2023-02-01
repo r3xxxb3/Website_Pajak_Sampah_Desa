@@ -112,14 +112,14 @@ Index Retribusi
                                 <td style="vertical-align: middle; text-align: center;" >
                                     {{$retri->created_at->format('d M Y')}}
                                 </td>
-                                <td >
+                                <td style="vertical-align: middle; text-align: center;">
                                     @if($retri->status == "pending")
                                     <span class="badge badge-warning">{{$retri->status}}</span>
                                     @elseif($retri->status == "lunas")
                                     <span class="badge badge-success">{{$retri->status}}</span>
                                     @endif
                                 </td>
-                                <td align="center">
+                                <td style="vertical-align: middle; text-align: center;">
                                     <!-- <input type="checkbox" name="id[]" id="id" value="{{$retri->id}}"> -->
                                     <a href="#" data-toggle="modal" data-target="#modal-{{$retri->id}}" class="btn btn-info btn-sm col"><i class="fas fa-eye"></i> Lihat</a>
                                 </td>

@@ -142,10 +142,18 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::get('/pembayaran', 'Admin\PembayaranController@index')->name('admin-pembayaran-index');
     Route::get('/pembayaran/create', 'Admin\PembayaranController@create')->name('admin-pembayaran-create');
     Route::get('/pembayaran/verif/{id}', 'Admin\PembayaranController@verif')->name('admin-pembayaran-verif');
+    Route::get('/pembayaran/edit/{id}', 'Admin\PembayaranController@edit')->name('admin-pembayaran-edit');
     Route::post('/pembayaran/update/{id}', 'Admin\PembayaranController@update')->name('admin-pembayaran-update');
     Route::get('/pembayaran/delete/{id}', 'Admin\PembayaranController@delete')->name('admin-pembayaran-delete');
     Route::post('/pembayaran/search', 'Admin\PembayaranController@search')->name('admin-pembayaran-search');
-
+    Route::post('/pembayaran/item/delete', 'Admin\PembayaranController@itemDelete')->name('admin-pembayaran-item-hapus');
+    Route::post('/pembayaran/item/cari', 'Admin\PembayaranController@itemSearch')->name('admin-pembayaran-item-cari');
+    Route::post('/pembayaran/item/tambah', 'Admin\PembayaranController@itemAdd')->name('admin-pembayaran-item-tambah');
+    Route::post('/pembayaran/item/refresh', 'Admin\PembayaranController@itemRefresh')->name('admin-pembayaran-item-refresh');
+    Route::post('/pembayaran/keranjang', 'Admin\PembayaranController@keranjang')->name('admin-pembayaran-keranjang');
+    Route::post('/pembayaran/keranjang/view', 'Admin\PembayaranController@keranjangView')->name('admin-pembayaran-keranjang-view');
+    Route::post('/pembayaran/keranjang/hapus', 'Admin\PembayaranController@keranjangHapus')->name('admin-pembayaran-keranjang-hapus');
+    Route::post('/pembayaran/keranjang/cari', 'Admin\PembayaranController@keranjangSearch')->name('admin-pembayaran-keranjang-cari');
 });
 
 Route::name('js.')->group(function() {
@@ -184,6 +192,11 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user'] , function(){
 
     //Retribusi
     Route::get('/retribusi', 'User\RetribusiController@index')->name('retribusi-index');
+    Route::post('/retribusi/update', 'User\RetribusiController@update')->name('retribusi-update');
+    Route::post('/retribusi/keranjang', 'User\RetribusiController@keranjang')->name('retribusi-keranjang');
+    Route::post('/retribusi/keranjang/view', 'User\RetribusiController@keranjangView')->name('retribusi-keranjang-view');
+    Route::post('/retribusi/keranjang/hapus', 'User\RetribusiController@keranjangHapus')->name('retribusi-keranjang-hapus');
+    Route::post('/retribusi/keranjang/bayar', 'User\RetribusiController@pay')->name('retribusi-keranjang-bayar');
 
     //Request
     Route::get('/request', 'User\RequestController@index')->name('request-index');
@@ -193,13 +206,28 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user'] , function(){
     Route::post('/request/update/{id}', 'User\RequestController@update')->name('request-update');
     Route::get('/request/cancel/{id}', 'User\RequestController@cancel')->name('request-cancel');
     Route::get('/request/delete/{id}', 'User\RequestController@cancel')->name('request-delete');
+    Route::post('/request/keranjang', 'User\RequestController@keranjang')->name('request-keranjang');
+    Route::post('/request/keranjang/view', 'User\RequestController@keranjangView')->name('request-keranjang-view');
+    Route::post('/request/keranjang/hapus', 'User\RequestController@keranjangHapus')->name('request-keranjang-hapus');
+    Route::post('/request/keranjang/bayar', 'User\RequestController@pay')->name('request-keranjang-bayar');
+
 
     //Pembayaran
     Route::get('/pembayaran', 'User\PembayaranController@index')->name('pembayaran-index');
     Route::get('/pembayaran/create', 'User\PembayaranController@create')->name('pembayaran-create');
     Route::post('/pembayaran/store', 'User\PembayaranController@store')->name('pembayaran-store');
-    Route::post('/Pembayaran/update', 'User\PembayaranController@update')->name('pembayaran->update');
-
+    Route::get('/pembayaran/edit/{id}', 'User\PembayaranController@edit')->name('pembayaran-edit');
+    Route::post('/pembayaran/update/{id}', 'User\PembayaranController@update')->name('pembayaran-update');
+    Route::get('/pembayaran/delete/{id}', 'User\PembayaranController@delete')->name('pembayaran-delete');
+    Route::post('/Pembayaran/search', 'User\PembayaranController@search')->name('pembayaran-search');
+    Route::post('/pembayaran/item/delete', 'User\PembayaranController@itemDelete')->name('pembayaran-item-hapus');
+    Route::post('/pembayaran/item/cari', 'User\PembayaranController@itemSearch')->name('pembayaran-item-cari');
+    Route::post('/pembayaran/item/tambah', 'User\PembayaranController@itemAdd')->name('pembayaran-item-tambah');
+    Route::post('/pembayaran/item/refresh', 'User\PembayaranController@itemRefresh')->name('pembayaran-item-refresh');
+    Route::post('/pembayaran/keranjang', 'User\PembayaranController@keranjang')->name('pembayaran-keranjang');
+    Route::post('/pembayaran/keranjang/view', 'User\PembayaranController@keranjangView')->name('pembayaran-keranjang-view');
+    Route::post('/pembayaran/keranjang/hapus', 'User\PembayaranController@keranjangHapus')->name('pembayaran-keranjang-hapus');
+    Route::post('/pembayaran/keranjang/cari', 'User\PembayaranController@keranjangSearch')->name('pembayaran-keranjang-cari');
 });
 
 Route::get('/home', 'HomeController@landing')->name('home');

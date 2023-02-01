@@ -16,6 +16,8 @@
       <li class="{{ request()->segment(2) == 'request' ? ' active' : '' }}"><a class="nav-link" href="{{ route('request-index') }}"><i class="fa fa-truck"></i> <span>Request Pengangkutan</span></a></li>
       <li class="menu-header">Pembayaran</li>
       <li class="{{ request()->segment(2) == 'pembayaran' ? ' active' : '' }}"><a class="nav-link" href="{{route('pembayaran-index')}}"><i class="fa fa-credit-card"></i> <span>Pembayaran</span></a></li>
-
+      <li class="menu-header">Customer Service</li>
+      <li class="{{ request()->segment(2) == 'Penilaian' ? ' active' : '' }}"><a class="nav-link" href=""><i class="fa fa-star"></i> <span>Penilaian Layanan</span></a></li>
+      <li class="{{ request()->segment(2) == 'kritik' ? ' active' : '' }}"><a class="nav-link" href=""><i class="fa fa-comments"></i> <span>Kritik & Saran</span></a></li>
     </ul>
 </aside>
