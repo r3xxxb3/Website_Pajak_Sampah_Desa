@@ -27,5 +27,9 @@ class Pengangkutan extends Model
     public function keranjang(){
         return $this->morphMany(Keranjang::class, 'model');
     }
+
+    public function kepuasan(){
+        return $this->morphMany(KepuasanPengguna::class, 'item');
+    }
     
 }

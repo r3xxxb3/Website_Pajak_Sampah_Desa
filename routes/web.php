@@ -118,7 +118,6 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::get('/properti/delete/{id}', 'Admin\pelangganController@propertiDelete')->name('admin-properti-delete');
     Route::post('/banjar/search', 'Admin\pelangganController@banjarCheck')->name('banjar-search');
 
-
     //Manajemen Retribusi
     Route::get('/retribusi', 'Admin\RetribusiController@index')->name('admin-retribusi-index');
     Route::get('/retribusi/history', 'Admin\RetribusiController@history')->name('admin-retribusi-history');
@@ -141,6 +140,7 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     //Manajemen Pembayaran
     Route::get('/pembayaran', 'Admin\PembayaranController@index')->name('admin-pembayaran-index');
     Route::get('/pembayaran/create', 'Admin\PembayaranController@create')->name('admin-pembayaran-create');
+    Route::post('/pembayaran/store', 'Admin\PembayaranController@store')->name('admin-pembayaran-store');
     Route::get('/pembayaran/verif/{id}', 'Admin\PembayaranController@verif')->name('admin-pembayaran-verif');
     Route::get('/pembayaran/edit/{id}', 'Admin\PembayaranController@edit')->name('admin-pembayaran-edit');
     Route::post('/pembayaran/update/{id}', 'Admin\PembayaranController@update')->name('admin-pembayaran-update');
@@ -154,6 +154,18 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::post('/pembayaran/keranjang/view', 'Admin\PembayaranController@keranjangView')->name('admin-pembayaran-keranjang-view');
     Route::post('/pembayaran/keranjang/hapus', 'Admin\PembayaranController@keranjangHapus')->name('admin-pembayaran-keranjang-hapus');
     Route::post('/pembayaran/keranjang/cari', 'Admin\PembayaranController@keranjangSearch')->name('admin-pembayaran-keranjang-cari');
+    Route::post('/pembayaran/pelanggan/cari', 'Admin\PembayaranController@pelangganSearch')->name('admin-pembayaran-pelanggan-cari');
+
+    //Customer Service
+    Route::get('/penilaian', 'Admin\CustomerServiceController@penilaianIndex')->name('admin-custom-penilaian-index');
+    // Route::post('/penilaian/store', 'Admin\CustomerServiceController@penilaianStore')->name('admin-custom-penilaian-store');
+    Route::get('/kritik', 'Admin\CustomerServiceController@kritikIndex')->name('admin-custom-kritik-index');
+    Route::get('/kritik/delete/{id}', 'Admin\CustomerServiceController@kritikDelete')->name('admin-custom-kritik-delete');
+
+    //Report
+    Route::get('/laporan', 'Admin\ReportController@index')->name('admin-laporan-index');
+    Route::post('laporan/keuangan', 'Admin\ReportCOntroller@keuanganSearch')->name('admin-report-keuangan-search');
+
 });
 
 Route::name('js.')->group(function() {
@@ -228,6 +240,15 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user'] , function(){
     Route::post('/pembayaran/keranjang/view', 'User\PembayaranController@keranjangView')->name('pembayaran-keranjang-view');
     Route::post('/pembayaran/keranjang/hapus', 'User\PembayaranController@keranjangHapus')->name('pembayaran-keranjang-hapus');
     Route::post('/pembayaran/keranjang/cari', 'User\PembayaranController@keranjangSearch')->name('pembayaran-keranjang-cari');
+
+    //Customer Service
+    Route::get('/penilaian', 'User\CustomerServiceController@penilaianIndex')->name('custom-penilaian-index');
+    Route::post('/penilaian/store', 'User\CustomerServiceController@penilaianStore')->name('custom-penilaian-store');
+    Route::post('/penilaian/update', 'User\CustomerServiceController@penilaianUpdate')->name('custom-penilaian-update');
+    Route::get('/kritik', 'User\CustomerServiceController@kritikIndex')->name('custom-kritik-index');
+    Route::post('/kritik/store', 'User\CustomerServiceController@kritikStore')->name('custom-kritik-store');
+    Route::post('/kritik/update', 'User\CustomerServiceController@kritikUpdate')->name('custom-kritik-update');
+    Route::get('/kritik/delete/{id}', 'User\CustomerServiceController@kritikDelete')->name('custom-kritik-delete');
 });
 
 Route::get('/home', 'HomeController@landing')->name('home');

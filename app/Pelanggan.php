@@ -29,6 +29,14 @@ class Pelanggan extends Authenticatable
     }
 
     public function properti(){
-        return $this->hasMany(Properti::Class, 'id_pelanggan', 'id');
+        return $this->hasMany(Properti::class, 'id_pelanggan', 'id');
+    }
+
+    public function pembayaran(){
+        return $this->hasMany(Pembayaran::class, 'id_pelanggan', 'id');
+    }
+
+    public function kritik(){
+        return $this->hasMany(KritikSaran::class, 'id_pelanggan', 'id');
     }
 }

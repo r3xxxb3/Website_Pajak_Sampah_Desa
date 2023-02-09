@@ -43,12 +43,14 @@
 
   <script src="{{ route('js.dynamic') }}"></script>
   <script src="{{ asset('js/app.js') }}?{{ uniqid() }}"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
   <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
   <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script src="{{ asset('assets/js/stisla.js') }}"></script>
+  <script src="{{ asset('assets/js/chart.min.js') }}"></script>
   <script src="{{ asset('assets/js/scripts.js') }}"></script>
   @yield('scripts')
 </body>

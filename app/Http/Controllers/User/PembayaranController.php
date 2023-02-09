@@ -503,7 +503,8 @@ class PembayaranController extends Controller
             return response()->json($data, 200);
         }elseif($request->jenis == "pengangkutan"){
             $checkReq = DetailPembayaran::where('model_type', "App\\Pengangkutan")->get()->pluck('model_id');
-            $pengangkutan = Pengangkutan::where('id_desa_adat', $request->desa)->where('id_pelanggan', auth()->guard('web')->user()->id)->where('status', "Selesai")->whereNotIn('id', $checkReq)->get();
+            $checkKerReq = Keranjang::where('model_type', "App\\Pengangkutan")->get()->pluck('model_id');
+            $pengangkutan = Pengangkutan::where('id_desa_adat', $request->desa)->where('id_pelanggan', auth()->guard('web')->user()->id)->where('status', "Selesai")->whereNotIn('id', $checkReq)->whereNotIn('id', $checkKerReq)->get();
             foreach($pengangkutan as $p){
                 $p->tanggal = $p->created_at->format('d M Y');
             }

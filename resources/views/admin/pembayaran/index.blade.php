@@ -86,13 +86,13 @@ Pembayaran
                         jQuery.each(res, function(i, val){
                             var jenis = val.model_type.split('\\');
                             console.log(jenis);
-                            if(val.model.status == "lunas"){
+                            if(val.status == "lunas"){
                                 table.row.add([
                                     jenis[1],
                                     val.properti+" ("+val.pelanggan+")",
                                     val.model.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}),
                                     val.tanggal,
-                                    '<span class="badge badge-success text-capitalize">'+val.model.status+'</span>'
+                                    '<span class="badge badge-success text-capitalize">'+"Lunas"+'</span>'
                                 ]);
                             }else{
                                 table.row.add([
@@ -100,7 +100,7 @@ Pembayaran
                                     val.properti+" ("+val.pelanggan+")",
                                     val.model.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}),
                                     val.tanggal,
-                                    '<span class="badge badge-warning text-capitalize">'+val.model.status+'</span>'
+                                    '<span class="badge badge-warning text-capitalize">'+"Pending"+'</span>'
                                 ]);
                             }
                         });
@@ -197,26 +197,14 @@ Pembayaran
                                 </td>
                                 <td style="vertical-align:middle;" >
                                     @if(count($pembayaran->detail) != 0)
-                                        <?php $v = 'null' ?>
-                                        @foreach($pembayaran->detail as $m)
-                                            @if($m->model_type == "App\Retribusi")
-                                                @if($v == "null")
-                                                    {{$v = "Retribusi"}}
-                                                @elseif($m->model_type == "App\Pengangkutan")
-                                                    {{$v}}." & Request Pengangkutan"
-                                                @else
-                                                    @continue
-                                                @endif
-                                            @elseif($m->model_type == "App\Pengangkutan")
-                                                @if($v == "null")
-                                                    {{$v = "Request Pengangkutan"}}
-                                                @elseif($m->model_type == "App\Retribusi")
-                                                    {{$v}}." & Retribusi"
-                                                @else
-                                                    @continue
-                                                @endif
-                                            @endif
-                                        @endforeach
+                                        <?php $v = 'null'; $jenis = $pembayaran->detail->map->model_type->toArray()?>
+                                        @if(in_array("App\Retribusi", $jenis) && in_array("App\Pengangkutan", $jenis))
+                                                {{$v = "Retribusi & Pengangkutan"}}
+                                        @elseif(in_array("App\Pengangkutan", $jenis))
+                                                {{$v = "Pengangkutan"}}
+                                        @elseif(in_array("App\Retribusi", $jenis))
+                                                {{$v = "Retribusi"}}
+                                        @endif
                                     @endif
                                 </td>
                                 

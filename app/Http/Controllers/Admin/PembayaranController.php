@@ -45,9 +45,109 @@ class PembayaranController extends Controller
     public function create(){
         $properti = Properti::where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->get('id_pelanggan');
         $request = Pengangkutan::where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->get('id_pelanggan');
-        $pelanggan = Pelanggan::whereIn('id', $properti)->orWhere('id', $request)->get();
+        $pelanggan = Pelanggan::whereIn('id', $properti)->orWhere('id', $request)->with('kependudukan')->get();
 
         return view('admin.pembayaran.create', compact('pelanggan'));
+    }
+
+    public function store(Request $request){
+        $ids = explode(",",$request->id[0]);
+        $idP = $request->pelanggan;
+        $pelanggan = Pelanggan::where('id', $idP)->first();
+        // dd($pelanggan);
+        if(!isset($pelanggan)){
+            return redirect()->back()->with('error', "Id Pelanggan tidak ditemukan !");
+        }
+
+        $checkDesa = [];
+        foreach($ids as $i=>$idm){
+            $raw = explode ("-", $idm);
+            $id[$i] = [$raw[0], $raw[1]]; 
+        }
+        // dd($id);
+        $messages = [
+            'required' => 'Kolom :attribute Wajib Diisi!',
+            'unique' => 'Kolom :attribute Tidak Boleh Sama!',
+            'max' => 'Ukuran File tidak boleh melebihi 5 MB',
+            'numeric' => 'Kolom :attribute Hanya  Menerima Inputan Angka  !'
+		];
+
+        // dd($request->id);
+        // dd($request->file);
+        // dd($request->media);
+        // dd($request->nominal);
+        
+        if($request->media == "transfer"){
+            $this->validate($request, [
+                'file' => 'required|max:5120',
+                'nominal' => 'required|numeric',
+                'media' => 'required',
+                'id' => 'required|array',
+            ],$messages);
+        }else{
+            $this->validate($request, [
+                'nominal' => 'required',
+                'media' => 'required',
+                'id' => 'required|array',
+            ],$messages);
+        }
+
+
+        $pembayaran = new Pembayaran;
+
+        if($request->file('file')){
+            //simpan file
+            
+            $file = $request->file('file');
+            $images = $pelanggan->kependudukan->nik."_".$file->getClientOriginalName();
+            // dd($images);
+            $pembayaran->bukti_bayar = $images;
+            $foto_upload = 'assets/img/bukti_bayar';
+            $file->move($foto_upload,$images);
+        }
+        $pembayaran->id_pelanggan = $pelanggan->id;
+        $pembayaran->media = $request->media;
+        $pembayaran->nominal = $request->nominal;
+        $pembayaran->jenis = $request->type;
+        if($pembayaran->save()){
+            foreach($id as $i){
+                if($i[1] == "retribusi"){
+                    // dd($i);
+                    $retribusi = Retribusi::where('id', $i[0])->first();
+                    array_push($checkDesa, $retribusi->properti->id_desa_adat);
+                    // dd(count(array_unique($properti->map->id_desa_adat->toArray())));
+                }elseif($i[1] = "pengangkutan"){
+                    // dd($i);
+                    $pengangkutan = Pengangkutan::where('id', $i[0])->first();
+                    array_push($checkDesa, $pengangkutan->id_desa_adat);
+                }
+            }
+            if(count(array_unique($checkDesa)) > 1){
+                // dd($checkDesa);
+                return redirect()->back()->with('error', 'Pembayaran sekaligus hanya dapat dilakukan untuk item dengan Desa Adat yang sama !');
+            }else{
+                foreach($id as $i){
+                    if($i[1] == "retribusi"){
+                        // dd($i);
+                        $keranjang = Keranjang::where('model_id', $i[0])->where('model_type', "App\\".$i[1])->first();
+                        $keranjang->forceDelete();
+                        $retribusi = Retribusi::where('id', $i[0])->first();
+                        $pembayaran->retribusi()->attach($retribusi);
+                        // dd(count(array_unique($properti->map->id_desa_adat->toArray())));
+                    }elseif($i[1] = "pengangkutan"){
+                        // dd($i);
+                        $keranjang = Keranjang::where('model_id', $i[0])->where('model_type', "App\\".$i[1])->first();
+                        $keranjang->forceDelete();
+                        $pengangkutan = Pengangkutan::where('id', $i[0])->first();
+                        $pembayaran->pengangkutan()->attach($pengangkutan);
+                    }
+                }
+                return redirect()->route('admin-pembayaran-index')->with('success', 'Berhasil Melakukan Pembayaran !');
+                // dd(count(array_unique($checkDesa)) > 1);  
+            }
+        }else{
+            return redirect()->back()->with('error', 'Pembayaran Gagal untuk Dilakukan !');
+        }
     }
 
     public function edit($id){
@@ -190,14 +290,38 @@ class PembayaranController extends Controller
                 // dd($m->properti = $m->model->properti);
                 $m->pelanggan = $m->model->pelanggan->kependudukan->nama;
                 $m->properti = $m->model->properti->nama_properti;
+                $m->status = $m->pembayaran->status;
             }elseif($m->model_type == "App\\Pengangkutan"){
                 // dd($m->model->pengangkutan->alamat);
                 $m->pelanggan = $m->model->pelanggan->kependudukan->nama;
                 $m->properti = $m->model->alamat;
+                $m->status = $m->pembayaran->status;
             }
         }
         $data = $model;
         // echo($model->map->model_type."-".$model->map->pelanggan."-".$model->map->properti);
+        return response()->json($data, 200);
+    }
+
+    public function pelangganSearch(Request $request){
+        $data = [];
+        $checkRetri = DetailPembayaran::where('model_type', "App\\Retribusi")->get()->pluck('model_id');
+        $checkReq = DetailPembayaran::where('model_type', "App\\Pengangkutan")->get()->pluck('model_id');
+        $checkKerRetri = Keranjang::where('model_type', "App\\Retribusi")->get()->pluck('model_id');
+        $checkKerReq = Keranjang::where('model_type', "App\\Pengangkutan")->get()->pluck('model_id');
+        // dd($checkKerReq);
+        $properti = Properti::where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->where('id_pelanggan', $request->pelanggan)->get();
+        $retribusi = Retribusi::whereIn('id_properti', $properti->map->id)->where('status', "pending")->whereNotIn('id', $checkRetri)->whereNotIn('id', $checkKerRetri)->with('properti')->get();
+        $pengangkutan = Pengangkutan::where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->where('id_pelanggan', $request->pelanggan)->where('status', "Selesai")->whereNotIn('id', $checkReq)->whereNotIn('id', $checkKerReq)->get();
+        
+        foreach($retribusi as $r){
+            $r->tanggal = $r->created_at->format('d M Y');
+        }
+        foreach($pengangkutan as $p){
+            $p->tanggal = $p->created_at->format('d M Y');
+        }
+        array_push($data, $retribusi->toArray());
+        array_push($data, $pengangkutan->toArray());
         return response()->json($data, 200);
     }
 
@@ -374,6 +498,7 @@ class PembayaranController extends Controller
         
         foreach($retribusi as $r){
             $r->tanggal = $r->created_at->format('d M Y');
+            $r->jasa = $r->properti->jasa->jenis_jasa;
         }
         foreach($pengangkutan as $p){
             $p->tanggal = $p->created_at->format('d M Y');
@@ -433,6 +558,7 @@ class PembayaranController extends Controller
             return response()->json($data, 200);
         }elseif($request->jenis == "pengangkutan"){
             $checkReq = DetailPembayaran::where('model_type', "App\\Pengangkutan")->get()->pluck('model_id');
+            $checkKerReq = Keranjang::where('model_type', "App\\Pengangkutan")->get()->pluck('model_id');
             $pengangkutan = Pengangkutan::where('id_desa_adat', $request->desa)->where('id_pelanggan', $request->pelanggan)->where('status', "Selesai")->whereNotIn('id', $checkReq)->get();
             foreach($pengangkutan as $p){
                 $p->tanggal = $p->created_at->format('d M Y');

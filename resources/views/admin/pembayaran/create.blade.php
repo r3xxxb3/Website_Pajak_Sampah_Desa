@@ -55,6 +55,26 @@
         lengthMenu: [[5, 10, 20, -1], [5, 10, 20, "All"]]
     });
 
+    var tablePelanggan = $('#dataTablePelanggan').DataTable({
+        "oLanguage":{
+            "sSearch": "Cari:",
+            "sZeroRecords": "Data tidak ditemukan",
+            "sSearchPlaceholder": "Cari Pelanggan..",
+            "infoEmpty": "Menampilkan 0 data",
+            "infoFiltered": "(dari _MAX_ data)",
+            "sLengthMenu": "Tampilkan _MENU_ data",
+        },
+        "language":{
+            "paginate": {
+                    "previous": 'Sebelumnya',
+                    "next": 'Berikutnya'
+                },
+            "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
+        },
+        pageLength: 5,
+        lengthMenu: [[5, 10, 20, -1], [5, 10, 20, "All"]]
+    });
+
     var tableItem = $('#dataTableItem').DataTable({
         "oLanguage":{
             "sSearch": "Cari:",
@@ -100,13 +120,14 @@
         }
     }
 
-    function refreshItem(){
-        // console.log("testing");
+    function refreshItem(pelanggan){
+        // // console.log("testing");
         $.ajax({
             method : 'POST',
-                    url : '{{route("pembayaran-keranjang-view")}}',
+                    url : '{{route("admin-pembayaran-keranjang-view")}}',
                     data : {
                     "_token" : "{{ csrf_token() }}",
+                    pelanggan: pelanggan,
                     },
                     beforeSend : function() {
                                 
@@ -116,12 +137,12 @@
                         var total = 0;
                         var link = [];
                         var loop = 0;
-                        console.log(res);
+                        // console.log(res);
                         table.clear()
                         jQuery.each(res, function(i, val){
                             jQuery.each(val, function(a, nilai){
                                 if(nilai.id_properti != null){
-                                    // console.log(true);
+                                    // // console.log(true);
                                     table.row.add([
                                         nilai.properti.nama_properti,
                                         nilai.jasa,
@@ -132,11 +153,11 @@
                                     ]);
                                     pk.push(nilai.id+"-retribusi");
                                     total += nilai.nominal;
-                                    // console.log(nilai.nominal);
+                                    // // console.log(nilai.nominal);
                                     loop++;
                                     link[a] = nilai.id_properti+"properti";
                                 }else{
-                                    // console.log(false);
+                                    // // console.log(false);
                                     table.row.add([
                                         "Pengangkutan ("+ nilai.alamat +")",
                                         "Request Pengangkutan Sampah",
@@ -147,9 +168,9 @@
                                     ]);
                                     pk.push(nilai.id+"-pengangkutan");
                                     total += nilai.nominal;
-                                    // console.log(total);
+                                    // // console.log(total);
                                     loop++;
-                                    console.log(nilai.properti == undefined);
+                                    // console.log(nilai.properti == undefined);
                                     link[loop] = nilai.id+"pengangkutan";
                                 }
                             });
@@ -157,12 +178,63 @@
                         $("#id").val(pk);
                         table.draw();
                         $('.total').html('Total : '+total.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}));
-                        console.log(link);
+                        // console.log(link);
                     }
         });
     }
 
+    function pelangganCari(pelanggan){
+        // pelanggan = $(this).attr("id");
+        $("#pelanggan").val(pelanggan);
+        console.log(pelanggan);
+        $.ajax({
+            method : 'POST',
+                url : '{{route("admin-pembayaran-pelanggan-cari")}}',
+                data : {
+                "_token" : "{{ csrf_token() }}",
+                pelanggan: pelanggan,
+                },
+                beforeSend : function() {
+                            
+                },
+                success : (res) => {
+                    // console.log(res);
+                    tableItem.clear();
+                    jQuery.each(res, function(i, val){
+                            jQuery.each(val, function(i, nilai){
+                                if(nilai.id_properti != null){
+                                    // // console.log(nilai);
+                                    tableItem.row.add([
+                                        nilai.properti.nama_properti,
+                                        "Retribusi",
+                                        nilai.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}),
+                                        nilai.tanggal,
+                                        `<a class="btn btn-success btn-sm text-white col mb-1 tambah" id="`+nilai.id+"-retribusi"+`"><i class="fas fa-plus"></i> Tambah</a>`
+                                    ]);
+                                }else{
+                                    // // console.log("false");
+                                    tableItem.row.add([
+                                        "Pengangkutan ("+nilai.alamat+")",
+                                        "Pengangkutan",
+                                        nilai.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}),
+                                        nilai.tanggal,
+                                        `<a class="btn btn-success btn-sm text-white col mb-1 tambah" id="`+nilai.id+"-pengangkutan"+`"><i class="fas fa-plus"></i> Tambah</a>`
+                                    ]);
+                                }
+                            });
+                    });
+                    refreshItem(pelanggan);
+                    tableItem.draw();
+                }
+        });
+    }
+
     $(document).ready( function () {
+        var pelanggan = null;
+        $('.pelanggan').on("click", function(e){
+            pelanggan = $(this).attr("id");
+        });
+        
 
         // echo "var data = ".json_encode($data).";"
         // var pk = [];
@@ -170,21 +242,20 @@
         //     if(val.id_properti != null){
         //         pk.push(val.id+"-retribusi");
         //     }else{
-        //         console.log(val);
+        //         // console.log(val);
         //         pk.push(val.id+"-pengangkutan");
         //     }
         // });
-        console.log(pk);
-        $("#id").val(pk);
+        // $("#id").val(pk);
         
         $('.cari').on('click', function(e){
             var desa = $('#desa').val();
             var jenis = $('#jenisItem').val();
-            // console.log(desa);
+            // // console.log(desa);
             e.preventDefault();
             $.ajax({
                 method : 'POST',
-                    url : '{{route("pembayaran-keranjang-cari")}}',
+                    url : '{{route("admin-pembayaran-keranjang-cari")}}',
                     data : {
                     "_token" : "{{ csrf_token() }}",
                     desa: desa,
@@ -194,13 +265,12 @@
                                 
                     },
                     success : (res) => {
-                        console.log(res);
+                        // console.log(res);
                         tableItem.clear();
                         jQuery.each(res, function(i, val){
-                            
                                 jQuery.each(val, function(i, nilai){
                                     if(nilai.id_properti != null){
-                                        console.log(nilai);
+                                        // console.log(nilai);
                                         tableItem.row.add([
                                             nilai.properti.nama_properti,
                                             "Retribusi",
@@ -209,7 +279,7 @@
                                             `<a class="btn btn-success btn-sm text-white col mb-1 tambah" id="`+nilai.id+"-retribusi"+`"><i class="fas fa-plus"></i> Tambah</a>`
                                         ]);
                                     }else{
-                                        console.log("false");
+                                        // console.log("false");
                                         tableItem.row.add([
                                             "Pengangkutan ("+nilai.alamat+")",
                                             "Pengangkutan",
@@ -220,7 +290,8 @@
                                     }
                                 });
                         });
-                        tableItem.draw()
+                        // refreshItem();
+                        tableItem.draw();
                     }
             });
         });
@@ -228,11 +299,11 @@
         $('table').on('click', '.tambah' ,function(e){
             if(confirm("Apakah Anda Yakin Ingin menambah item ke dalam Pembayaran ?") == true){
                 var id = $(this).attr("id");
-                console.log(id);
+                // console.log(id);
                 e.preventDefault();
                 $.ajax({
                     method : 'POST',
-                    url : '{{route("pembayaran-keranjang")}}',
+                    url : '{{route("admin-pembayaran-keranjang")}}',
                     data : {
                     "_token" : "{{ csrf_token() }}",
                     id: id,
@@ -245,8 +316,8 @@
                                 .row( $(this).parents('tr') )
                                 .remove()
                                 .draw();
-                        console.log(res);
-                        refreshItem();
+                        console.log(pelanggan);
+                        refreshItem(pelanggan);
                     }
                 });
             }else{
@@ -259,28 +330,28 @@
                 var detail = $(this).attr("id");
                 var id = detail;
                 var pkO = $("#id").val().split(",");
-                console.log(pkO);
+                // console.log(pkO);
                 if(pkO.length > 1 ){
                     $.each(pkO, function(i,val){
                         if(id == val){
                             pkO.splice(i, 1);
-                            console.log(pkO +" "+i);
+                            // console.log(pkO +" "+i);
                         }
                     });
                 }else{
                     $.each(pkO, function(i,val){
                         if(id == val){
                             pkO.splice(i, 1);
-                            console.log(pkO +" "+i);
+                            // console.log(pkO +" "+i);
                         }
                     });
                 }
-                console.log(pkO);
+                // console.log(pkO);
                 $("#id").val(pkO);
                 e.preventDefault();
                 $.ajax({
                     method : 'POST',
-                    url : '{{route("pembayaran-keranjang-hapus")}}',
+                    url : '{{route("admin-pembayaran-keranjang-hapus")}}',
                     data : {
                     "_token" : "{{ csrf_token() }}",
                     id: id,
@@ -289,11 +360,11 @@
                                 
                     },
                     success : (res) => {
-                        console.log(res);
+                        // console.log(res);
                         if (res.stat == "success" || res.desc == "Retribusi sudah dihapus dari keranjang !") {
                             // $('.batal#'+id).hide();
                             // $('.batal#'+id).attr('disabled');
-                            console.log("true");
+                            // console.log("true");
                             table
                                 .row( $(this).parents('tr') )
                                 .remove()
@@ -302,14 +373,14 @@
                             let val = parseFloat((($(this).parents('tr').find("td:eq(2)").text()).substring(3, $(this).parents('tr').find("td:eq(2)").text().length-2)).replace(/\D/g,''));
                             let old = parseFloat((($(".total").text()).substring(11, $(".total").text().length-2)).replace(/\D/g,''));
                             let total = old - val;
-                            console.log($(this).parents('tr').find("td:eq(2)").text());
-                            console.log(total+" "+val+" "+old);
+                            // console.log($(this).parents('tr').find("td:eq(2)").text());
+                            // console.log(total+" "+val+" "+old);
                             $(".total").html("Total : "+total.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}));
                             // table.rows().every( function () {
                             //     var data = this.data();
                             //     var total =+ parseFloat((data['2'].substring(3, 10)).replace(/\D/g,''));
                             //     // var minus = Number(data['0'].replace(/[^0-9\.]+/g));
-                            //     console.log(total);
+                            //     // console.log(total);
                             // });
                         }else {
                             table
@@ -320,16 +391,19 @@
                             let val = parseFloat((($(this).parents('tr').find("td:eq(2)").text()).substring(3, $(this).parents('tr').find("td:eq(2)").text().length-2)).replace(/\D/g,''));
                             let old = parseFloat((($(".total").text()).substring(11, $(".total").text().length-2)).replace(/\D/g,''));
                             let total = old - val;
-                            console.log($(this).parents('tr').find("td:eq(2)").text());
-                            console.log(total+" "+val+" "+old);
+                            // console.log($(this).parents('tr').find("td:eq(2)").text());
+                            // console.log(total+" "+val+" "+old);
                             $(".total").html("Total : "+total.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}));
                             // table.rows().every( function (rowIndex, tableLoop, rowLoop) {
                             //     var data = this.data();
                             //     var total =+ parseFloat((data['2'].substring(3, 10)).replace(/\D/g,''));
                             //     // var minus = Number(data['0'].replace(/[^0-9\.]+/g));
-                            //     console.log(total);
+                            //     // console.log(total);
                             // });
                         }
+                        // refresh item table;
+                        console.log(pelanggan);
+                        pelangganCari(pelanggan);
                     }
                 });
             }else{
@@ -352,7 +426,7 @@
 
     $("#file-multi").change(function() {
         readURLDetail(this);
-        console.log("true");
+        // console.log("true");
     });
 </script>
 @endsection
@@ -383,8 +457,43 @@
                     </button>
                 </div>
             @endif
-            <form method="POST" enctype="multipart/form-data" action="{{route('pembayaran-store')}}">
+            <form method="POST" enctype="multipart/form-data" action="{{route('admin-pembayaran-store')}}">
             @csrf
+            <div class="card shadow">
+                <div class="form-group card-header shadow">
+                    <h5 class="font-weight-bold text-primary"><i class="fas fa-user"></i> List Pelanggan</h5>
+                </div>
+                <div class="form-group card-body">
+                    <div id="myDIV" style="display: block">
+                        <div class="row">
+                            <div class="col">
+                                <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTablePelanggan" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th style="vertical-align: middle; text-align: center;">NIK</th>
+                                            <th style="vertical-align: middle; text-align: center;">Nama Pelanggan</th>
+                                            <th style="vertical-align: middle; text-align: center;">No Telp</th>
+                                            <th style="vertical-align: middle; text-align: center;" class="col-2">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($pelanggan as $p)
+                                        <tr>
+                                            <td>{{$p->kependudukan->nik}}</td>
+                                            <td>{{$p->kependudukan->nama}}</td>
+                                            <td>{{$p->kependudukan->telepon}}</td>
+                                            <td><a class="btn btn-success btn-sm text-white col mb-1 pelanggan" id="{{$p->id}}" onclick="pelangganCari({{$p->id}})"><i class="fas fa-search"></i> Cari</a></td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="card shadow">
                 <div class="form-group card-header shadow">
                     <h5 class="font-weight-bold text-primary"><i class="fas fa-list"></i> List Retribusi & Request</h5>
@@ -432,6 +541,7 @@
                             <div class="col">
                                 <h6 class="m-0 font-weight-bold text-primary"></h6>
                                 <input type="text" id="id" name="id[]" hidden>
+                                <input type="text" name="pelanggan" id="pelanggan" hidden>
                                 <input type="text" id="pembayaran" name="pembayaran" value="{{isset($pembayaran) ? $pembayaran->id_pembayaran : '' }}" hidden>
                             </div>
                         </div>
@@ -502,28 +612,6 @@
                         <h5 class="text-primary">Pilih item</h5>
                     </div>
                     <div class="card-body">
-                        <div id="myDIV" style="display: block">
-                            <div class="row justify-content-between mb-3">
-                                <div class="col col-5">
-                                    <label for="jenisItem" class="font-weight-bold text-dark">Jenis Item</label>
-                                    <select name="jenisItem" id="jenisItem" class="form-control @error('jenisItem') is-invalid @enderror">
-                                        <option value="both" selected>Retribusi & Request Pengangkutan</option>
-                                        <option value="retribusi">Retribusi</option>
-                                        <option value="pengangkutan">Request Pengangkutan</option>
-                                    </select>
-                                </div>
-                                <div class="col col-4">
-                                    <label for="desa" class="font-weight-bold text-dark">Desa Adat</label>
-                                    <select name="desa" id="desa" class="form-control @error('desa') is-invalid @enderror">
-                                        
-                                    </select>
-                                </div>
-                                <div class="col col-3 pt-4" style="vertical-align: middle; text-align: center;">
-                                    <a class="btn btn-info btn-sm text-white col cari" ><i class="fas fa-search"></i> Cari</a>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
                         <div class="row">
                             <div class="col">
                                 <table class="table table-bordered" id="dataTableItem" width="100%" cellspacing="0">

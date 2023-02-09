@@ -36,4 +36,8 @@ class Retribusi extends Model
     public function keranjang(){
         return $this->morphMany(Keranjang::Class, 'model');
     }
+
+    public function kepuasan(){
+        return $this->morphMany(KepuasanPengguna::Class, 'item');
+    }
 }
