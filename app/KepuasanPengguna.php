@@ -16,4 +16,5 @@ class KepuasanPengguna extends Model
     public function item(){
         return $this->morphTo();
     }
+    
 }

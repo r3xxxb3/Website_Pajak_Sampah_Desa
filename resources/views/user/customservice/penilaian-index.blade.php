@@ -72,7 +72,7 @@ Penilaian Layanan
     }
 
     $(document).ready( function(){
-        $(".nilai").on('click', function(e){
+        $("table").on('click','.nilai', function(e){
             $(".srate").removeClass('text-warning');
             $("#id").val($(this).attr('id'));
         });

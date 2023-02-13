@@ -165,6 +165,7 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     //Report
     Route::get('/laporan', 'Admin\ReportController@index')->name('admin-laporan-index');
     Route::post('laporan/keuangan', 'Admin\ReportCOntroller@keuanganSearch')->name('admin-report-keuangan-search');
+    Route::post('laporan/penilaian', 'Admin\ReportCOntroller@penilaianSearch')->name('admin-report-penilaian-search');
 
 });
 

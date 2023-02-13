@@ -45,6 +45,7 @@ class CustomerServiceController extends Controller
 
     public function penilaianStore(Request $request){
         $id = explode("-",$request->id);
+        // dd($request->id);
         $checkPenilaian = KepuasanPengguna::where('item_id', $id[0])->where('item_type', "App\\".$id[1])->first();
         if(!isset($checkPenilaian)){
             $penilaian  = new KepuasanPengguna;
