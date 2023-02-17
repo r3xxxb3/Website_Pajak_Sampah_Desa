@@ -7,6 +7,7 @@ use App\Properti;
 use App\StandarRetribusi;
 use App\Retribusi;
 use Illuminate\Support\Facades\Hash;
+use Telegram;
 use Log;
 
 class TestingController extends Controller
@@ -57,4 +58,36 @@ class TestingController extends Controller
     //     }
 
     }
+
+    // public function telegramTest(){
+    //     // Laravel
+    //     $response = Telegram::setWebhook(['url' => env('TELEGRAM_WEBHOOK_URL')]);
+        
+    // }
+
+    // public function webhook(){
+    //     $updates = Telegram::commandsHandler(true);
+    //     $chat_id = $updates->message->chat->id;
+    //     $username = $updates->message->chat->first_name;
+
+    //     // return response()->json("testing", 200);
+    //     // dd($chat_id." ".$username);
+    //     // dd(!$updates->message->isEmpty());
+
+    //     if(!$updates->message->isEmpty()){
+    //         if(strtolower($updates->message->text) === 'halo'){
+    //             // dd('True');
+    //             return Telegram::sendMessage([
+    //                 'chat_id' => $chat_id,
+    //                 'text' => 'testing success '.$username
+    //             ]);
+    //         }else{
+    //             return Telegram::sendMessage([
+    //                 'chat_id' =>$chat_id,
+    //                 'text' => 'testing success '.$username
+    //             ]);
+    //         }
+    //     }
+    //     // dd($updates);
+    // }
 }

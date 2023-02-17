@@ -277,18 +277,14 @@ Edit Jenis Jasa
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr class="table-primary">
-                            <th class="col-2">Action</th>
                             <th>Nominal</th>
                             <th>Status Aktif</th>
+                            <th class="col-2">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                     @foreach ($index as $retri)
                         <tr>
-                            <td align="center">
-                                <a  data-toggle="modal" data-target="#modal-{{$retri->id}}" class="btn btn-info btn-sm text-white" ><i class="fas fa-pencil-alt"></i></a>
-                                <a style="margin-right:7px" class="btn btn-danger btn-sm" href="/admin/masterdata/retribusi/delete/{{$retri->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i></a>
-                            </td>
                             <td>
                                 {{"Rp."." ".number_format($retri->nominal_retribusi ?? 0,0, ',', '.')}}
                             </td>
@@ -304,6 +300,10 @@ Edit Jenis Jasa
                                     </label>
                                 </td>
                             </div>
+                            <td align="center">
+                                <a  data-toggle="modal" data-target="#modal-{{$retri->id}}" class="btn btn-info btn-sm text-white col mb-2" ><i class="fas fa-pencil-alt"></i> Ubah</a>
+                                <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/masterdata/retribusi/delete/{{$retri->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
+                            </td>
                         </tr>
                     @endforeach
                     </tbody>

@@ -257,3 +257,4 @@ Route::post('/jadwal', 'HomeController@searchJadwal')->name('jadwal-search');
 
 
 route::get('/test/{id}', 'TestingController@test')->name('test');
+

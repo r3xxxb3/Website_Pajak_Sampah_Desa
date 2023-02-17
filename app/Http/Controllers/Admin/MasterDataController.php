@@ -212,8 +212,10 @@ class MasterDataController extends Controller
     public function editJadwal ($id)
     {
         $jadwal = Jadwal::where('id_jadwal', $id)->first();
+        $jenis = JenisSampah::all();
+
         if($jadwal != [] ){
-            return view('admin.master-data.jadwal.edit', compact('jadwal'));
+            return view('admin.master-data.jadwal.edit', compact('jadwal', 'jenis'));
         }else{
             return redirect()->route('masterdata-jadwal-index')->with('error', 'Data Jadwal Tidak Ditemukan !');
         }

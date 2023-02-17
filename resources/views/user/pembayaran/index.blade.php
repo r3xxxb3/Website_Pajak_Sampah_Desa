@@ -119,7 +119,7 @@ Histori pembayaran
                                     val.properti+" ("+val.pelanggan+")",
                                     val.model.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}),
                                     val.tanggal,
-                                    '<span class="badge badge-warning text-capitalize">'+val.model.status+'</span>'
+                                    '<span class="badge badge-warning text-capitalize">'+"Pending"+'</span>'
                                 ]);
                             }
                         });
