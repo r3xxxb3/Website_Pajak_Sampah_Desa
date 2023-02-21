@@ -37,6 +37,7 @@ return [
             'commands'            => [
                 App\Console\Commands\TelegramBot\startCommand::class,
                 App\Console\Commands\TelegramBot\daftarCommand::class,
+                App\Console\Commands\TelegramBot\jadwalCommand::class,
             ],
         ],
 

@@ -235,7 +235,7 @@ Pembayaran
                                 <td style="vertical-align: middle; text-align: center;">
                                     @if($pembayaran->status == "pending")
                                         <a class="btn btn-info text-white btn-sm col detail mb-1" id="detail-{{$pembayaran->id_pembayaran}}" data-toggle="modal" data-target="#modal-detail" ><i class="fas fa-eye"></i> Lihat Detail</a>
-                                        <a href="/admin/pembayaran/verif/{{$pembayaran->id_pembayaran}}" class="btn btn-success btn-sm col mb-1"><i class="fas fa-check"></i> Verifikasi</a><br>
+                                        <a href="/admin/pembayaran/verif/{{$pembayaran->id_pembayaran}}" class="btn btn-success btn-sm col mb-1" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-check"></i> Verifikasi</a><br>
                                         <a href="/admin/pembayaran/edit/{{$pembayaran->id_pembayaran}}" class="btn btn-warning btn-sm col mb-1"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
                                         <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/pembayaran/delete/{{$pembayaran->id_pembayaran}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
                                     @elseif($pembayaran->status == "lunas")

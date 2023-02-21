@@ -24,7 +24,7 @@ class startCommand extends Command
    /**
     * @var string Command Description
     */
-   protected $description = 'Help command, Get a list of commands';
+   protected $description = 'command untuk memulai bot';
 
    /**
     * {@inheritdoc}
