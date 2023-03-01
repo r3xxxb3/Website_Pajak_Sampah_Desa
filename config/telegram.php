@@ -38,6 +38,10 @@ return [
                 App\Console\Commands\TelegramBot\startCommand::class,
                 App\Console\Commands\TelegramBot\daftarCommand::class,
                 App\Console\Commands\TelegramBot\jadwalCommand::class,
+                App\Console\Commands\TelegramBot\retribusiCommand::class,
+                App\Console\Commands\TelegramBot\pengangkutanCommand::class,
+                App\Console\Commands\TelegramBot\pembayaranCommand::class,
+                App\Console\Commands\TelegramBot\pengumumanCommand::class,
             ],
         ],
 

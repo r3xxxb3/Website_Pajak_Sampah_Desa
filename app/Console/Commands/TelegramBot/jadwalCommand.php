@@ -31,7 +31,7 @@ class jadwalCommand extends Command
      * @var string
      */
     protected $description = 'command untuk melihat jadwal pengangkutan sampah';
-
+    
     /**
      * Execute the console command.
      *

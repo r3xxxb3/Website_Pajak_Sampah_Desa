@@ -7,6 +7,9 @@ use App\Kependudukan;
 use App\Properti;
 use App\StandarRetribusi;
 use App\Retribusi;
+use App\BanjarAdat;
+use App\DesaAdat;
+use App\KramaMipil;
 use App\Pelanggan;
 use App\Pegawai;
 use App\Pembayaran;
@@ -100,6 +103,39 @@ class TelegramBotController extends Controller
                         'chat_id' =>$chat_id,
                         'text' => $message
                     ]);
+                }elseif(strtolower($messages[0]) === 'pengumuman'){
+                    $pegawai = Pegawai::where('chat_id', $chat_id)->first();
+                    if(isset($pegawai)){
+                        if(!empty($messages[1])){
+                            $reply = $messages[1];
+                            $banjarAdat = BanjarAdat::where('desa_adat_id', $pegawai->id_desa_adat)->get();
+                            $mipil = KramaMipil::whereIn('banjar_adat_id', $banjarAdat->map->id)->get();
+                            $penduduk = Kependudukan::whereIn('id', $mipil->map->penduduk_id)->get();
+                            $pelanggan = Pelanggan::whereIn('id_penduduk', $penduduk->map->id)->where('chat_id', '!=', 'null')->get();
+                            // dd($pelanggan);
+                            foreach($pelanggan as $p){
+                                return Telegram::sendMessage([
+                                    'chat_id' =>$p->chat_id,
+                                    'text' => $reply
+                                ]);
+                            }
+                        }else{
+                            $reply = "Tidak dapat melakukan pengumuman jika isi pengumuman kosong !";
+                            return Telegram::sendMessage([
+                                'chat_id' =>$chat_id,
+                                'text' => $reply
+                            ]);
+                        }
+
+                    }else{
+                        $reply = "Anda tidak dapat menggunakan perintah ini !";
+                        
+                        return Telegram::sendMessage([
+                            'chat_id' =>$chat_id,
+                            'text' => $reply
+                        ]);
+                    }
+
                 }else{
                     if($updates->message->entities != null){
     
