@@ -99,7 +99,7 @@ class UserController extends Controller
         $properti->jumlah_kamar = $request->kamar;
         
         if($properti->save()){
-            $pegawai = Pegawai::all();
+            $pegawai = Pegawai::where('id_desa_adat', $request->desa)->get();
             // dd($properti->id_jenis);
             // $properti->toArray();
             foreach($pegawai as $p){
@@ -170,7 +170,7 @@ class UserController extends Controller
                 $properti->jumlah_kamar = $request->kamar;
 
                 if($properti->update()){
-                    $pegawai = Pegawai::all();
+                    $pegawai = Pegawai::where('id_desa_adat', $request->desa)->get();
                     foreach($pegawai as $p){
                         $p->notify(new PropertiNotif($properti, "update"));
                     }
@@ -195,7 +195,14 @@ class UserController extends Controller
     }
 
     public function propertiCancel($id){
-
+        $properti = Properti::where('id', $id)->first();
+        $pegawai = Pegawai::where('id_desa_adat', $properti->id_desa_adat)->get();
+        // dd($properti->id_jenis);
+        // $properti->toArray();
+        foreach($pegawai as $p){
+            $p->notify(new PropertiNotif($properti, "cancel"));
+        }
+        return redirect()->back()->with('success', "Berhasil meminta pembatalan properti !");
     } 
 
     public function propertiDelete($id){
@@ -213,7 +220,6 @@ class UserController extends Controller
                 $properti->delete();
                 return redirect()->route('properti-index')->with('success', 'Data Properti berhasil dihapus !');
             }
-
         }
     }
 

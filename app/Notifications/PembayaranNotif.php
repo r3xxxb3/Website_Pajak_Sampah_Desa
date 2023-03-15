@@ -2,14 +2,13 @@
 
 namespace App\Notifications;
 
-use App\Properti;
+use App\Pembayaran;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PropertiNotif extends Notification
+class PembayaranNotif extends Notification
 {
     use Queueable;
 
@@ -18,10 +17,10 @@ class PropertiNotif extends Notification
      *
      * @return void
      */
-    public function __construct(Properti $properti, $type)
+    public function __construct(Pembayaran $pembayaran, $type)
     {
         //
-        $this->properti = $properti;
+        $this->pembayaran = $pembayaran;
         $this->type = $type;
     }
 
@@ -44,7 +43,6 @@ class PropertiNotif extends Notification
      */
     public function toMail($notifiable)
     {
-        // Mail Notification
         // return (new MailMessage)
         //             ->line('The introduction to the notification.')
         //             ->action('Notification Action', url('/'))
@@ -59,30 +57,30 @@ class PropertiNotif extends Notification
      */
     public function toArray($notifiable)
     {
-        // dd($notifiable->id_pegawai == null);
-        if($notifiable->id_pegawai != null){
+        // dd($this->type, $this->properti);
+        if(isset($notifiable->pelanggan)){
             if($this->type == "create"){
                 return [
                     //
-                    'message' => auth()->guard('web')->user()->kependudukan->nama." Menambahkan Properti dengan Jenis ".$this->properti->jasa->jenis_jasa,
-                    'user_id' => auth()->guard('web')->user()->id,
-                    'item_id' => $this->properti->id,
+                    'message' => $notifiable->pelanggan->kependudukan->nama." Membuat Pembayaran",
+                    'user_id' => $notifiable->pelanggan->id,
+                    'item_id' => $this->pembayaran->id_pembayaran,
                     'type' => $this->type,
                 ];
             }elseif($this->type == "update"){
                 return [
                     //
-                    'message' => auth()->guard('web')->user()->kependudukan->nama." Mengubah Properti ".$this->properti->nama_properti." menjadi Jenis ".$this->properti->jasa->jenis_jasa,
-                    'user_id' => auth()->guard('web')->user()->id,
-                    'item_id' => $this->properti->id,
+                    'message' => $notifiable->pelanggan->kependudukan->nama." Mengubah Pembayaran",
+                    'user_id' => $notifiable->pelanggan->id,
+                    'item_id' => $this->pembayaran->id_pembayaran,
                     'type' => $this->type,
                 ];
             }elseif($this->type == "cancel"){
                 return [
                     //
-                    'message' => auth()->guard('web')->user()->kependudukan->nama." melakukan permintaan pembatalan Properti dengan Jenis ".$this->properti->jasa->jenis_jasa,
-                    'user_id' => auth()->guard('web')->user()->id,
-                    'item_id' => $this->properti->id,
+                    'message' => $notifiable->pelanggan->kependudukan->nama." Menambahkan Pembayaran",
+                    'user_id' => $notifiable->pelanggan->id,
+                    'item_id' => $this->pembayaran->id_pembayaran,
                     'type' => $this->type,
                 ];
             }
@@ -90,29 +88,28 @@ class PropertiNotif extends Notification
             if($this->type == "create"){
                 return [
                     //
-                    'message' => "Admin Menambahkan Properti dengan Jenis ".$this->properti->jasa->jenis_jasa,
+                    'message' => "Admin membuat Pembayaran",
                     'user_id' => $this->properti->id_pelanggan,
-                    'item_id' => $this->properti->id,
+                    'item_id' => $this->pembayaran->id_pembayaran,
                     'type' => $this->type,
                 ];
             }elseif($this->type == "update"){
                 return [
                     //
-                    'message' => "Admin Mengubah Properti ".$this->properti->nama_properti." menjadi Jenis ".$this->properti->jasa->jenis_jasa,
-                    'user_id' => $this->properti->id_pelanggan,
-                    'item_id' => $this->properti->id,
+                    'message' => "Admin Mengubah Pembayaran ",
+                    'user_id' => $this->pembayaran->id_pelanggan,
+                    'item_id' => $this->pembayaran->id_pembayaran,
                     'type' => $this->type,
                 ];
             }elseif($this->type == "cancel"){
                 return [
                     //
-                    'message' => "Admin Membatalkan Properti dengan Jenis ".$this->properti->jasa->jenis_jasa,
-                    'user_id' => $this->properti->id_pelanggan,
-                    'item_id' => $this->properti->id,
+                    'message' => "Admin Membatalkan Pembayaran",
+                    'user_id' => $this->pembayaran->id_pelanggan,
+                    'item_id' => $this->pembayaran->id_pembayaran,
                     'type' => $this->type,
                 ];
             }
         }
-
     }
 }

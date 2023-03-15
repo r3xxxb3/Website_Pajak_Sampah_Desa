@@ -2,14 +2,13 @@
 
 namespace App\Notifications;
 
-use App\Properti;
+use App\Pengangkutan;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PropertiNotif extends Notification
+class PengangkutanNotif extends Notification
 {
     use Queueable;
 
@@ -18,10 +17,10 @@ class PropertiNotif extends Notification
      *
      * @return void
      */
-    public function __construct(Properti $properti, $type)
+    public function __construct(Pengangkutan $pengangkutan, $type)
     {
         //
-        $this->properti = $properti;
+        $this->pengangkutan = $pengangkutan;
         $this->type = $type;
     }
 
@@ -44,7 +43,6 @@ class PropertiNotif extends Notification
      */
     public function toMail($notifiable)
     {
-        // Mail Notification
         // return (new MailMessage)
         //             ->line('The introduction to the notification.')
         //             ->action('Notification Action', url('/'))
@@ -59,30 +57,30 @@ class PropertiNotif extends Notification
      */
     public function toArray($notifiable)
     {
-        // dd($notifiable->id_pegawai == null);
-        if($notifiable->id_pegawai != null){
+        // dd($this->type, $this->pengangkutan);
+        if(isset($notifiable->pelanggan)){
             if($this->type == "create"){
                 return [
                     //
-                    'message' => auth()->guard('web')->user()->kependudukan->nama." Menambahkan Properti dengan Jenis ".$this->properti->jasa->jenis_jasa,
-                    'user_id' => auth()->guard('web')->user()->id,
-                    'item_id' => $this->properti->id,
+                    'message' => $notifiable->pelanggan->kependudukan->nama." Menambahkan Permintaan Pengangkutan dengan alamat ".$this->pengangkutan->alamat,
+                    'user_id' => $notifiable->pelanggan->id,
+                    'item_id' => $this->pengangkutan->id,
                     'type' => $this->type,
                 ];
             }elseif($this->type == "update"){
                 return [
                     //
-                    'message' => auth()->guard('web')->user()->kependudukan->nama." Mengubah Properti ".$this->properti->nama_properti." menjadi Jenis ".$this->properti->jasa->jenis_jasa,
-                    'user_id' => auth()->guard('web')->user()->id,
-                    'item_id' => $this->properti->id,
+                    'message' => $notifiable->pelanggan->kependudukan->nama." Mengubah permintaan pengangkutan ",
+                    'user_id' => $notifiable->pelanggan->id,
+                    'item_id' => $this->pengangkutan->id,
                     'type' => $this->type,
                 ];
             }elseif($this->type == "cancel"){
                 return [
                     //
-                    'message' => auth()->guard('web')->user()->kependudukan->nama." melakukan permintaan pembatalan Properti dengan Jenis ".$this->properti->jasa->jenis_jasa,
-                    'user_id' => auth()->guard('web')->user()->id,
-                    'item_id' => $this->properti->id,
+                    'message' => $notifiable->pelanggan->kependudukan->nama." membatalkan permintaan pengangkutan dengan alamat ".$this->pengangkutan->alamat,
+                    'user_id' => $notifiable->pelanggan->id,
+                    'item_id' => $this->pengangkutan->id,
                     'type' => $this->type,
                 ];
             }
@@ -90,29 +88,28 @@ class PropertiNotif extends Notification
             if($this->type == "create"){
                 return [
                     //
-                    'message' => "Admin Menambahkan Properti dengan Jenis ".$this->properti->jasa->jenis_jasa,
-                    'user_id' => $this->properti->id_pelanggan,
-                    'item_id' => $this->properti->id,
+                    'message' => "Admin Menambahkan Permintaan Pengangkutan dengan alamat ".$this->pengangkutan->alamat,
+                    'user_id' => $this->pengangkutan->id_pelanggan,
+                    'item_id' => $this->pengangkutan->id,
                     'type' => $this->type,
                 ];
             }elseif($this->type == "update"){
                 return [
                     //
-                    'message' => "Admin Mengubah Properti ".$this->properti->nama_properti." menjadi Jenis ".$this->properti->jasa->jenis_jasa,
-                    'user_id' => $this->properti->id_pelanggan,
-                    'item_id' => $this->properti->id,
+                    'message' => "Admin Mengubah Permintaan Pengangkutan ",
+                    'user_id' => $this->pengangkutan->id_pelanggan,
+                    'item_id' => $this->pengangkutan->id,
                     'type' => $this->type,
                 ];
             }elseif($this->type == "cancel"){
                 return [
                     //
-                    'message' => "Admin Membatalkan Properti dengan Jenis ".$this->properti->jasa->jenis_jasa,
-                    'user_id' => $this->properti->id_pelanggan,
-                    'item_id' => $this->properti->id,
+                    'message' => "Admin Membatalkan Perminataan Pengangkutan",
+                    'user_id' => $this->pengangkutan->id_pelanggan,
+                    'item_id' => $this->pengangkutan->id,
                     'type' => $this->type,
                 ];
             }
         }
-
     }
 }

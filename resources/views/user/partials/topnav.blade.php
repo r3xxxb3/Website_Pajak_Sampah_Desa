@@ -20,20 +20,38 @@
       </div>
       <div class="dropdown-list-content dropdown-list-icons">
       @if(Auth::guard('web')->user()->unreadNotifications->count())
-        @for($i = 1; $i < 40; $i++)
-        <a href="#" class="dropdown-item dropdown-item-unread">
-          <div class="dropdown-item-icon bg-primary text-white">
-            <i class="fas fa-code"></i>
-          </div>
+        @foreach(Auth::guard('web')->user()->unreadNotifications as $notif)
+          @if($notif->type = "App\Notifications\propertiNotif")
+            <a href="{{Route('user-properti-redirect', $notif->id)}}"  class="dropdown-item dropdown-item-unread">
+          @elseif($notif->type = "App\Notifications\retribusiNotif")
+            <a href="{{Route('user-retribusi-redirect', $notif->id)}}"  class="dropdown-item dropdown-item-unread">
+          @elseif($notif->type = "App\Notifications\requestNotif")
+            <a href="{{Route('user-request-redirect', $notif->id)}}"  class="dropdown-item dropdown-item-unread">
+          @elseif($notif->type = "App\Notifications\pembayaranNotif")
+            <a href="{{Route('user-pembayaran-redirect', $notif->id)}}"  class="dropdown-item dropdown-item-unread">
+          @endif
+            @if($notif->data['type']== "update")
+            <div class="dropdown-item-icon bg-warning text-white">
+              <i class="fas fa-pen"></i>
+            </div>
+            @elseif($notif->data['type'] == "create")
+            <div class="dropdown-item-icon bg-primary text-white">
+              <i class="fas fa-plus"></i>
+            </div>
+            @elseif($notif->data['type'] == "cancel")
+            <div class="dropdown-item-icon bg-danger text-white">
+              <i class="fas fa-exclamation"></i>
+            </div>
+            @endif
           <div class="dropdown-item-desc">
-            Template update is available now!
-            <div class="time text-primary">2 Min Ago</div>
+            {{$notif->data['message']}}
+            <div class="time text-primary">{{now()->diffInMinutes($notif->created_at)}} Min Ago</div>
           </div>
         </a>
-        @endfor
-        @else
+        @endforeach
+      @else
         <p class="text-muted p-2 text-center">No notifications found!</p>
-        @endif
+      @endif
     </div>
   </li>
   <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">

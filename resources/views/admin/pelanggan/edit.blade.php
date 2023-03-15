@@ -161,6 +161,14 @@ Edit Data Pelanggan
                 "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
             },
         });
+        var focus = <?php echo isset($focus) ? $focus : "null" ?>;
+        if(focus != null){
+            var properti = <?php echo $index->filter(function ($properti) use ($focus){ if($properti->id ==  $focus){$properti->detailJasa = $properti->jasa; return $properti;}})->values() ?>;
+            console.log(properti[0]);
+            catchProp(properti[0], properti[0].detailJasa, properti[0].id_desa_adat, properti[0].id_banjar_adat);
+            $('#modal-edit').modal('show');
+        }
+
     } );
 </script>
 
@@ -436,7 +444,6 @@ $('#desa_edit').on('change', function(e){
                                 <a  data-toggle="modal" data-target="#modal-edit" class="btn btn-warning btn-sm text-white col mb-1" onClick="catchProp({{$properti}}, {{$properti->jasa}}, {{isset($properti->id_desa_adat) ? $properti->id_desa_adat : 'null'}}, {{isset($properti->id_banjar_adat) ? $properti->id_banjar_adat : 'null'}})"><i class="fas fa-pencil-alt"></i> Ubah</a>
                                 <a style="margin-right:7px" class="btn btn-danger btn-sm col " href="{{Route('admin-properti-delete', $properti->id)}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
                             </td>
-
                         </tr>
                     @endforeach
                     </tbody>

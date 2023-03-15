@@ -39,11 +39,11 @@ class startCommand extends Command
        $pegawai = Pegawai::where('chat_id', $updates->message->chat->id)->first();
 
        if(isset($pegawai)){
-        $text = "Halo ".$name." ! \nBerikut ini daftar perintah yang dapat anda gunakan ! \n1. Cek Jadwal Pengangkutan Sampah /jadwal \n2. Cek Retribusi Pending /retribusi \n3. Cek Request Pengangkutan Sampah \n4. Cek Pembayaran ";
+        $text = "Halo ".$name." ! \nBerikut ini daftar perintah yang dapat anda gunakan ! \n1. Cek Jadwal Pengangkutan Sampah /jadwal \n2. Cek Retribusi Pending /retribusi \n3. Cek Request Pengangkutan Sampah /pengangkutan \n4. Cek Pembayaran /pembayaran \n5. Buat Pengumuman /pengumuman";
         $telegramchat->pengguna_id = $pegawai->id;
         $telegramchat->pengguna_type = "App\\Pegawai";
        }elseif(isset($pelanggan)){
-        $text = "Halo ".$name." ! \nBerikut ini daftar perintah yang dapat anda gunakan ! \n1. Cek Jadwal Pengangkutan Sampah /jadwal \n2. Cek Retribusi Pending /retribusi \n3. Cek Request Pengangkutan Sampah \n4. Cek Status Pembayaran";
+        $text = "Halo ".$name." ! \nBerikut ini daftar perintah yang dapat anda gunakan ! \n1. Cek Jadwal Pengangkutan Sampah /jadwal \n2. Cek Retribusi Pending /retribusi \n3. Cek Request Pengangkutan Sampah \n4. Cek Status Pembayaran /pembayaran";
         $telegramchat->pengguna_id = $pegawai->id;
         $telegramchat->pengguna_type = "App\\Pelanggan";
        }else{

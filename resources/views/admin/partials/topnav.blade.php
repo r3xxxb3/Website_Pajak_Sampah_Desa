@@ -21,25 +21,37 @@
       <div class="dropdown-list-content dropdown-list-icons">
       @if(Auth::guard('admin')->user()->unreadNotifications->count())
         @foreach(Auth::guard('admin')->user()->unreadNotifications as $notif)
-        <a href="{{Route('pelanggan-edit', $notif->data['user_id'])}}"  class="dropdown-item dropdown-item-unread">
-          <div class="dropdown-item-icon bg-primary text-white">
+          @if($notif->type = "App\Notifications\propertiNotif")
+            <a href="{{Route('admin-properti-redirect', $notif->id)}}"  class="dropdown-item dropdown-item-unread">
+          @elseif($notif->type = "App\Notifications\retribusiNotif")
+            <a href="{{Route('admin-retribusi-redirect', $notif->id)}}"  class="dropdown-item dropdown-item-unread">
+          @elseif($notif->type = "App\Notifications\requestNotif")
+            <a href="{{Route('admin-request-redirect', $notif->id)}}"  class="dropdown-item dropdown-item-unread">
+          @elseif($notif->type = "App\Notifications\pembayaranNotif")
+            <a href="{{Route('admin-pembayaran-redirect', $notif->id)}}"  class="dropdown-item dropdown-item-unread">
+          @endif
             @if($notif->data['type']== "update")
+            <div class="dropdown-item-icon bg-warning text-white">
               <i class="fas fa-pen"></i>
+            </div>
             @elseif($notif->data['type'] == "create")
+            <div class="dropdown-item-icon bg-primary text-white">
               <i class="fas fa-plus"></i>
+            </div>
             @elseif($notif->data['type'] == "cancel")
+            <div class="dropdown-item-icon bg-danger text-white">
               <i class="fas fa-exclamation"></i>
+            </div>
             @endif
-          </div>
           <div class="dropdown-item-desc">
             {{$notif->data['message']}}
             <div class="time text-primary">{{now()->diffInMinutes($notif->created_at)}} Min Ago</div>
           </div>
         </a>
         @endforeach
-        @else
+      @else
         <p class="text-muted p-2 text-center">No notifications found!</p>
-        @endif
+      @endif
     </div>
   </li>
   <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">

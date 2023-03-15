@@ -111,6 +111,12 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::post('/pelanggan/update/{id}', 'Admin\pelangganController@update')->name('pelanggan-update');
     Route::get('/pelanggan/delete/{id}', 'Admin\pelangganController@delete')->name('pelanggan-delete');
 
+    //notification redirect
+    Route::get('/notification/properti/{id}', 'Admin\NotificationController@propertiRedirect')->name('admin-properti-redirect');
+    Route::get('/notification/retribusi/{id}', 'Admin\NotificationController@retribusiRedirect')->name('admin-retribusi-redirect');
+    Route::get('/notification/request/{id}', 'Admin\NotificationController@requestRedirect')->name('admin-request-redirect');
+    Route::get('/notification/pembayaran/{id}', 'Admin\NotificationController@pembayaranRedirect')->name('admin-pembayaran-redirect');
+
     //Manajemen properti pelanggan
     Route::post('/properti/store', 'Admin\pelangganController@propertiStore' )->name('admin-properti-store');
     Route::post('/properti/update/{id}', 'Admin\pelangganController@propertiUpdate')->name('admin-properti-update');
@@ -189,6 +195,12 @@ Route::get('/logout', 'Auth\AuthController@logout')->name('logout');
 Route::group(['middleware' => ['auth'], 'prefix' => 'user'] , function(){
     Route::get('/dashboard', 'User\DashboardController@dashboard')->name('user-dashboard');
 
+    //notification redirect
+    Route::get('/notification/properti/{id}', 'User\NotificationController@propertiRedirect')->name('user-properti-redirect');
+    Route::get('/notification/retribusi/{id}', 'User\NotificationController@retribusiRedirect')->name('user-retribusi-redirect');
+    Route::get('/notification/request/{id}', 'User\NotificationController@requestRedirect')->name('user-request-redirect');
+    Route::get('/notification/pembayaran/{id}', 'User\NotificationController@pembayaranRedirect')->name('user-pembayaran-redirect');
+
     //Data Diri
     Route::get('/data-diri/index', 'User\UserController@dataIndex')->name('data-index');
     Route::post('/data-diri/update', 'User\UserController@dataUpdate')->name('data-update');
@@ -199,7 +211,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user'] , function(){
     Route::post('/properti/store', 'User\UserController@propertiStore')->name('properti-store');
     Route::get('/properti/edit/{id}', 'User\UserController@propertiEdit')->name('properti-edit');
     Route::post('/properti/update/{id}', 'User\UserController@propertiUpdate')->name('properti-update');
-    Route::post('/properti/cancel/{id}', 'User\UserController@propertiCancel')->name('properti-cancel');
+    Route::get('/properti/cancel/{id}', 'User\UserController@propertiCancel')->name('properti-cancel');
     Route::get('/properti/delete/{id}', 'User\UserController@propertiDelete')->name('properti-delete');
     Route::post('/banjar/search', 'User\UserController@banjarCheck')->name('banjar-search');
 

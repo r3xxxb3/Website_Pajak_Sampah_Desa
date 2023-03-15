@@ -190,16 +190,33 @@ class PelangganController extends Controller
     }
 
     public function edit($id){
-        $desaAdat = DesaAdat::all();
-        $banjarAdat = BanjarAdat::all();
-        $pelanggan = Pelanggan::where('id', $id)->first();
-        $jenis = JenisJasa::all();
-        $index = Properti::where('id_pelanggan', $pelanggan->id)->where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->get();
-        if($pelanggan != null){
-            // dd(auth()->guard('admin')->user());
-            return view('admin.pelanggan.edit', compact('pelanggan', 'index', 'jenis', 'desaAdat', 'banjarAdat'));
+        $val = explode("-", $id);
+        if(count($val) > 1){
+            // dd($val);
+            $focus = $val[1];
+            $desaAdat = DesaAdat::all();
+            $banjarAdat = BanjarAdat::all();
+            $pelanggan = Pelanggan::where('id', $val[0])->first();
+            $jenis = JenisJasa::all();
+            $index = Properti::where('id_pelanggan', $pelanggan->id)->where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->get();
+            if($pelanggan != null){
+                // dd(auth()->guard('admin')->user());
+                return view('admin.pelanggan.edit', compact('pelanggan', 'index', 'jenis', 'desaAdat', 'banjarAdat', 'focus'));
+            }else{
+                return redirect()->route('pelanggan-index')->with('error', 'Data Pelanggan Tidak Ditemukan !');
+            }
         }else{
-            return redirect()->route('pelanggan-index')->with('error', 'Data Pelanggan Tidak Ditemukan !');
+            $desaAdat = DesaAdat::all();
+            $banjarAdat = BanjarAdat::all();
+            $pelanggan = Pelanggan::where('id', $id)->first();
+            $jenis = JenisJasa::all();
+            $index = Properti::where('id_pelanggan', $pelanggan->id)->where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->get();
+            if($pelanggan != null){
+                // dd(auth()->guard('admin')->user());
+                return view('admin.pelanggan.edit', compact('pelanggan', 'index', 'jenis', 'desaAdat', 'banjarAdat'));
+            }else{
+                return redirect()->route('pelanggan-index')->with('error', 'Data Pelanggan Tidak Ditemukan !');
+            }
         }
         
     }

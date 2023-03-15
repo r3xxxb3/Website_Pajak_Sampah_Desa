@@ -35,7 +35,7 @@ class pembayaranCommand extends Command
     protected $description = 'command untuk memperlihatkan pembayaran pending';
 
     public function __construct(){
-        $this->url = "https://e36a-114-5-36-99.ap.ngrok.io/";
+        $this->url = "https://c291-114-5-36-99.ap.ngrok.io/";
         $this->google = "https://www.google.com/maps/search/?api=1&query=";
     }
 

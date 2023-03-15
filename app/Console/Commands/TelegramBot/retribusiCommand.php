@@ -33,7 +33,7 @@ class retribusiCommand extends Command
     protected $description = 'command untuk melihat data retribusi yang masih pending';
 
     public function __construct(){
-        return $url = "https://e36a-114-5-36-99.ap.ngrok.io/";
+        return $url = "https://c291-114-5-36-99.ap.ngrok.io/";
     }
 
     /**
