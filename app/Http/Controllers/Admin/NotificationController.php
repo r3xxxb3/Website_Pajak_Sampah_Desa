@@ -31,14 +31,38 @@ class NotificationController extends Controller
     }
 
     public function retribusiRedirect($id){
-        
+        $notif = auth()->guard('admin')->user()->unreadNotifications->where('id', $id)->first();
+        // dd($notif);
+        // if($notif->data["type"] == "create"){
+        //     return redirect()->route('pelanggan-edit', $notif->data["user_id"]."-".$notif->data["item_id"]);
+        // }elseif($notif->data["type"] == "update"){
+        //     return redirect()->route('pelanggan-edit',  $notif->data["user_id"]."-".$notif->data["item_id"]);
+        // }elseif($notif->data["type"] == "cancel"){
+        //     return redirect()->route('pelanggan-edit',  $notif->data["user_id"]."-".$notif->data["item_id"]);
+        // }
     }
 
-    public function pengangkutanRedirect($id){
-        
+    public function requestRedirect($id){
+        $notif = auth()->guard('admin')->user()->unreadNotifications->where('id', $id)->first();
+        // dd($notif);
+        if($notif->data["type"] == "create"){
+            return redirect()->route('admin-request-edit', $notif->data["item_id"]);
+        }elseif($notif->data["type"] == "update"){
+            return redirect()->route('admin-request-edit',  $notif->data["item_id"]);
+        }elseif($notif->data["type"] == "cancel"){
+            return redirect()->route('admin-request-edit',  $notif->data["item_id"]);
+        }
     }
 
     public function PembayaranRedirect($id){
-        
+        $notif = auth()->guard('admin')->user()->unreadNotifications->where('id', $id)->first();
+        // dd($notif);
+        if($notif->data["type"] == "create"){
+            return redirect()->route('admin-pembayaran-edit',$notif->data["item_id"]);
+        }elseif($notif->data["type"] == "update"){
+            return redirect()->route('admin-pembayaran-edit', $notif->data["item_id"]);
+        }elseif($notif->data["type"] == "cancel"){
+            return redirect()->route('admin-pembayaran-edit', $notif->data["item_id"]);
+        }
     }
 }

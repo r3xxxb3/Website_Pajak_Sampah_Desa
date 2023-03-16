@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\PengangkutanNotif;
 use Illuminate\Http\Request;
+use App\Pegawai;
 use App\Pengangkutan;
 use App\DesaAdat;
 use App\keranjang;
@@ -66,6 +68,12 @@ class RequestController extends Controller
         $requestP->alamat = $request->alamat;
         $requestP->status = "Pending";
         if($requestP->save()){
+            $pegawai = Pegawai::where('id_desa_adat', $requestP->id_desa_adat)->get();
+            // dd($properti->id_jenis);
+            // $properti->toArray();
+            foreach($pegawai as $p){
+                $p->notify(new PengangkutanNotif($requestP, "create"));
+            }
             return redirect()->route('request-index')->with('success', 'Berhasil membuat request pengangkutan !');
         }else{
             return redirect()->back()->with('error', 'Gagal membuat request pengangkutan !');
@@ -123,6 +131,12 @@ class RequestController extends Controller
             $requestP->id_desa_adat = $request->desaAdat;
             $requestP->status = "Pending";
             if($requestP->update()){
+                $pegawai = Pegawai::where('id_desa_adat', $requestP->id_desa_adat)->get();
+                // dd($properti->id_jenis);
+                // $properti->toArray();
+                foreach($pegawai as $p){
+                    $p->notify(new PengangkutanNotif($requestP, "update"));
+                }
                 return redirect()->route('request-index')->with('success', 'Berhasil mengubah request pengangkutan !');
             }else{
                 return redirect()->back()->with('error', 'Gagal mengubah request pengangkutan !');
@@ -138,6 +152,12 @@ class RequestController extends Controller
         if($requestP->status == 'Pending'){
             $requestP->status = "Batal";
             $requestP->update();
+            $pegawai = Pegawai::where('id_desa_adat', $requestP->id_desa_adat)->get();
+            // dd($properti->id_jenis);
+            // $properti->toArray();
+            foreach($pegawai as $p){
+                $p->notify(new PengangkutanNotif($requestP, "cancel"));
+            }
             return redirect()->route('request-index')->with('success', 'Berhasil membatalkan request pengangkutan !');  
         }else{
             return redirect()->back()->with('error', 'Proses pembatalan request pengangkutan tidak dapat dilakukan !');

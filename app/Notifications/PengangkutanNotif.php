@@ -58,28 +58,28 @@ class PengangkutanNotif extends Notification
     public function toArray($notifiable)
     {
         // dd($this->type, $this->pengangkutan);
-        if(isset($notifiable->pelanggan)){
+        if($notifiable->id_pegawai != null){
             if($this->type == "create"){
                 return [
                     //
-                    'message' => $notifiable->pelanggan->kependudukan->nama." Menambahkan Permintaan Pengangkutan dengan alamat ".$this->pengangkutan->alamat,
-                    'user_id' => $notifiable->pelanggan->id,
+                    'message' => auth()->guard('web')->user()->kependudukan->nama." Menambahkan Permintaan Pengangkutan dengan alamat ".$this->pengangkutan->alamat,
+                    'user_id' => auth()->guard('web')->user()->id,
                     'item_id' => $this->pengangkutan->id,
                     'type' => $this->type,
                 ];
             }elseif($this->type == "update"){
                 return [
                     //
-                    'message' => $notifiable->pelanggan->kependudukan->nama." Mengubah permintaan pengangkutan ",
-                    'user_id' => $notifiable->pelanggan->id,
+                    'message' => auth()->guard('web')->user()->kependudukan->nama." Mengubah permintaan pengangkutan ",
+                    'user_id' => auth()->guard('web')->user()->id,
                     'item_id' => $this->pengangkutan->id,
                     'type' => $this->type,
                 ];
             }elseif($this->type == "cancel"){
                 return [
                     //
-                    'message' => $notifiable->pelanggan->kependudukan->nama." membatalkan permintaan pengangkutan dengan alamat ".$this->pengangkutan->alamat,
-                    'user_id' => $notifiable->pelanggan->id,
+                    'message' => auth()->guard('web')->user()->kependudukan->nama." membatalkan permintaan pengangkutan dengan alamat ".$this->pengangkutan->alamat,
+                    'user_id' => auth()->guard('web')->user()->id,
                     'item_id' => $this->pengangkutan->id,
                     'type' => $this->type,
                 ];
@@ -105,6 +105,22 @@ class PengangkutanNotif extends Notification
                 return [
                     //
                     'message' => "Admin Membatalkan Perminataan Pengangkutan",
+                    'user_id' => $this->pengangkutan->id_pelanggan,
+                    'item_id' => $this->pengangkutan->id,
+                    'type' => $this->type,
+                ];
+            }elseif($this->type == "verify"){
+                return [
+                    //
+                    'message' => "Admin melakukan verifikasi pada request pengangkutan, Anda dapat melakukan pembayaran !",
+                    'user_id' => $this->pengangkutan->id_pelanggan,
+                    'item_id' => $this->pengangkutan->id,
+                    'type' => $this->type,
+                ];
+            }elseif($this->type == "confirm"){
+                return [
+                    //
+                    'message' => "Admin melakukan konfirmasi pada request pengangkutan, Pengangkutan akan segera di proses !",
                     'user_id' => $this->pengangkutan->id_pelanggan,
                     'item_id' => $this->pengangkutan->id,
                     'type' => $this->type,

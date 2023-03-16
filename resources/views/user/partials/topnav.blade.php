@@ -21,13 +21,13 @@
       <div class="dropdown-list-content dropdown-list-icons">
       @if(Auth::guard('web')->user()->unreadNotifications->count())
         @foreach(Auth::guard('web')->user()->unreadNotifications as $notif)
-          @if($notif->type = "App\Notifications\propertiNotif")
+          @if($notif->type == "App\Notifications\PropertiNotif")
             <a href="{{Route('user-properti-redirect', $notif->id)}}"  class="dropdown-item dropdown-item-unread">
-          @elseif($notif->type = "App\Notifications\retribusiNotif")
+          @elseif($notif->type == "App\Notifications\RetribusiNotif")
             <a href="{{Route('user-retribusi-redirect', $notif->id)}}"  class="dropdown-item dropdown-item-unread">
-          @elseif($notif->type = "App\Notifications\requestNotif")
+          @elseif($notif->type == "App\Notifications\PengangkutanNotif")
             <a href="{{Route('user-request-redirect', $notif->id)}}"  class="dropdown-item dropdown-item-unread">
-          @elseif($notif->type = "App\Notifications\pembayaranNotif")
+          @elseif($notif->type == "App\Notifications\PembayaranNotif")
             <a href="{{Route('user-pembayaran-redirect', $notif->id)}}"  class="dropdown-item dropdown-item-unread">
           @endif
             @if($notif->data['type']== "update")
@@ -35,12 +35,20 @@
               <i class="fas fa-pen"></i>
             </div>
             @elseif($notif->data['type'] == "create")
-            <div class="dropdown-item-icon bg-primary text-white">
+            <div class="dropdown-item-icon bg-success text-white">
               <i class="fas fa-plus"></i>
             </div>
             @elseif($notif->data['type'] == "cancel")
             <div class="dropdown-item-icon bg-danger text-white">
               <i class="fas fa-exclamation"></i>
+            </div>
+            @elseif($notif->data['type'] == "confirm")
+            <div class="dropdown-item-icon bg-success text-white">
+              <i class="fas fa-check"></i>
+            </div>
+            @elseif($notif->data['type'] == "verify")
+            <div class="dropdown-item-icon bg-success text-white">
+              <i class="fas fa-check-double"></i>
             </div>
             @endif
           <div class="dropdown-item-desc">

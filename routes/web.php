@@ -135,7 +135,7 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::get('/request', 'Admin\RequestController@index')->name('admin-request-index');
     Route::get('/request/create', 'Admin\RequestController@create')->name('admin-request-create');
     Route::post('/request/store', 'Admin\RequestController@store')->name('admin-request-store');
-    Route::get('/request/edit/{id}', 'Admin\RequestController@edit')->name('admin-request-store');
+    Route::get('/request/edit/{id}', 'Admin\RequestController@edit')->name('admin-request-edit');
     Route::get('/request/update/{id}', 'Admin\RequestController@update')->name('admin-request-update');
     Route::get('/request/confirm/{id}', 'Admin\RequestController@confirm')->name('admin-request-confirm');
     Route::get('/request/cancel/{id}', 'Admin\RequestController@cancel')->name('admin-request-cancel');

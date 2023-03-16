@@ -20,18 +20,49 @@ class NotificationController extends Controller
     //
     public function propertiRedirect($id){
         $notif = auth()->guard('web')->user()->unreadNotifications->where('id', $id)->first();
-        dd($notif);
+        // dd($notif);
+        if($notif->data["type"] == "create"){
+            return redirect()->route('properti-edit', $notif->data["item_id"]);
+        }elseif($notif->data["type"] == "update"){
+            return redirect()->route('properti-edit',  $notif->data["item_id"]);
+        }elseif($notif->data["type"] == "cancel"){
+            return redirect()->route('properti-edit',  $notif->data["item_id"]);
+        }
     }
 
     public function retribusiRedirect($id){
-        
+        $notif = auth()->guard('web')->user()->unreadNotifications->where('id', $id)->first();
+        // dd($notif);
+        if($notif->data["type"] == "create"){
+            return redirect()->route('retribusi-index');
+        }
     }
 
-    public function pengangkutanRedirect($id){
-        
+    public function requestRedirect($id){
+        $notif = auth()->guard('web')->user()->unreadNotifications->where('id', $id)->first();
+        // dd($notif);
+        if($notif->data["type"] == "create"){
+            return redirect()->route('request-edit', $notif->data["item_id"]);
+        }elseif($notif->data["type"] == "update"){
+            return redirect()->route('request-edit',  $notif->data["item_id"]);
+        }elseif($notif->data["type"] == "cancel"){
+            return redirect()->route('request-edit',  $notif->data["item_id"]);
+        }elseif($notif->data["type"] == "confirm"){
+            return redirect()->route('request-edit',  $notif->data["item_id"]);
+        }elseif($notif->data["type"] == "verify"){
+            return redirect()->route('request-edit',  $notif->data["item_id"]);
+        }
     }
 
     public function PembayaranRedirect($id){
-        
+        $notif = auth()->guard('web')->user()->unreadNotifications->where('id', $id)->first();
+        // dd($notif);
+        if($notif->data["type"] == "create"){
+            return redirect()->route('pembayaran-index');
+        }elseif($notif->data["type"] == "update"){
+            return redirect()->route('pembayaran-index');
+        }elseif($notif->data["type"] == "cancel"){
+            return redirect()->route('pembayaran-index');
+        }
     }
 }

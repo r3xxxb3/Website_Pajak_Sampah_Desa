@@ -21,13 +21,13 @@
       <div class="dropdown-list-content dropdown-list-icons">
       @if(Auth::guard('admin')->user()->unreadNotifications->count())
         @foreach(Auth::guard('admin')->user()->unreadNotifications as $notif)
-          @if($notif->type = "App\Notifications\propertiNotif")
+          @if($notif->type == "App\Notifications\PropertiNotif")
             <a href="{{Route('admin-properti-redirect', $notif->id)}}"  class="dropdown-item dropdown-item-unread">
-          @elseif($notif->type = "App\Notifications\retribusiNotif")
+          @elseif($notif->type == "App\Notifications\RetribusiNotif")
             <a href="{{Route('admin-retribusi-redirect', $notif->id)}}"  class="dropdown-item dropdown-item-unread">
-          @elseif($notif->type = "App\Notifications\requestNotif")
+          @elseif($notif->type == "App\Notifications\PengangkutanNotif")
             <a href="{{Route('admin-request-redirect', $notif->id)}}"  class="dropdown-item dropdown-item-unread">
-          @elseif($notif->type = "App\Notifications\pembayaranNotif")
+          @elseif($notif->type == "App\Notifications\PembayaranNotif")
             <a href="{{Route('admin-pembayaran-redirect', $notif->id)}}"  class="dropdown-item dropdown-item-unread">
           @endif
             @if($notif->data['type']== "update")

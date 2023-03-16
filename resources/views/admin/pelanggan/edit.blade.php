@@ -161,9 +161,10 @@ Edit Data Pelanggan
                 "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
             },
         });
-        var focus = <?php echo isset($focus) ? $focus : "null" ?>;
+        var focus = <?php echo isset($focus) ? $focus : "null" ;?>;
+        <?php $foc = isset($focus) ? $focus : "null" ?>
         if(focus != null){
-            var properti = <?php echo $index->filter(function ($properti) use ($focus){ if($properti->id ==  $focus){$properti->detailJasa = $properti->jasa; return $properti;}})->values() ?>;
+            var properti = <?php echo $index->filter(function ($properti) use ($foc){ if($properti->id ==  $foc){$properti->detailJasa = $properti->jasa; return $properti;}})->values() ?>;
             console.log(properti[0]);
             catchProp(properti[0], properti[0].detailJasa, properti[0].id_desa_adat, properti[0].id_banjar_adat);
             $('#modal-edit').modal('show');

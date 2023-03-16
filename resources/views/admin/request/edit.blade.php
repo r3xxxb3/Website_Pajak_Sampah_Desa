@@ -123,7 +123,7 @@ Edit Request Pengangkutan
                     </button>
                 </div>
             @endif
-            <form method="POST" enctype="multipart/form-data" action="{{route('request-update', $requestP->id)}}">
+            <form method="POST" enctype="multipart/form-data" action="{{route('admin-request-update', $requestP->id)}}">
             @csrf
             <div class="card shadow">
                 <div class="form-group card-header shadow">
@@ -213,7 +213,7 @@ Edit Request Pengangkutan
                     @else
                     <div class="row mt-4">
                         <div class="col">
-                            <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda Yakin Ingin Menambah Data?')"><i class="fas fa-save"></i> Simpan</button>
+                            <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda Yakin Ingin Mengubah Data?')"><i class="fas fa-save"></i> Simpan</button>
                             <a href="{{route('admin-request-index')}}" class="btn btn-danger"><i class="fas fa-times"></i> Cancel</a>
                         </div>
                     </div>

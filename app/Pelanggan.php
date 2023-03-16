@@ -28,6 +28,10 @@ class Pelanggan extends Authenticatable
         return $this->belongsTo(Kependudukan::class, 'id_penduduk', 'id');
     }
 
+    public function pengangkutan(){
+        return $this->hasMany(Pengangkutan::class, 'id_pelanggan', 'id');
+    }
+
     public function properti(){
         return $this->hasMany(Properti::class, 'id_pelanggan', 'id');
     }

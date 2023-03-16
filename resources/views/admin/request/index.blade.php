@@ -137,9 +137,7 @@ List Request Pengangkutan
                 @endif
 
                 <div class="table-responsive">
-                    <form action="" method="post">
-                        @csrf
-                        <a class= "btn btn-success text-white mb-2"  ><i class="fas fa-plus"></i> Tambah Request Pengangkutan</a>
+                        <a class= "btn btn-success text-white mb-2"  href="{{Route('admin-request-create')}}"><i class="fas fa-plus"></i> Tambah Request Pengangkutan</a>
                         <table class="table table-bordered " id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr class="table-primary">
@@ -181,7 +179,7 @@ List Request Pengangkutan
                                         <span class="badge badge-danger status" name="{{$i->status}}" data-toggle="modal" data-target="#modal-status">{{$i->status}}</span>
                                         @endif
                                     </td>
-                                    <td align="center">
+                                    <td style="vertical-align: middle; text-align: center;">
                                         @if($i->status == "Pending")
                                             <a class="btn btn-info btn-sm text-white col mb-1" onclick="swal({title: 'Konfirmasi Request Pengangkutan ?', icon: 'warning', buttons:{cancel: {text: 'Tidak',value: null,visible: true,closeModal: true,},confirm: {text: 'Ya',value: true,visible: true,closeModal: true}}}).then(function(value){if(value){window.location = window.location = '{{Route('admin-request-confirm', $i->id)}}' }})" ><i class="fas fa-check"></i> Konfirmasi</a><br>
                                             <a href="/admin/request/edit/{{$i->id}}" class="btn btn-warning btn-sm col mb-1"><i class="fas fa-pencil-alt"></i> Ubah</a> <br>
@@ -198,7 +196,6 @@ List Request Pengangkutan
                             @endforeach
                             </tbody>
                         </table>
-                    </form>
                 </div>
                 
             </div>

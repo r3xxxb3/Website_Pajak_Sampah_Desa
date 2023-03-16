@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Builder;
+use App\Notifications\PengangkutanNotif;
 use Illuminate\Http\Request;
 use App\Pelanggan;
 use App\Pengangkutan;
@@ -23,11 +25,68 @@ class RequestController extends Controller
     }
 
     public function create(){
-        
+        $desaAdat = auth()->guard('admin')->user()->id_desa_adat;
+        $pelanggan = Pelanggan::whereHas('properti', function(Builder $query) use ($desaAdat){
+            $query->where('id_desa_adat', $desaAdat);
+        })->orWhereHas('pengangkutan', function(Builder $query) use ($desaAdat){
+            $query->where('id_desa_adat', $desaAdat);
+        })->get();
+        $desaAdat = DesaAdat::all();
+        return view('admin.request.create', compact('desaAdat', 'pelanggan'));
     }
 
     public function store(Request $request){
+        
+        $messages = [
+            'required' => 'Kolom :attribute Wajib Diisi!',
+            'unique' => 'Kolom :attribute Tidak Boleh Sama!',
+            'max' => 'Ukuran File tidak boleh melebihi 5 MB',
+            'numeric' => 'Kolom :attribute Hanya  Menerima Inputan Angka  !'
+		];
 
+        // dd($request->id);
+        // dd($request->file);
+        // dd($request->media);
+        // dd($request->nominal);
+        
+        $this->validate($request, [
+            'file' => 'max:5120',
+            'pelanggan' => 'required',
+            'lat' => 'required',
+            'lng' => 'required',
+            'alamat' => 'required',
+        ],$messages);
+        
+
+        $pelanggan = Pelanggan::where('id', $request->pelanggan)->first();
+        if(!isset($pelanggan)){
+            return redirect()->back()->with('error', "Pelanggan tidak ditemukan !");
+        }
+
+        $requestP = new Pengangkutan;
+
+        if($request->file('file')){
+            //simpan file
+            
+            $file = $request->file('file');
+            $images = $pelanggan->kependudukan->nik."_".$file->getClientOriginalName();
+            // dd($images);
+            $requestP->file = $images;
+            $foto_upload = 'assets/img/request_p';
+            $file->move($foto_upload,$images);
+        }
+        $requestP->id_pelanggan = $pelanggan->id;
+        $requestP->lat = $request->lat;
+        $requestP->lng = $request->lng;
+        $requestP->id_desa_adat = auth()->guard('admin')->user()->id_desa_adat;
+        $requestP->alamat = $request->alamat;
+        $requestP->status = "Pending";
+        if($requestP->save()){
+            $pelanggan->notify(new PengangkutanNotif($requestP, "create"));
+            return redirect()->route('admin-request-index')->with('success', 'Berhasil membuat request pengangkutan !');
+        }else{
+            return redirect()->back()->with('error', 'Gagal membuat request pengangkutan !');
+        }
     }
 
     public function edit($id){
@@ -42,6 +101,7 @@ class RequestController extends Controller
 
     public function verif(Request $request){
         $requestP = Pengangkutan::where('id', $request->idReq)->first();
+        $pelanggan = $requestP->pelanggan;
         // dd($requestP);
         if(isset($requestP)){
             if($requestP->status == "Pending"){
@@ -51,6 +111,7 @@ class RequestController extends Controller
                     $requestP->nominal = $request->nominal;
                     $requestP->status = "Selesai";
                     if($requestP->update()){
+                        $pelanggan->notify(new PengangkutanNotif($requestP, "verify"));
                         return redirect()->route('admin-request-index')->with('success', "Verifikasi Request Pengangkutan Berhasil !");
                     }else{
                         return redirect()->back()->with('error', "verifikasi Request Pengangkutan Gagal !");
@@ -66,9 +127,11 @@ class RequestController extends Controller
 
     public function confirm($id){
         $requestP = Pengangkutan::where('id', $id)->first();
+        $pelanggan = $requestP->pelanggan;
         if(isset($requestP)){
             $requestP->status = "Terkonfirmasi";
             if($requestP->save()){
+                $pelanggan->notify(new PengangkutanNotif($requestP, "confirm"));
                 return redirect()->back()->with('success', "Request Pengangkutan berhasil terkonfirmasi !");
             }else{
                 return redirect()->back()->with('success', "Request Pengangkutan gagal terkonfirmasi !");

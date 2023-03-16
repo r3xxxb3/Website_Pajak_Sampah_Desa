@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
+use App\Notifications\PembayaranNotif;
 use Illuminate\Http\Request;
 use App\Pembayaran;
 use App\Retribusi;
@@ -110,6 +111,7 @@ class PembayaranController extends Controller
         $pembayaran->nominal = $request->nominal;
         $pembayaran->jenis = $request->type;
         if($pembayaran->save()){
+            $pelanggan->notify(new PembayaranNotif($pembayaran, "create"));
             foreach($id as $i){
                 if($i[1] == "retribusi"){
                     // dd($i);
@@ -216,13 +218,13 @@ class PembayaranController extends Controller
             $foto_upload = 'assets/img/bukti_bayar';
             $file->move($foto_upload,$images);
         }
-
-        $pembayaran->id_pelanggan = auth()->guard('web')->user()->id;
         $pembayaran->media = $request->media;
         $pembayaran->nominal = $request->nominal;
         $pembayaran->jenis = $request->type;
+        $pelanggan = $pembayaran->pelanggan;
         if($pembayaran->update()){
-            return redirect()->back()->with('success', 'Berhasil Melakukan Pembayaran untuk Retribusi !');
+            $pelanggan->notify(new PembayaranNotif($pembayaran, "update"));
+            return redirect()->back()->with('success', 'Berhasil Melakukan Perubahan Data Pembayaran !');
         }else{
             return redirect()->back()->with('error', 'Pembayaran Gagal untuk Dilakukan !');
         }
@@ -253,6 +255,7 @@ class PembayaranController extends Controller
 
     public function verif($id){
         $pembayaran = Pembayaran::where('id_pembayaran', $id)->first();
+        $pelanggan = $pembayaran->pelanggan;
         if($pembayaran != null){
             // dd($pembayaran);
             $pembayaran->id_pegawai = auth()->guard('admin')->user()->id_pegawai;
@@ -271,6 +274,7 @@ class PembayaranController extends Controller
                 }
             }
             $pembayaran->update();
+            $pelanggan->notify(new PembayaranNotif($pembayaran, 'verify'));
             return redirect()->back()->with('success', 'Pembayaran berhasil terverifikasi !');
         }else{
             return redirect()->back()->with('error', 'Data pembayaran tidak ditemukan !');
@@ -342,6 +346,8 @@ class PembayaranController extends Controller
                     $pembayaran->retribusi()->attach($retribusi);
                     $info['stat'] = "success";
                     $info['desc'] = "Item retribusi berhasil masuk ke dalam pembayaran !";
+                    $pelanggan = $pembayaran->pelanggan;
+                    $pelanggan->notify(new PembayaranNotif($pembayaran, "itemAdd"));
                     return response()->json($info, 200);
                 }
             }elseif($detail[1] == "pengangkutan"){
@@ -355,6 +361,8 @@ class PembayaranController extends Controller
                     $pembayaran->pengangkutan()->attach($pengangkutan);
                     $info['stat'] = "success";
                     $info['desc'] = "Item Request Pengangkutan berhasil masuk ke dalam pembayaran !";
+                    $pelanggan = $pembayaran->pelanggan;
+                    $pelanggan->notify(new PembayaranNotif($pembayaran, "itemAdd"));
                     return response()->json($info, 200);
                 }
             }
@@ -374,6 +382,8 @@ class PembayaranController extends Controller
             DetailPembayaran::where('model_id', $id[0])->where('model_type', "App\\".$id[1])->forceDelete();
             $info['stat'] = "success";
             $info['desc'] = "Item berhasil dihapus dari pembayaran !";
+            $pelanggan = $pembayaran->pelanggan;
+            $pelanggan->notify(new PembayaranNotif($pembayaran, "itemDelete"));
             return response()->json($info, 200);
         }else{
             $info['stat'] = "error";

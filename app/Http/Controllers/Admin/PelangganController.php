@@ -306,6 +306,7 @@ class PelangganController extends Controller
 
     public function propertiUpdate($id, Request $request){
         $properti = Properti::where('id', $id)->first();
+        $pelanggan = $properti->pelanggan;
         if(isset($properti)){
             if($request->file('file_edit')){
                 //simpan file
@@ -333,6 +334,7 @@ class PelangganController extends Controller
                 $properti->id_jenis = $request->jenis_edit;
                 $properti->note = "Admin Mengubah Jenis properti menjadi ".$jenis->jenis_jasa;
                 $properti->status = "Terverifikasi";
+                $pelanggan->notify(new PropertiNotif($properti, "update"));
                 $properti->update();
                 return redirect()->back()->with('success', 'verifikasi Properti berhasil !');
             }else{
@@ -348,8 +350,10 @@ class PelangganController extends Controller
 
     public function propertiCancel($id){
         $properti = Properti::where('id', $id)->first();
+        $pelanggan = $properti->pelanggan;
         if(isset($properti)){
             $properti->status =  "Cancelled";
+            $pelanggan->notify(new PropertiNotif($properti, "cancel"));
             $properti->update();
             return redirect()->back()->with('success-1', 'Pembatalan Properti berhasil !');
         }else{

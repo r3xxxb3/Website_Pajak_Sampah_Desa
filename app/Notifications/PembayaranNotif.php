@@ -58,28 +58,44 @@ class PembayaranNotif extends Notification
     public function toArray($notifiable)
     {
         // dd($this->type, $this->properti);
-        if(isset($notifiable->pelanggan)){
+        if($notifiable->id_pegawai != null){
             if($this->type == "create"){
                 return [
                     //
-                    'message' => $notifiable->pelanggan->kependudukan->nama." Membuat Pembayaran",
-                    'user_id' => $notifiable->pelanggan->id,
+                    'message' => auth()->guard('web')->user()->kependudukan->nama." Membuat Pembayaran",
+                    'user_id' => auth()->guard('web')->user()->id,
                     'item_id' => $this->pembayaran->id_pembayaran,
                     'type' => $this->type,
                 ];
             }elseif($this->type == "update"){
                 return [
                     //
-                    'message' => $notifiable->pelanggan->kependudukan->nama." Mengubah Pembayaran",
-                    'user_id' => $notifiable->pelanggan->id,
+                    'message' => auth()->guard('web')->user()->kependudukan->nama." Mengubah Pembayaran",
+                    'user_id' => auth()->guard('web')->user()->id,
                     'item_id' => $this->pembayaran->id_pembayaran,
                     'type' => $this->type,
                 ];
             }elseif($this->type == "cancel"){
                 return [
                     //
-                    'message' => $notifiable->pelanggan->kependudukan->nama." Menambahkan Pembayaran",
-                    'user_id' => $notifiable->pelanggan->id,
+                    'message' => auth()->guard('web')->user()->kependudukan->nama." Membatalkan Pembayaran",
+                    'user_id' => auth()->guard('web')->user()->id,
+                    'item_id' => $this->pembayaran->id_pembayaran,
+                    'type' => $this->type,
+                ];
+            }elseif($this->type == "itemAdd"){
+                return [
+                    //
+                    'message' => auth()->guard('web')->user()->kependudukan->nama." menambahkan item untuk Pembayaran",
+                    'user_id' => auth()->guard('web')->user()->id,
+                    'item_id' => $this->pembayaran->id_pembayaran,
+                    'type' => $this->type,
+                ];
+            }elseif($this->type == "itemDelete"){
+                return [
+                    //
+                    'message' => auth()->guard('web')->user()->kependudukan->nama." menghapus item untuk Pembayaran",
+                    'user_id' => auth()->guard('web')->user()->id,
                     'item_id' => $this->pembayaran->id_pembayaran,
                     'type' => $this->type,
                 ];
@@ -105,6 +121,30 @@ class PembayaranNotif extends Notification
                 return [
                     //
                     'message' => "Admin Membatalkan Pembayaran",
+                    'user_id' => $this->pembayaran->id_pelanggan,
+                    'item_id' => $this->pembayaran->id_pembayaran,
+                    'type' => $this->type,
+                ];
+            }elseif($this->type == "itemAdd"){
+                return [
+                    //
+                    'message' => "Admin Menambahkan item untuk Pembayaran",
+                    'user_id' => $this->pembayaran->id_pelanggan,
+                    'item_id' => $this->pembayaran->id_pembayaran,
+                    'type' => $this->type,
+                ];
+            }elseif($this->type == "itemDelete"){
+                return [
+                    //
+                    'message' => "Admin Menghapus item untuk Pembayaran",
+                    'user_id' => $this->pembayaran->id_pelanggan,
+                    'item_id' => $this->pembayaran->id_pembayaran,
+                    'type' => $this->type,
+                ];
+            }elseif($this->type == "verify"){
+                return [
+                    //
+                    'message' => "Admin melakukan verifikasi pada Pembayaran",
                     'user_id' => $this->pembayaran->id_pelanggan,
                     'item_id' => $this->pembayaran->id_pembayaran,
                     'type' => $this->type,

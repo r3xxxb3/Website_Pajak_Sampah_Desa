@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
+use App\Notifications\PembayaranNotif;
 use Illuminate\Http\Request;
 use App\Pegawai;
 use App\Properti;
@@ -120,6 +121,12 @@ class PembayaranController extends Controller
                 // dd($checkDesa);
                 return redirect()->back()->with('error', 'Pembayaran sekaligus hanya dapat dilakukan untuk item dengan Desa Adat yang sama !');
             }else{
+                $pegawai = Pegawai::where('id_desa_adat', $checkDesa[0])->get();
+                // dd($properti->id_jenis);
+                // $properti->toArray();
+                foreach($pegawai as $p){
+                    $p->notify(new PembayaranNotif($pembayaran, "create"));
+                }
                 foreach($id as $i){
                     if($i[1] == "retribusi"){
                         // dd($i);
@@ -216,9 +223,15 @@ class PembayaranController extends Controller
         $pembayaran->nominal = $request->nominal;
         $pembayaran->jenis = $request->type;
         if($pembayaran->update()){
-            return redirect()->back()->with('success', 'Berhasil Melakukan Pembayaran untuk Retribusi !');
+            $pegawai = Pegawai::whereIn('id_desa_adat', $pembayaran->retribusi->map->properti->map->id_desa_adat)->orWhereIn('id_desa_adat', $pembayaran->pengangkutan->map->id_desa_adat)->get();
+            // dd($properti->id_jenis);
+            // $properti->toArray();
+            foreach($pegawai as $p){
+                $p->notify(new PembayaranNotif($pembayaran, "update"));
+            }
+            return redirect()->back()->with('success', 'Berhasil Melakukan perubahan pada pembayaran !');
         }else{
-            return redirect()->back()->with('error', 'Pembayaran Gagal untuk Dilakukan !');
+            return redirect()->back()->with('error', 'Perubahan Pembayaran Gagal untuk Dilakukan !');
         }
 
     }
@@ -286,6 +299,12 @@ class PembayaranController extends Controller
                     $pembayaran->retribusi()->attach($retribusi);
                     $info['stat'] = "success";
                     $info['desc'] = "Item retribusi berhasil masuk ke dalam pembayaran !";
+                    $pegawai = Pegawai::whereIn('id_desa_adat', $retribusi->properti->id_desa_adat)->get();
+                    // dd($properti->id_jenis);
+                    // $properti->toArray();
+                    foreach($pegawai as $p){
+                        $p->notify(new PembayaranNotif($pembayaran, "itemAdd"));
+                    }
                     return response()->json($info, 200);
                 }
             }elseif($detail[1] == "pengangkutan"){
@@ -299,6 +318,12 @@ class PembayaranController extends Controller
                     $pembayaran->pengangkutan()->attach($pengangkutan);
                     $info['stat'] = "success";
                     $info['desc'] = "Item Request Pengangkutan berhasil masuk ke dalam pembayaran !";
+                    $pegawai = Pegawai::whereIn('id_desa_adat', $pengangkutan->id_desa_adat)->get();
+                    // dd($properti->id_jenis);
+                    // $properti->toArray();
+                    foreach($pegawai as $p){
+                        $p->notify(new PembayaranNotif($pembayaran, "itemAdd"));
+                    }
                     return response()->json($info, 200);
                 }
             }
@@ -318,6 +343,12 @@ class PembayaranController extends Controller
             DetailPembayaran::where('model_id', $id[0])->where('model_type', "App\\".$id[1])->forceDelete();
             $info['stat'] = "success";
             $info['desc'] = "Item berhasil dihapus dari pembayaran !";
+            $pegawai = Pegawai::whereIn('id_desa_adat', $detail->model->id_desa_adat)->orWhereIn('id_desa_adat', $detail->model->properti->id_desa_ada)->get();
+            // dd($properti->id_jenis);
+            // $properti->toArray();
+            foreach($pegawai as $p){
+                $p->notify(new PembayaranNotif($detailPembayaran->pembayaran, "itemDelete"));
+            }
             return response()->json($info, 200);
         }else{
             $info['stat'] = "error";
