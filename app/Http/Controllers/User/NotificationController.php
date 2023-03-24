@@ -21,6 +21,8 @@ class NotificationController extends Controller
     public function propertiRedirect($id){
         $notif = auth()->guard('web')->user()->unreadNotifications->where('id', $id)->first();
         // dd($notif);
+        $notif->read_at = date('Y-m-d H:i:s');
+        $notif->update();
         if($notif->data["type"] == "create"){
             return redirect()->route('properti-edit', $notif->data["item_id"]);
         }elseif($notif->data["type"] == "update"){
@@ -33,6 +35,8 @@ class NotificationController extends Controller
     public function retribusiRedirect($id){
         $notif = auth()->guard('web')->user()->unreadNotifications->where('id', $id)->first();
         // dd($notif);
+        $notif->read_at = date('Y-m-d H:i:s');
+        $notif->update();
         if($notif->data["type"] == "create"){
             return redirect()->route('retribusi-index');
         }
@@ -41,6 +45,8 @@ class NotificationController extends Controller
     public function requestRedirect($id){
         $notif = auth()->guard('web')->user()->unreadNotifications->where('id', $id)->first();
         // dd($notif);
+        $notif->read_at = date('Y-m-d H:i:s');
+        $notif->update();
         if($notif->data["type"] == "create"){
             return redirect()->route('request-edit', $notif->data["item_id"]);
         }elseif($notif->data["type"] == "update"){
@@ -57,6 +63,8 @@ class NotificationController extends Controller
     public function PembayaranRedirect($id){
         $notif = auth()->guard('web')->user()->unreadNotifications->where('id', $id)->first();
         // dd($notif);
+        $notif->read_at = date('Y-m-d H:i:s');
+        $notif->update();
         if($notif->data["type"] == "create"){
             return redirect()->route('pembayaran-index');
         }elseif($notif->data["type"] == "update"){
