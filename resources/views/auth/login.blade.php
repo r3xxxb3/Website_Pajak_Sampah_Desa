@@ -35,9 +35,9 @@
                         </a>
                     </div>
                     </div>
-                    <input aria-describedby="passwordHelpBlock" id="password" type="password" placeholder="Masukan Password" class="form-control{{ $errors->has('password') ? ' is-invalid': '' }}" name="password" tabindex="2">
+                    <input aria-describedby="passwordHelpBlock" id="password" type="password" placeholder="Masukan Password" class="form-control{{ $errors->login->has('password') ? ' is-invalid': '' }}" name="password" tabindex="2">
                     <div class="invalid-feedback">
-                            {{ $errors->first('password') }}
+                            {{ $errors->login->first('password') }}
                     </div>
                     <!-- @if(App::environment('demo'))
                     <small id="passwordHelpBlock" class="form-text text-muted">

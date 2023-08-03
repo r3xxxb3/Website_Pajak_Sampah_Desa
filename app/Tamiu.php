@@ -10,7 +10,7 @@ class Tamiu extends Model
     protected $table = "tb_cacah_tamiu";
 
     public function banjarAdat(){
-        return $this->belongsTo(BanjarAdat::class, 'id', 'banjar_adat_id');
+        return $this->belongsTo(BanjarAdat::class, 'banjar_adat_id', 'id');
     }
 
     public function desaAdat(){

@@ -81,6 +81,10 @@ Pembayaran
 
     $(document).ready( function () {
         
+        @if($pembayaran->bukti_bayar != null)
+        $('')
+        @endif
+        
         $('.cari').on('click', function(e){
             var desa = $('#desa').val();
             var jenis = $('#jenisItem').val();
@@ -98,12 +102,12 @@ Pembayaran
                                 
                     },
                     success : (res) => {
-                        console.log(res);
+                        // console.log(res);
                         tableItem.clear();
                         jQuery.each(res, function(i, val){
                                 jQuery.each(val, function(i, nilai){
                                     if(nilai.id_properti != null){
-                                        console.log(nilai);
+                                        // console.log(nilai);
                                         tableItem.row.add([
                                             nilai.properti.nama_properti,
                                             "Retribusi",
@@ -112,7 +116,7 @@ Pembayaran
                                             `<a class="btn btn-success btn-sm text-white col mb-1 tambah" id="`+nilai.id+"-retribusi"+`"><i class="fas fa-plus"></i> Tambah</a>`
                                         ]);
                                     }else{
-                                        console.log("false");
+                                        // console.log("false");
                                         tableItem.row.add([
                                             "Pengangkutan ("+nilai.alamat+")",
                                             "Pengangkutan",
@@ -131,9 +135,9 @@ Pembayaran
         $('table').on('click', '.tambah' ,function(e){
             if(confirm("Apakah Anda Yakin Ingin menambah item ke dalam Pembayaran ?") == true){
                 var pembayaran = <?php echo $pembayaran->id_pembayaran ?>;
-                console.log(pembayaran);
+                // console.log(pembayaran);
                 var id = $(this).attr("id");
-                console.log(id);
+                // console.log(id);
                 e.preventDefault();
                 $.ajax({
                     method : 'POST',
@@ -151,7 +155,7 @@ Pembayaran
                                 .row( $(this).parents('tr') )
                                 .remove()
                                 .draw();
-                        console.log(res);
+                        // console.log(res);
                         refreshItem();
                     }
                 });
@@ -165,19 +169,19 @@ Pembayaran
                 var detail = $(this).attr("id");
                 var id = detail.split(",");
                 var pkO = $("#id").val().split(",");
-                console.log(pkO);
+                // console.log(pkO);
                 if(pkO.length > 1 ){
                     $.each(pkO, function(i,val){
                         if(id == val){
                             pkO.splice(i, 1);
-                            console.log(pkO +" "+i);
+                            // console.log(pkO +" "+i);
                         }
                     });
                 }else{
                     $.each(pkO, function(i,val){
                         if(id == val){
                             pkO.splice(i, 1);
-                            console.log(pkO +" "+i);
+                            // console.log(pkO +" "+i);
                         }
                     });
                 }
@@ -194,11 +198,11 @@ Pembayaran
                                 
                     },
                     success : (res) => {
-                        console.log(res);
+                        // console.log(res);
                         if (res.stat == "success" || res.desc == "Retribusi sudah dihapus dari keranjang !") {
                             // $('.batal#'+id).hide();
                             // $('.batal#'+id).attr('disabled');
-                            console.log("true");
+                            // console.log("true");
                             table
                                 .row( $(this).parents('tr') )
                                 .remove()
@@ -258,7 +262,7 @@ Pembayaran
     }
 
     function checkButton(pembayaran, m){
-        if(pembayaran.status != "terverifikasi"){
+        if(pembayaran.status != "lunas"){
             if(m.properti != undefined){
                 return `<a class="btn btn-danger btn-sm text-white batal" id="`+m.id+"-"+`retribusi"><i class="fas fa-times"></i> Hapus</a>`;
             }else{
@@ -289,16 +293,18 @@ Pembayaran
                         var link = [];
                         var pk = [];
                         var loop = 0;
+                        var total = 0;
                         console.log(res);
                         table.clear()
                         jQuery.each(res, function(i, val){
                             jQuery.each(val, function(a, nilai){
                                 console.log(nilai.id_properti);
+                                total += nilai.nominal;
                                 if(nilai.id_properti != null){
                                     table.row.add([
                                         nilai.properti.nama_properti,
-                                        nilai.jasa.jenis_jasa,
-                                        nilai.nominal,
+                                        nilai.jasa,
+                                        nilai.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}),
                                         nilai.tanggal,
                                         checkStatus(nilai.status),
                                         checkButton(<?php echo $pembayaran?>, nilai)
@@ -310,7 +316,7 @@ Pembayaran
                                     table.row.add([
                                         nilai.alamat,
                                         "Request Pengangkutan Sampah",
-                                        nilai.nominal,
+                                        nilai.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}),
                                         nilai.tanggal,
                                         checkStatus(nilai.status),
                                         checkButton(<?php echo $pembayaran?>, nilai)
@@ -322,6 +328,8 @@ Pembayaran
                                 }
                             });
                         });
+                        console.log(total);
+                        $(".total").html("Total : "+total.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}));
                         $("#id").val(pk);
                         table.draw();
                     }
@@ -341,10 +349,9 @@ Pembayaran
     }
 
 
-
     $("#file-multi").change(function() {
         readURLDetail(this);
-        console.log("true");
+        // console.log("true");
     });
 </script>
 @endsection
@@ -381,7 +388,7 @@ Pembayaran
                 <div class="form-group card-header shadow">
                     <h5 class="font-weight-bold text-primary"><i class="fas fa-list"></i> List Retribusi & Request</h5>
                     <div class="col" align="end">
-                        @if($pembayaran->status != "terverifikasi")
+                        @if($pembayaran->status != "lunas")
                         <a class="btn btn-warning btn-sm text-white" data-toggle="modal" data-target="#modal-ubah" ><i class="fas fa-edit"></i> Ubah</a>
                         @endif
                     </div>
@@ -415,11 +422,15 @@ Pembayaran
                                                 @elseif($m->status == "lunas")
                                                     <span class="badge badge-success">{{$m->status}}</span>
                                                 @elseif($m->status == "Selesai")
-                                                <span class="badge badge-warning">pending</span>
+                                                    @if($pembayaran->status == "lunas")
+                                                        <span class="badge badge-success">lunas</span>
+                                                    @else
+                                                        <span class="badge badge-warning">pending</span>
+                                                    @endif
                                                 @endif
                                             </td>
                                             <td>
-                                                @if($pembayaran->status != "terverifikasi")
+                                                @if($pembayaran->status != "lunas")
                                                     @if(isset($m->properti))
                                                     <a class="btn btn-danger btn-sm text-white batal" id="{{$m->id.'-'}}retribusi"><i class="fas fa-times"></i> Hapus</a>
                                                     @else
@@ -429,7 +440,7 @@ Pembayaran
                                                     @if(isset($m->properti))
                                                     <a class="btn btn-danger btn-sm text-white lihat" href="{{Route('properti-edit', $m->properti->id)}}" id="" ><i class="fas fa-eye"></i> Lihat Properti</a>
                                                     @else
-                                                    <a class="btn btn-danger btn-sm text-white lihat" href="{{Route('pengangkutan-edit', $m->id)}}" id="" ><i class="fas fa-eye"></i> Lihat Pengangkutan</a>
+                                                    <a class="btn btn-danger btn-sm text-white lihat" href="{{Route('request-edit', $m->id)}}" id="" ><i class="fas fa-eye"></i> Lihat Pengangkutan</a>
                                                     @endif
                                                 @endif
                                             </td>
@@ -469,7 +480,7 @@ Pembayaran
                                 <div class="d-flex justify-content-center">
                                     <img src="{{isset($pembayaran->bukti_bayar) ? asset('assets/img/bukti_bayar/'.$pembayaran->bukti_bayar) : asset('assets/img/properti/blank.png') }}"  height="300px" style="object-fit:cover" class="mb-3" id="prop">
                                 </div>
-                                <input type="file" class="form-control @error('file') is-invalid @enderror" id="file-multi" name="file" accept="image/png, image/jpeg, image/jpg" placeholder="File/Foto Bukti bayar" {{$pembayaran->status == "terverifikasi" ? disabled : ''}}>
+                                <input type="file" class="form-control @error('file') is-invalid @enderror" id="file-multi" name="file" accept="image/png, image/jpeg, image/jpg" placeholder="File/Foto Bukti bayar" {{$pembayaran->status == "lunas" ? 'disabled' : ''}}>
                                     @error('file')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -480,7 +491,7 @@ Pembayaran
                         <div class="row">
                             <div class="col mb-2">
                             <label for="media" class="font-weight-bold text-dark">Media Pembayaran</label>
-                                <select class="form-control @error('media') is-invalid @enderror" id="media-multi" name="media" {{$pembayaran->status == "terverifikasi" ? disabled : ''}}>
+                                <select class="form-control @error('media') is-invalid @enderror" id="media-multi" name="media" {{$pembayaran->status == "lunas" ? 'disabled' : ''}}>
                                 <option value="" {{$pembayaran->media == null ? 'selected' : '' }}>Pilih media Pembayaran</option>
                                     <option value="transfer" {{$pembayaran->media == "transfer" ? 'selected' : '' }}>transfer</option>
                                     <option value="cash" {{$pembayaran->media == "cash" ? 'selected' : ''}}>cash</option>
@@ -493,7 +504,7 @@ Pembayaran
                             </div>
                             <div class="col mb-2">
                             <label for="nominal-multi" class="font-weight-bold text-dark">Konfirmasi Nominal Bayar</label>
-                                <input type="number" class="form-control @error('nominal') is-invalid @enderror" id="nominal-multi" name="nominal" placeholder="Inputkan total yang diperlihatkan !" value="{{isset($pembayaran->nominal) ? $pembayaran->nominal : old('nominal')}}" {{$pembayaran->status == "terverifikasi" ? disabled : ''}}>
+                                <input type="number" class="form-control @error('nominal') is-invalid @enderror" id="nominal-multi" name="nominal" placeholder="Inputkan total yang diperlihatkan !" value="{{isset($pembayaran->nominal) ? $pembayaran->nominal : old('nominal')}}" {{$pembayaran->status == "lunas" ? 'disabled' : ''}}>
                                     @error('nominal')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -503,12 +514,17 @@ Pembayaran
                         </div>
                         <div class="row mt-5">
                             <div class="col" style="vertical-align: middle; text-align: left;">
-                                <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Data Pembayaran Sudah Benar?')"><i class="fas fa-save"></i> Ubah</button>
+                                @if($pembayaran->status != 'lunas' || $pembayaran->status != 'batal')
+                                    <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Data Pembayaran Sudah Benar?')"><i class="fas fa-save"></i> Ubah</button>
+                                    <a class="btn btn-danger text-white" href="{{route('pembayaran-index')}}"><i class="fas fa-arrow-left"></i> Kembali</a>
+                                @else
+                                    <a class="btn btn-danger text-white" href="{{route('pembayaran-index')}}"><i class="fas fa-arrow-left"></i> Kembali</a>
+                                @endif
                                 <!-- <a class="btn btn-danger text-white"><i class="fas fa-times"></i> Batal</a> -->
                             </div>
                             <div class="col" style="vertical-align: middle; text-align: end;">
-                                @if($pembayaran != "terverifikasi")
-                                    <h1 class="total">Total : Rp {{isset($pembayaran->nominal) ? number_format($pembayaran->nominal ?? 0, 2, ',','.') : old('nominal')}}</h1>
+                                @if($pembayaran != "lunas")
+                                    <h1 class="total">Total : Rp {{number_format($total ?? 0, 2, ',','.')}}</h1>
                                 @endif
                             </div>
                         </div>

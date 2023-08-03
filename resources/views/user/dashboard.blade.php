@@ -73,7 +73,7 @@ Dashboard User
           </div>
           <div class="col retribusi" onClick="window.location='{{route('retribusi-index')}}';">
             <div class="card card-statistic-2" >
-            <div class="card-icon shadow-primary bg-primary">
+            <div class="card-icon shadow-primary bg-warning">
                       <i class="fas fa-receipt"></i>
                   </div>
                   <div class="card-wrap">
@@ -88,7 +88,7 @@ Dashboard User
           </div>
           <div class="col request" onClick="window.location='{{route('request-index')}}';">
               <div class="card card-statistic-2">
-                <div class="card-icon shadow-primary bg-primary">
+                <div class="card-icon shadow-primary bg-warning">
                   <i class="fas fa-truck"></i>
                 </div>
                   <div class="card-wrap">
@@ -103,7 +103,7 @@ Dashboard User
           </div>
           <div class="col pembayaran" onClick="window.location='{{route('pembayaran-index')}}';">
             <div class="card card-statistic-2">
-            <div class="card-icon shadow-primary bg-primary">
+            <div class="card-icon shadow-primary bg-warning">
                   <i class="fas fa-money-check-alt"></i>
                   </div>
                   <div class="card-wrap">

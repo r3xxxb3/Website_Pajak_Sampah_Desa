@@ -10,6 +10,8 @@ use App\Retribusi;
 use App\BanjarAdat;
 use App\DesaAdat;
 use App\KramaMipil;
+use App\KramaTamiu;
+use App\Tamiu;
 use App\Pelanggan;
 use App\Pegawai;
 use App\Pembayaran;
@@ -110,15 +112,21 @@ class TelegramBotController extends Controller
                             $reply = $messages[1];
                             $banjarAdat = BanjarAdat::where('desa_adat_id', $pegawai->id_desa_adat)->get();
                             $mipil = KramaMipil::whereIn('banjar_adat_id', $banjarAdat->map->id)->get();
-                            $penduduk = Kependudukan::whereIn('id', $mipil->map->penduduk_id)->get();
+                            $ktamiu = KramaTamiu::whereIn('banjar_adat_id', $banjarAdat->map->id)->get();
+                            $tamiu = Tamiu::whereIn('banjar_adat_id', $banjarAdat->map->id)->get();
+                            $penduduk = Kependudukan::whereIn('id', $mipil->map->penduduk_id)->orWhereIn('id', $ktamiu)->orWhereIn('id', $tamiu->map->penduduk_id)->get();
                             $pelanggan = Pelanggan::whereIn('id_penduduk', $penduduk->map->id)->where('chat_id', '!=', 'null')->get();
                             // dd($pelanggan);
                             foreach($pelanggan as $p){
-                                return Telegram::sendMessage([
+                                Telegram::sendMessage([
                                     'chat_id' =>$p->chat_id,
                                     'text' => $reply
                                 ]);
                             }
+                            return Telegram::sendMessage([
+                                    'chat_id' =>$pegawai->chat_id,
+                                    'text' => "Berhasil mengirimkan pengumuman !"
+                                ]);
                         }else{
                             $reply = "Tidak dapat melakukan pengumuman jika isi pengumuman kosong !";
                             return Telegram::sendMessage([

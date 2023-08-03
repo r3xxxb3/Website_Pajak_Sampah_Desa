@@ -14,15 +14,15 @@ class Retribusi extends Model
     protected $fillable = ['id_pelanggan', 'id_properti', 'status', 'nominal'];
 
     public function properti(){
-        return $this->belongsTo(Properti::class, 'id_properti', 'id');
+        return $this->belongsTo(Properti::class, 'id_properti', 'id')->withTrashed();
     }
 
     public function pelanggan(){
-        return $this->belongsTo(Pelanggan::class, 'id_pelanggan', 'id');
+        return $this->belongsTo(Pelanggan::class, 'id_pelanggan', 'id')->withTrashed();
     }
 
     public function Dpembayaran() {
-        return $this->morphMany(DetailPembayaran::Class, 'model');
+        return $this->morphMany(DetailPembayaran::Class, 'model')->withTrashed();
     }
 
     // public function pembayaran(){
@@ -30,7 +30,7 @@ class Retribusi extends Model
     // }
 
     public function pembayaran() {
-        return $this->morphToMany(Pembayaran::class, 'detail', 'tb_detail_pembayaran');
+        return $this->morphToMany(Pembayaran::class, 'detail', 'tb_detail_pembayaran')->withTrashed();
     }
 
     public function keranjang(){

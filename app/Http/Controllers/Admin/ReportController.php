@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Pelanggan;
 use App\Retribusi;
 use App\Pengangkutan;
-use App\properti;
+use App\Properti;
 use App\Pembayaran;
 use App\DetailPembayaran;
 use App\DesaAdat;
@@ -37,7 +37,7 @@ class ReportController extends Controller
             $rateRetri += $kr[0]->rate;
         }
         $retribusi->totalRate = $kepuasanRetribusi->count();
-        $retribusi->rate = $rateRetri / $kepuasanRetribusi->count();
+        $retribusi->rate = $rateRetri / ($kepuasanRetribusi->count() > 0 ? $kepuasanRetribusi->count() : 1);
         // dd($retribusi->rate);
         
 
@@ -161,7 +161,7 @@ class ReportController extends Controller
         }
         $rRate = [];
         $retribusi->totalRate = $kepuasanRetribusi->count();
-        $retribusi->rate = round($rateRetri / $kepuasanRetribusi->count(), 1);
+        $retribusi->rate = round($rateRetri / ($kepuasanRetribusi->count() > 0 ? $kepuasanRetribusi->count() : 1), 1);
         array_push($rRate, $retribusi->rate);
         array_push($rRate, $retribusi->totalRate);
 

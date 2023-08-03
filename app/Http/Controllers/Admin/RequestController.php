@@ -31,7 +31,6 @@ class RequestController extends Controller
         })->orWhereHas('pengangkutan', function(Builder $query) use ($desaAdat){
             $query->where('id_desa_adat', $desaAdat);
         })->get();
-        $desaAdat = DesaAdat::all();
         return view('admin.request.create', compact('desaAdat', 'pelanggan'));
     }
 
@@ -91,12 +90,71 @@ class RequestController extends Controller
 
     public function edit($id){
         $requestP = Pengangkutan::where('id', $id)->first();
-        $desaAdat = DesaAdat::all();
-        return view('admin.request.edit', compact('requestP', 'desaAdat'));
+        $desaAdat = auth()->guard('admin')->user()->id_desa_adat;
+        $pelanggan = Pelanggan::whereHas('properti', function(Builder $query) use ($desaAdat){
+            $query->where('id_desa_adat', $desaAdat);
+        })->orWhereHas('pengangkutan', function(Builder $query) use ($desaAdat){
+            $query->where('id_desa_adat', $desaAdat);
+        })->get();
+        return view('admin.request.edit', compact('requestP', 'pelanggan'));
     }
 
     public function update(Request $request, $id){
+        
+        $messages = [
+            'required' => 'Kolom :attribute Wajib Diisi!',
+            'unique' => 'Kolom :attribute Tidak Boleh Sama!',
+            'max' => 'Ukuran File tidak boleh melebihi 5 MB',
+            'numeric' => 'Kolom :attribute Hanya  Menerima Inputan Angka  !'
+		];
 
+        // dd($request->id);
+        // dd($request->file);
+        // dd($request->media);
+        // dd($request->nominal);
+        
+        $this->validate($request, [
+            'file' => 'max:5120',
+            'pelanggan' => 'required',
+            'lat' => 'required',
+            'lng' => 'required',
+            'alamat' => 'required',
+        ],$messages);
+        
+
+        $pelanggan = Pelanggan::where('id', $request->pelanggan)->first();
+        if(!isset($pelanggan)){
+            return redirect()->back()->with('error', "Pelanggan tidak ditemukan !");
+        }
+
+        $requestP = Pengangkutan::where('id', $id)->first();
+        if(isset($requestP)){
+            if($request->file('file')){
+                //simpan file
+                
+                $file = $request->file('file');
+                $images = $pelanggan->kependudukan->nik."_".$file->getClientOriginalName();
+                // dd($images);
+                $requestP->file = $images;
+                $foto_upload = 'assets/img/request_p';
+                $file->move($foto_upload,$images);
+            }
+            $requestP->id_pelanggan = $pelanggan->id;
+            $requestP->lat = $request->lat;
+            $requestP->lng = $request->lng;
+            $requestP->id_desa_adat = auth()->guard('admin')->user()->id_desa_adat;
+            $requestP->alamat = $request->alamat;
+            $requestP->status = "Pending";
+            if($requestP->update()){
+                $pelanggan->notify(new PengangkutanNotif($requestP, "update"));
+                return redirect()->route('admin-request-index')->with('success', 'Berhasil mengubah request pengangkutan !');
+            }else{
+                return redirect()->back()->with('error', 'Gagal mengubah request pengangkutan !');
+            }
+        }else{
+            return redirect()->back()->with('error', 'Data request pengangkutan tidak ditemukan !');
+        }
+        
     }
 
     public function verif(Request $request){
@@ -108,6 +166,15 @@ class RequestController extends Controller
                 return redirect()->back()->with('error', "Lakukan Konfirmasi request pengangkutan terlebih dahulu !");
             }elseif($requestP->status == "Terkonfirmasi"){
                 if($request->nominal != 0){
+                    if($request->file('bukti')){
+                        //simpan file
+                        $file = $request->file('bukti');
+                        $images = "proof-".$requestP->id.auth()->guard('admin')->user()->id_pegawai."_".$file->getClientOriginalName();
+                        // dd($images);
+                        $requestP->proof_image = $images;
+                        $foto_upload = 'assets/img/request_p/bukti';
+                        $file->move($foto_upload,$images);
+                    }
                     $requestP->nominal = $request->nominal;
                     $requestP->status = "Selesai";
                     if($requestP->update()){

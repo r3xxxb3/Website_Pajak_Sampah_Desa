@@ -139,9 +139,12 @@ Report
                 $('#retri-'+i).addClass('text-warning');
             }else{
                 if( i == parseInt(decimal[0]) + 1){
-                    console.log($('.partitionRetribusi:after'));
-                    $('#retri-'+i).addClass('partitionRetribusi');
-                    $(":root").css("--0-retribusi", decimal[1]+"0%");
+                    console.log(decimal[0], decimal[1]);
+                    if(decimal[1] != undefined){
+                        console.log($('.partitionRetribusi:after'));
+                        $('#retri-'+i).addClass('partitionRetribusi');
+                        $(":root").css("--0-retribusi", decimal[1]+"0%");
+                    }
                 }
             }
         }
@@ -161,9 +164,12 @@ Report
                 $('#peng-'+i).addClass('text-warning');
             }else{
                 if (i == parseInt(decimal[0]) + 1){
-                    console.log($('.partitionPengangkutan:after'));
-                    $('#peng-'+i).addClass('partitionPengangkutan');
-                    $(":root").css("--0-pengangkutan", decimal[1]+"0%");
+                    console.log(decimal[0], decimal[1]);
+                    if(decimal[1] != undefined){
+                        console.log($('.partitionPengangkutan:after'));
+                        $('#peng-'+i).addClass('partitionPengangkutan');
+                        $(":root").css("--0-pengangkutan", decimal[1]+"0%");
+                    }
                 }
             }
         }

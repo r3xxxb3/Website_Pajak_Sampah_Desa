@@ -21,7 +21,7 @@ class NotificationController extends Controller
     public function propertiRedirect($id){
         $notif = auth()->guard('admin')->user()->unreadNotifications->where('id', $id)->first();
         // dd(date('Y-m-d H:i:s'));
-        $notif->read_at = date('Y-m-d H:i:s');
+        $notif->read_at = now();
         $notif->update();
         // dd($notif);
         if($notif->data["type"] == "create"){
@@ -47,7 +47,7 @@ class NotificationController extends Controller
 
     public function requestRedirect($id){
         $notif = auth()->guard('admin')->user()->unreadNotifications->where('id', $id)->first();
-        $notif->read_at = date('Y-m-d H:i:s');
+        $notif->read_at = now();
         $notif->update();
         // dd($notif);
         if($notif->data["type"] == "create"){
@@ -61,7 +61,8 @@ class NotificationController extends Controller
 
     public function PembayaranRedirect($id){
         $notif = auth()->guard('admin')->user()->unreadNotifications->where('id', $id)->first();
-        $notif->read_at = date('Y-m-d H:i:s');
+        // dd($notif);
+        $notif->read_at = now();
         $notif->update();
         // dd($notif);
         if($notif->data["type"] == "create"){
@@ -69,6 +70,8 @@ class NotificationController extends Controller
         }elseif($notif->data["type"] == "update"){
             return redirect()->route('admin-pembayaran-edit', $notif->data["item_id"]);
         }elseif($notif->data["type"] == "cancel"){
+            return redirect()->route('admin-pembayaran-edit', $notif->data["item_id"]);
+        }else{
             return redirect()->route('admin-pembayaran-edit', $notif->data["item_id"]);
         }
     }

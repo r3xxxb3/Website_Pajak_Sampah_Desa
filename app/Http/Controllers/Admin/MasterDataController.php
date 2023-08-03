@@ -8,10 +8,12 @@ use App\Kota;
 use App\Kecamatan;
 use App\Desa;
 use App\Jadwal;
+use App\DetailJadwal;
 use App\StandarRetribusi;
 use App\JenisSampah;
 use App\JenisJasa;
 use App\Role;
+use App\Pegawai;
 use Auth;
 
 
@@ -212,10 +214,13 @@ class MasterDataController extends Controller
     public function editJadwal ($id)
     {
         $jadwal = Jadwal::where('id_jadwal', $id)->first();
+        $detailJadwal = DetailJadwal::where('id_jadwal', $jadwal->id_jadwal)->get();
         $jenis = JenisSampah::all();
+        $list = Pegawai::where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->whereNotIn('id_pegawai',$detailJadwal->map->id_pegawai)->get();
+        $index = Pegawai::whereIn('id_pegawai', $detailJadwal->map->id_pegawai)->with('kependudukan')->get();
 
         if($jadwal != [] ){
-            return view('admin.master-data.jadwal.edit', compact('jadwal', 'jenis'));
+            return view('admin.master-data.jadwal.edit', compact('jadwal', 'jenis', 'index', 'list'));
         }else{
             return redirect()->route('masterdata-jadwal-index')->with('error', 'Data Jadwal Tidak Ditemukan !');
         }
@@ -240,7 +245,7 @@ class MasterDataController extends Controller
             $jadwal->selesai = $request->selesai;
             $jadwal->hari = $request->hari;
             $jadwal->save();
-            return redirect()->route('masterdata-jadwal-index')->with('success','Berhasil Menambah Data Jadwal Pengangkutan !');
+            return redirect()->route('masterdata-jadwal-index')->with('success','Berhasil Mengubah Data Jadwal Pengangkutan !');
         }else{
             return redirect()->back()->with('error', 'Data Jadwal Tidak Ditemukan !');
         }
@@ -256,10 +261,48 @@ class MasterDataController extends Controller
             return redirect()->route('masterdata-jadwal-index')->with('error', 'Berhasil Menghapus Data Jadwal Pengangkutan !');
         }   
     }
+    
+    public function detailJadwalTambah (Request $request)
+    {
+        $jadwal = Jadwal::where('id_jadwal', $request->jadwal)->first();
+        $pegawai = Pegawai::where('id_pegawai', $request->pId)->first();
+        if(($jadwal != null) || (!isset($pegawai))){
+            $detail = new DetailJadwal;
+            $detail->id_jadwal = $request->jadwal;
+            $detail->id_pegawai = $request->pId;
+            $detail->save();
+            $status = "success";
+            $detailJadwal = DetailJadwal::where('id_jadwal', $jadwal->id_jadwal)->get();
+            $allPeg = Pegawai::whereIn('id_pegawai', $detailJadwal->map->id_pegawai)->with('kependudukan')->get();
+            $avaPeg = Pegawai::whereNotIn('id_pegawai', $detailJadwal->map->id_pegawai)->where('id_pegawai', auth()->guard('admin')->user()->id_pegawai)->with('kependudukan')->get();
+            return response()->json([$status, $allPeg, $avaPeg] , 200);
+        }else{
+            $status = "error" ;
+            return response()->json([$status], 200);
+        }
+    }
+    
+    public function detailJadwalHapus (Request $request)
+    {
+        $jadwal = Jadwal::where('id_jadwal', $request->jadwal)->first();
+        $pegawai = Pegawai::where('id_pegawai', $request->pId)->first();
+        if(($jadwal != null) || (!isset($pegawai))){
+            $detail = DetailJadwal::where('id_jadwal', $jadwal->id_jadwal)->where('id_pegawai', $pegawai->id_pegawai)->first();
+            $detail->delete();
+            $status = "success";
+            $detailJadwal = DetailJadwal::where('id_jadwal', $jadwal->id_jadwal)->get();
+            $allPeg = Pegawai::whereIn('id_pegawai', $detailJadwal->map->id_pegawai)->with('kependudukan')->get();
+            $avaPeg = Pegawai::whereNotIn('id_pegawai', $detailJadwal->map->id_pegawai)->where('id_pegawai', auth()->guard('admin')->user()->id_pegawai)->with('kependudukan')->get();
+            return response()->json([$status, $allPeg, $avaPeg] , 200);
+        }else{
+            $status = "error" ;
+            return response()->json([$status], 200);
+        }
+    }
 
     public function indexRetribusi ()
     {
-        $index  =  StandarRetribusi::all();
+        $index  =  StandarRetribusi::where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->get();
         return view('admin.master-data.standar-retribusi.index', compact('index'));
     }
 
@@ -277,7 +320,6 @@ class MasterDataController extends Controller
 
         $this->validate($request, [
             'standar' => 'required',
-            // 'durasi' => 'required',
         ],$messages);
 
         $standar = new StandarRetribusi;
@@ -287,7 +329,8 @@ class MasterDataController extends Controller
         $standar->tanggal_berlaku = $request->mulai;
         $standar->id_desa_adat = auth()->guard('admin')->user()->id_desa_adat;
         $standar->tanggal_selesai = $request->selesai;
-        // $standar->durasi = $request->durasi;
+        $standar->durasi = $request->durasi;
+        $standar->max_pending = $request->pending;
         $standar->save();
         return redirect()->back()->with('success','Berhasil Menambah Data Standar Retribusi !');
     }
@@ -312,16 +355,16 @@ class MasterDataController extends Controller
 
         $this->validate($request, [
             'standar' => 'required',
-            'durasi' => 'required',
         ],$messages);
 
         $standar = StandarRetribusi::where('id', $id)->first();
         // dd($standar);
         if($standar != []){
             $standar->nominal_retribusi = $request->standar;
-            $standar->durasi = $request->durasi;
             $standar->tanggal_berlaku = $request->mulai;
             $standar->tanggal_selesai = $request->selesai;
+            $standar->durasi = $request->durasi;
+            $standar->max_pending = $request->pending;
             $standar->update();
             return redirect()->back()->with('success-1','Berhasil Mengubah Data Standar Retribusi !');
         }else{
@@ -343,14 +386,14 @@ class MasterDataController extends Controller
 
     public function statusRetribusi ($id, $status){
         $statusRetribusi = StandarRetribusi::where('id', $id)->first();
-        $stats = StandarRetribusi::where('id_jenis_jasa', $statusRetribusi->id_jenis_jasa)->get();
+        // $stats = StandarRetribusi::where('id_jenis_jasa', $statusRetribusi->id_jenis_jasa)->get();
         // dd($stats);
-        if(isset($stats)){
-            foreach($stats as $s){
-                $s->active = '0';
-                $s->update();
-            }
-        }
+        // if(isset($stats)){
+        //     foreach($stats as $s){
+        //         $s->active = '0';
+        //         $s->update();
+        //     }
+        // }
         if($status == 'active'){
             $statusRetribusi->active = '1';
         }elseif($status = 'not-active'){
@@ -358,6 +401,22 @@ class MasterDataController extends Controller
         }
         $statusRetribusi->update();
         return response()->json(['sukses' => 'Status Standar Retribusi berhasil diganti']);
+    }
+    
+    public function standarSearch (Request $request)
+    {
+        // dd($request->desa." ".$request->jenis);
+        $jenis = JenisJasa::where('id', $request->jenis)->first();
+        if (isset($jenis)){
+            $standar = StandarRetribusi::where('id_jenis_jasa', $request->jenis)->where('id_desa_adat', $request->desa)->get();
+            if(!$standar->isEmpty()){
+                return response()->json(["success",$standar], 200);
+            }else{
+                return response()->json(["error", "Standar Retribusi tidak ditemukan !, Hubungi Admin"], 200);
+            }
+        }else{
+            return response()->json(["error", "Jenis Jasa Tidak Ditemukan !"], 200);
+        }
     }
 
 
@@ -417,7 +476,7 @@ class MasterDataController extends Controller
             $jenis->jenis_sampah = $request->jenis;
             $jenis->deskripsi = $request->deskripsi;
             $jenis->save();
-            return redirect()->route('masterdata-jenis-index')->with('success','Berhasil Menambah Data Jenis Sampah !');
+            return redirect()->route('masterdata-jenis-index')->with('success','Berhasil Mengubah Data Jenis Sampah !');
         }else{
             return redirect()->back()->with('error', 'Data Jenis Sampah Tidak Ditemukan !');
         }
@@ -456,7 +515,6 @@ class MasterDataController extends Controller
         $jenis = new JenisJasa;
         $jenis->jenis_jasa = $request->jenis;
         $jenis->deskripsi = $request->deskripsi;
-        $jenis->id_desa_adat = auth()->guard('admin')->user()->id_desa_adat;
         if($jenis->save()){
             return redirect()->route('masterdata-jenisjasa-index')->with('success','Berhasil Menambah Data Jenis Jasa !');    
         }else{
@@ -486,7 +544,6 @@ class MasterDataController extends Controller
         if($jenis != []){
             $jenis->jenis_jasa = $request->jenis;
             $jenis->deskripsi = $request->deskripsi;
-            $jenis->id_desa_adat = auth()->guard('admin')->user()->id_desa_adat;
             $jenis->save();
             return redirect()->route('masterdata-jenisjasa-index')->with('success', 'Berhasil Mengubah Data Jenis Jasa !');
         }else{

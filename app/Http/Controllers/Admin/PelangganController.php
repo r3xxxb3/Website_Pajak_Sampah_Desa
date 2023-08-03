@@ -16,6 +16,7 @@ use App\Kecamatan;
 use App\Banjar;
 use App\BanjarAdat;
 use App\JenisJasa;
+use App\StandarRetribusi;
 use App\KartuK;
 use App\Properti;
 use App\Provinsi;
@@ -28,52 +29,75 @@ class PelangganController extends Controller
 {
     //
     public function index(){
-        $checkKrama = KramaMipil::where('penduduk_id', auth()->guard('admin')->user()->kependudukan->id)->first();
-        if(!isset($checkKrama)){
-            $checkKrama = KramaTamiu::where('penduduk_id', auth()->guard('admin')->user()->kependudukan->id)->first();
-            if(!isset($checkKrama)){
-                $checkKrama = Tamiu::where('penduduk_id', auth()->guard('admin')->user()->kependudukan->id)->first();
-            }
-        }
-        $banjarAdat = BanjarAdat::where('id',$checkKrama->banjar_adat_id)->first();
-        if(isset($banjarAdat)){
-            $desaAdat = DesaAdat::where('id',$banjarAdat->desa_adat_id)->first();
-            $penduduk = [];
-            if(isset($desaAdat)){
-                foreach($desaAdat->banjarAdat as $loop=>$banjar){
-                    $data = KramaMipil::where('banjar_adat_id', $banjar->id)->get()->toArray();
-                    if(!empty($data)){
-                        foreach($data as $index=>$d){
-                            array_push($penduduk,$d['penduduk_id']);
-                            // dd($penduduk);
-                        }
-                    }
-                    $data = KramaTamiu::where('banjar_adat_id', $banjar->id)->get()->toArray();
-                    if(!empty($data)){
-                        foreach($data as $index=>$d){
-                            array_push($penduduk,$d['penduduk_id']);
-                            // dd($penduduk);
-                        }
-                    }
-                    $data = Tamiu::where('banjar_adat_id', $banjar->id)->get()->toArray();
-                    if(!empty($data)){
-                        foreach($data as $index=>$d){
-                            array_push($penduduk,$d['penduduk_id']);
-                            // dd($penduduk);
-                        }
-                    }
-                }
-                // dd($penduduk);
-                $index = Pelanggan::whereHas('properti', function (Builder $query){
-                    $query->where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat);
+        // $checkKrama = KramaMipil::where('penduduk_id', auth()->guard('admin')->user()->kependudukan->id)->first();
+        // if(!isset($checkKrama)){
+        //     $checkKrama = KramaTamiu::where('penduduk_id', auth()->guard('admin')->user()->kependudukan->id)->first();
+        //     if(!isset($checkKrama)){
+        //         $checkKrama = Tamiu::where('penduduk_id', auth()->guard('admin')->user()->kependudukan->id)->first();
+        //     }
+        // }
+        // $banjarAdat = BanjarAdat::where('id',$checkKrama->banjar_adat_id)->first();
+        // if(isset($banjarAdat)){
+        //     $desaAdat = DesaAdat::where('id',$banjarAdat->desa_adat_id)->first();
+        //     $penduduk = [];
+        //     if(isset($desaAdat)){
+        //         foreach($desaAdat->banjarAdat as $loop=>$banjar){
+        //             $data = KramaMipil::where('banjar_adat_id', $banjar->id)->get()->toArray();
+        //             if(!empty($data)){
+        //                 foreach($data as $index=>$d){
+        //                     array_push($penduduk,$d['penduduk_id']);
+        //                     // dd($penduduk);
+        //                 }
+        //             }
+        //             $data = KramaTamiu::where('banjar_adat_id', $banjar->id)->get()->toArray();
+        //             if(!empty($data)){
+        //                 foreach($data as $index=>$d){
+        //                     array_push($penduduk,$d['penduduk_id']);
+        //                     // dd($penduduk);
+        //                 }
+        //             }
+        //             $data = Tamiu::where('banjar_adat_id', $banjar->id)->get()->toArray();
+        //             if(!empty($data)){
+        //                 foreach($data as $index=>$d){
+        //                     array_push($penduduk,$d['penduduk_id']);
+        //                     // dd($penduduk);
+        //                 }
+        //             }
+        //         }
+        //         // dd($penduduk);
+        //         $index = Pelanggan::whereHas('properti', function (Builder $query){
+        //             $query->where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat);
+        //         })->get();
+        //         // dd($index);
+        //         return view('admin.pelanggan.index',compact('index'));
+        //     }else{
+        //         return view('admin.pelanggan.index')->with('error', "Desa Adat tidak ditemukan !");
+        //     }
+        // }else{
+        //     return view('admin.pelanggan.index')->with('error', "Banjar Adat tidak ditemukan !");
+        // }
+        // OLD QUERY
+        
+        // New optimized query
+        if(auth()->guard('admin')->user()->id_desa_adat != null){
+            $banjarAdat = BanjarAdat::where('desa_adat_id', auth()->guard('admin')->user()->id_desa_adat)->get();
+            if($banjarAdat != null){
+                $index = Pelanggan::whereHas('kependudukan', function(Builder $query) use ($banjarAdat) {
+                  $query->whereHas('mipil', function(Builder $query) use ($banjarAdat){
+                    $query->whereIn('banjar_adat_id', $banjarAdat->map->id);
+                  })->orWhereHas('ktamiu', function(Builder $query) use ($banjarAdat){
+                    $query->whereIn('banjar_adat_id', $banjarAdat->map->id);
+                  })->orWhereHas('tamiu', function(Builder $query) use ($banjarAdat){
+                    $query->whereIn('banjar_adat_id', $banjarAdat->map->desa_adat_id);
+                  });
                 })->get();
                 // dd($index);
                 return view('admin.pelanggan.index',compact('index'));
             }else{
-                return view('admin.pelanggan.index')->with('error', "Desa Adat tidak ditemukan !");
+                return view('admin.pelanggan.index')->with('error', "Banjar Adat tidak ditemukan !");
             }
         }else{
-            return view('admin.pelanggan.index')->with('error', "Banjar Adat tidak ditemukan !");
+            return view('admin.pelanggan.index')->with('error', "Desa Adat tidak ditemukan !");
         }
     }
 
@@ -197,8 +221,11 @@ class PelangganController extends Controller
             $desaAdat = DesaAdat::all();
             $banjarAdat = BanjarAdat::all();
             $pelanggan = Pelanggan::where('id', $val[0])->first();
-            $jenis = JenisJasa::all();
+            $jenis = JenisJasa::whereHas('standar', function(Builder $query) use ($desaAdmin){
+                $query->where('id_desa_adat', $desaAdmin);
+            })->get();
             $index = Properti::where('id_pelanggan', $pelanggan->id)->where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->get();
+            // $standar = StandarRetribusi::whereIn('id_jenis_jasa', $index->map->id_jenis)->get();
             if($pelanggan != null){
                 // dd(auth()->guard('admin')->user());
                 return view('admin.pelanggan.edit', compact('pelanggan', 'index', 'jenis', 'desaAdat', 'banjarAdat', 'focus'));
@@ -206,11 +233,17 @@ class PelangganController extends Controller
                 return redirect()->route('pelanggan-index')->with('error', 'Data Pelanggan Tidak Ditemukan !');
             }
         }else{
+            $desaAdmin = auth()->guard('admin')->user()->id_desa_adat;
             $desaAdat = DesaAdat::all();
             $banjarAdat = BanjarAdat::all();
             $pelanggan = Pelanggan::where('id', $id)->first();
-            $jenis = JenisJasa::all();
+            $jenis = JenisJasa::whereHas('standar', function(Builder $query) use ($desaAdmin){
+                $query->where('id_desa_adat', $desaAdmin);
+            })->get();
+            // dd($jenis);
             $index = Properti::where('id_pelanggan', $pelanggan->id)->where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->get();
+            // dd($index->map->jasa->map->standar);
+            // $standar = StandarRetribusi::whereIn('id_jenis_jasa', $index->map->id_jenis)->get();
             if($pelanggan != null){
                 // dd(auth()->guard('admin')->user());
                 return view('admin.pelanggan.edit', compact('pelanggan', 'index', 'jenis', 'desaAdat', 'banjarAdat'));
@@ -262,10 +295,12 @@ class PelangganController extends Controller
 		];
 
         $this->validate($request, [
-            'jenis' => 'required',
-            'nama' => 'required',
-            'alamat' => 'required',
+            'jenis_properti' => 'required',
+            'nama_properti' => 'required',
+            'desa' => 'required',
+            'alamat_properti' => 'required',
             'file' => 'max:5120',
+            'standar_properti' => 'required',
         ],$messages);
         
         $properti = new Properti;
@@ -286,14 +321,16 @@ class PelangganController extends Controller
             $file->move($foto_upload,$images);
         }
 
-        $properti->nama_properti = $request->nama;
-        $properti->alamat = $request->alamat;
-        $properti->id_jenis = $request->jenis;
+        $properti->nama_properti = $request->nama_properti;
+        $properti->id_desa_adat = $request->desa;
+        $properti->alamat = $request->alamat_properti;
+        $properti->id_jenis = $request->jenis_properti;
         $properti->lat = $request->lat;
         $properti->lng = $request->lng;
         $properti->status = "Pending";
         $properti->id_pelanggan = $pelanggan->id;
         $properti->jumlah_kamar = $request->kamar;
+        $properti->id_standar_retribusi = $request->standar_properti;
         
         if($properti->save()){
             $pelanggan->notify(new PropertiNotif($properti, "create"));
@@ -305,6 +342,20 @@ class PelangganController extends Controller
     }
 
     public function propertiUpdate($id, Request $request){
+        $messages = [
+            'required' => 'Kolom :attribute Wajib Diisi!',
+            'unique' => 'Kolom :attribute Tidak Boleh Sama!',
+            'max' => 'Ukuran File tidak boleh melebihi 5 MB',
+		];
+
+        $this->validate($request, [
+            'jenis_edit' => 'required',
+            'nama_edit' => 'required',
+            'alamat_edit' => 'required',
+            'file_edit' => 'max:5120',
+            'standar_edit' => 'required',
+        ],$messages);
+        
         $properti = Properti::where('id', $id)->first();
         $pelanggan = $properti->pelanggan;
         if(isset($properti)){
@@ -332,6 +383,7 @@ class PelangganController extends Controller
                 $properti->lat = $request->lat_edit;
                 $properti->lng = $request->lat_edit;
                 $properti->id_jenis = $request->jenis_edit;
+                $properti->id_standar_retribusi = $request->standar_edit;
                 $properti->note = "Admin Mengubah Jenis properti menjadi ".$jenis->jenis_jasa;
                 $properti->status = "Terverifikasi";
                 $pelanggan->notify(new PropertiNotif($properti, "update"));
@@ -340,6 +392,7 @@ class PelangganController extends Controller
             }else{
                 $properti->lat = $request->lat_edit;
                 $properti->lng = $request->lng_edit;
+                $properti->id_standar_retribusi = $request->standar_edit;
                 $properti->status = "Terverifikasi";
                 $properti->update();
                 return redirect()->back()->with('success', 'verifikasi Properti berhasil !');
@@ -352,7 +405,7 @@ class PelangganController extends Controller
         $properti = Properti::where('id', $id)->first();
         $pelanggan = $properti->pelanggan;
         if(isset($properti)){
-            $properti->status =  "Cancelled";
+            $properti->status =  "batal";
             $pelanggan->notify(new PropertiNotif($properti, "cancel"));
             $properti->update();
             return redirect()->back()->with('success-1', 'Pembatalan Properti berhasil !');
@@ -365,6 +418,9 @@ class PelangganController extends Controller
     public function propertiDelete($id){
         $properti = Properti::where('id', $id)->first();
         if(isset($properti)){
+            foreach($properti->retribusi as $retribusi){
+                $retribusi->delete();
+            }
             $properti->delete();
             return redirect()->back()->with('success-1', 'Penghapusan Properti berhasil !');
         }else{

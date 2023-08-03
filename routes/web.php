@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('home');
 });
 
 Route::get('/admin/login', 'Admin\AuthController@Login')->name('admin-login');
@@ -64,6 +64,8 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::get('/masterdata/jadwal/edit/{id}', 'Admin\MasterDataController@editJadwal')->name('masterdata-jadwal-edit');
     Route::post('/masterdata/jadwal/update/{id}', 'Admin\MasterDataController@updatejadwal')->name('masterdata-jadwal-update');
     Route::get('/masterdata/jadwal/delete/{id}', 'Admin\MasterDataController@deletejadwal')->name('masterdata-jadwal-delete');
+    Route::post('/masterdata/jadwal/detail/create', 'Admin\MasterDataController@detailJadwalTambah')->name('masterdata-detail-jadwal-create');
+    Route::post('/masterdata/jadwal/detail/delete', 'Admin\MasterDataController@detailJadwalHapus')->name('masterdata-detail-jadwal-delete');
 
     //manajemen data pegawai
     Route::get('/pegawai', 'Admin\PegawaiController@indexPegawai')->name('pegawai-index');
@@ -83,6 +85,7 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::post('/masterdata/retribusi/update/{id}', 'Admin\MasterDataController@updateRetribusi')->name('masterdata-retribusi-update');
     Route::get('/masterdata/retribusi/delete/{id}', 'Admin\MasterDataController@deleteRetribusi')->name('masterdata-retribusi-delete');
     Route::get('/masterdata/retribusi/{id}/{status}', 'Admin\MasterDataController@statusRetribusi')->name('masterdata-retribusi-status');
+    Route::post('/standar/search', 'Admin\MasterDataController@standarSearch')->name('standar-search');
 
     //Manajemen Jenis Jasa Retribusi
     Route::get('/masterdata/jenis-jasa', 'Admin\MasterDataController@indexJenisJasa')->name('masterdata-jenisjasa-index');
@@ -104,12 +107,12 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
 
 
     //Manajemen pelanggan
-    Route::get('/pelanggan', 'Admin\pelangganController@index')->name('pelanggan-index');
-    Route::get('/pelanggan/create', 'Admin\pelangganController@create')->name('pelanggan-create');
-    Route::get('/pelanggan/store/{id}', 'Admin\pelangganController@store')->name('pelanggan-store');
-    Route::get('/pelanggan/edit/{id}', 'Admin\pelangganController@edit')->name('pelanggan-edit');
-    Route::post('/pelanggan/update/{id}', 'Admin\pelangganController@update')->name('pelanggan-update');
-    Route::get('/pelanggan/delete/{id}', 'Admin\pelangganController@delete')->name('pelanggan-delete');
+    Route::get('/pelanggan', 'Admin\PelangganController@index')->name('pelanggan-index');
+    Route::get('/pelanggan/create', 'Admin\PelangganController@create')->name('pelanggan-create');
+    Route::get('/pelanggan/store/{id}', 'Admin\PelangganController@store')->name('pelanggan-store');
+    Route::get('/pelanggan/edit/{id}', 'Admin\PelangganController@edit')->name('pelanggan-edit');
+    Route::post('/pelanggan/update/{id}', 'Admin\PelangganController@update')->name('pelanggan-update');
+    Route::get('/pelanggan/delete/{id}', 'Admin\PelangganController@delete')->name('pelanggan-delete');
 
     //notification redirect
     Route::get('/notification/properti/{id}', 'Admin\NotificationController@propertiRedirect')->name('admin-properti-redirect');
@@ -118,14 +121,15 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::get('/notification/pembayaran/{id}', 'Admin\NotificationController@pembayaranRedirect')->name('admin-pembayaran-redirect');
 
     //Manajemen properti pelanggan
-    Route::post('/properti/store', 'Admin\pelangganController@propertiStore' )->name('admin-properti-store');
-    Route::post('/properti/update/{id}', 'Admin\pelangganController@propertiUpdate')->name('admin-properti-update');
-    Route::get('/properti/cancel/{id}', 'Admin\pelangganController@propertiCancel')->name('admin-properti-cancel');
-    Route::get('/properti/delete/{id}', 'Admin\pelangganController@propertiDelete')->name('admin-properti-delete');
-    Route::post('/banjar/search', 'Admin\pelangganController@banjarCheck')->name('banjar-search');
+    Route::post('/properti/store', 'Admin\PelangganController@propertiStore' )->name('admin-properti-store');
+    Route::post('/properti/update/{id}', 'Admin\PelangganController@propertiUpdate')->name('admin-properti-update');
+    Route::get('/properti/cancel/{id}', 'Admin\PelangganController@propertiCancel')->name('admin-properti-cancel');
+    Route::get('/properti/delete/{id}', 'Admin\PelangganController@propertiDelete')->name('admin-properti-delete');
+    Route::post('/banjar/search', 'Admin\PelangganController@banjarCheck')->name('banjar-search');
 
     //Manajemen Retribusi
     Route::get('/retribusi', 'Admin\RetribusiController@index')->name('admin-retribusi-index');
+    Route::get('/retribusi/generate', 'Admin\RetribusiController@generate')->name('admin-retribusi-generate');
     Route::get('/retribusi/history', 'Admin\RetribusiController@history')->name('admin-retribusi-history');
     Route::post('/retribusi/verif-many', 'Admin\RetribusiController@verifMany')->name('admin-retribusi-verif-many');
     Route::post('/retribusi/update/{id}', 'Admin\RetribusiController@update')->name('admin-retribusi-update');
@@ -136,7 +140,7 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
     Route::get('/request/create', 'Admin\RequestController@create')->name('admin-request-create');
     Route::post('/request/store', 'Admin\RequestController@store')->name('admin-request-store');
     Route::get('/request/edit/{id}', 'Admin\RequestController@edit')->name('admin-request-edit');
-    Route::get('/request/update/{id}', 'Admin\RequestController@update')->name('admin-request-update');
+    Route::post('/request/update/{id}', 'Admin\RequestController@update')->name('admin-request-update');
     Route::get('/request/confirm/{id}', 'Admin\RequestController@confirm')->name('admin-request-confirm');
     Route::get('/request/cancel/{id}', 'Admin\RequestController@cancel')->name('admin-request-cancel');
     Route::post('/request/verif', 'Admin\RequestController@verif')->name('admin-request-verif');
@@ -170,8 +174,8 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'] , function(){
 
     //Report
     Route::get('/laporan', 'Admin\ReportController@index')->name('admin-laporan-index');
-    Route::post('laporan/keuangan', 'Admin\ReportCOntroller@keuanganSearch')->name('admin-report-keuangan-search');
-    Route::post('laporan/penilaian', 'Admin\ReportCOntroller@penilaianSearch')->name('admin-report-penilaian-search');
+    Route::post('laporan/keuangan', 'Admin\ReportController@keuanganSearch')->name('admin-report-keuangan-search');
+    Route::post('laporan/penilaian', 'Admin\ReportController@penilaianSearch')->name('admin-report-penilaian-search');
 
 });
 
@@ -214,6 +218,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user'] , function(){
     Route::get('/properti/cancel/{id}', 'User\UserController@propertiCancel')->name('properti-cancel');
     Route::get('/properti/delete/{id}', 'User\UserController@propertiDelete')->name('properti-delete');
     Route::post('/banjar/search', 'User\UserController@banjarCheck')->name('banjar-search');
+    Route::post('/standar/search', 'User\UserController@standarSearch')->name('standar-search');
 
     //Retribusi
     Route::get('/retribusi', 'User\RetribusiController@index')->name('retribusi-index');
@@ -230,7 +235,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user'] , function(){
     Route::get('/request/edit/{id}', 'User\RequestController@edit')->name('request-edit');
     Route::post('/request/update/{id}', 'User\RequestController@update')->name('request-update');
     Route::get('/request/cancel/{id}', 'User\RequestController@cancel')->name('request-cancel');
-    Route::get('/request/delete/{id}', 'User\RequestController@cancel')->name('request-delete');
+    Route::get('/request/delete/{id}', 'User\RequestController@delete')->name('request-delete');
     Route::post('/request/keranjang', 'User\RequestController@keranjang')->name('request-keranjang');
     Route::post('/request/keranjang/view', 'User\RequestController@keranjangView')->name('request-keranjang-view');
     Route::post('/request/keranjang/hapus', 'User\RequestController@keranjangHapus')->name('request-keranjang-hapus');
@@ -240,6 +245,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user'] , function(){
     //Pembayaran
     Route::get('/pembayaran', 'User\PembayaranController@index')->name('pembayaran-index');
     Route::get('/pembayaran/create', 'User\PembayaranController@create')->name('pembayaran-create');
+    Route::post('/pembayaran/generate', 'User\PembayaranController@generateSnapToken')->name('pembayaran-generate');
     Route::post('/pembayaran/store', 'User\PembayaranController@store')->name('pembayaran-store');
     Route::get('/pembayaran/edit/{id}', 'User\PembayaranController@edit')->name('pembayaran-edit');
     Route::post('/pembayaran/update/{id}', 'User\PembayaranController@update')->name('pembayaran-update');
@@ -253,6 +259,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user'] , function(){
     Route::post('/pembayaran/keranjang/view', 'User\PembayaranController@keranjangView')->name('pembayaran-keranjang-view');
     Route::post('/pembayaran/keranjang/hapus', 'User\PembayaranController@keranjangHapus')->name('pembayaran-keranjang-hapus');
     Route::post('/pembayaran/keranjang/cari', 'User\PembayaranController@keranjangSearch')->name('pembayaran-keranjang-cari');
+    Route::post('/pembayaran/snap/save', 'User\PembayaranController@snapSave')->name('pembayaran-snap-save');
 
     //Customer Service
     Route::get('/penilaian', 'User\CustomerServiceController@penilaianIndex')->name('custom-penilaian-index');

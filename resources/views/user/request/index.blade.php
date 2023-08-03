@@ -256,7 +256,7 @@ List Request Pengangkutan
     $(document).ready( function () {
         $('#dataTable').DataTable({
             "oLanguage":{
-                "sSearch": "Cari:",
+                "sSearch": "",
                 "sZeroRecords": "Data tidak ditemukan",
                 "sSearchPlaceholder": "Cari request...",
                 "infoEmpty": "Menampilkan 0 data",
@@ -274,7 +274,7 @@ List Request Pengangkutan
 
         var table = $('#dataTableKeranjang').DataTable({
             "oLanguage":{
-                "sSearch": "Cari:",
+                "sSearch": "",
                 "sZeroRecords": "Data tidak ditemukan",
                 "sSearchPlaceholder": "Cari item",
                 "infoEmpty": "Menampilkan 0 data",
@@ -292,7 +292,7 @@ List Request Pengangkutan
             lengthMenu: [[5, 10, 20, -1], [5, 10, 20, "All"]]
         });
 
-        $(".keranjang").on('click', function(e){
+        $("table").on('click', '.keranjang' , function(e){
             var id = $(this).attr("id");
             console.log(id);
             e.preventDefault();
@@ -308,7 +308,7 @@ List Request Pengangkutan
                 },
                 success : (res) => {
                     console.log(res);
-                    if (res.stat == "success" || res.desc == "Retribusi sudah terdaftar dalam keranjang !") {
+                    if (res.stat == "success" || res.desc == "Request sudah terdaftar dalam keranjang !") {
                         $('#'+id).hide();
                         $('#'+id).attr('disabled');
                     }
@@ -350,7 +350,7 @@ List Request Pengangkutan
                     },
                     success : (res) => {
                         console.log(res);
-                        if (res.stat == "success" || res.desc == "Retribusi sudah dihapus dari keranjang !") {
+                        if (res.stat == "success" || res.desc == "Request sudah dihapus dari keranjang !") {
                             // $('.batal#'+id).hide();
                             // $('.batal#'+id).attr('disabled');
                             console.log("true");
@@ -442,7 +442,14 @@ List Request Pengangkutan
 
     });
 
-    
+    function lihatBukti(lokasi) {
+        // console.log(lokasi);
+        if(lokasi.proof_image != null){
+            $('#proof').attr('src', "{{asset('assets/img/request_p/bukti/')}}"+"/"+lokasi.proof_image);
+        }else{
+            $('#proof').attr('src', "{{asset('assets/img/properti/blank.png')}}");
+        }
+    }
 
     function lihatLokasi(lokasi) {
         // console.log(lokasi);
@@ -454,7 +461,7 @@ List Request Pengangkutan
     }
 
     $(document).ready( function () {
-        $(".status").on('click', function(){
+        $("table").on('click', ".status" , function(){
             var status = $(this).attr('name');
             console.log(status);
             if(status == "Selesai"){
@@ -571,7 +578,7 @@ List Request Pengangkutan
                     <form action="" method="post">
                         @csrf
                         <a class= "btn btn-success text-white mb-2" href="{{route('request-create')}}" ><i class="fas fa-plus"></i> Tambah Request Pengangkutan</a>
-                        <a class= "btn btn-warning text-white mb-2 lihat-keranjang" data-toggle="modal" data-target="#modal-keranjang"><i class="fas fa-eye"></i> Lihat Keranjang Request</a>
+                        <a class= "btn btn-warning text-white mb-2 lihat-keranjang" data-toggle="modal" data-target="#modal-keranjang"><i class="fas fa-eye"></i> Lihat Keranjang </a>
                         <table class="table table-bordered " id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr class="table-primary">
@@ -580,6 +587,7 @@ List Request Pengangkutan
                                     <th>Nominal </th>
                                     <th>Tanggal Request </th>
                                     <th>Lokasi</th>
+                                    <th>Bukti Pengangkutan</th>
                                     <th>Status</th>
                                     <th class="col-2 text-center">Action</th>
                                 </tr>
@@ -601,6 +609,9 @@ List Request Pengangkutan
                                     </td>
                                     <td style="vertical-align: middle; text-align: center;">
                                         <a class= "btn btn-success text-white mb-2" data-toggle="modal" data-target="#modal-single" onClick="lihatLokasi({{$i}})"><i class="fas fa-eye"></i> Lihat Lokasi</a>
+                                    </td>
+                                    <td style="vertical-align: middle; text-align: center;">
+                                        <a class= "btn btn-success text-white mb-2" data-toggle="modal" data-target="#modal-proof" onClick="lihatBukti({{$i}})"><i class="fas fa-eye"></i> Lihat Bukti</a>
                                     </td>
                                     <td style="vertical-align: middle; text-align: center;">
                                         @if($i->status == "Pending")
@@ -646,13 +657,29 @@ List Request Pengangkutan
         <div class="modal-content">
             <div class="modal-body">
                 <div id="myDIV" style="display: block">
-                        <div class="row justify-content-between mb-3">
-                            <div class="col">
-                                <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3 rounded mx-auto d-block" id="prop">
-                            </div>
+                    <div class="row justify-content-between mb-3">
+                        <div class="col">
+                            <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3 rounded mx-auto d-block" id="prop">
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-proof">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div id="myDIV" style="display: block">
+                    <div class="row justify-content-between mb-3">
+                        <div class="col">
+                            <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3 rounded mx-auto d-block" id="proof">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

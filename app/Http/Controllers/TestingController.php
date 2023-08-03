@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 use App\Properti;
+use App\Pembayaran;
 use App\StandarRetribusi;
 use App\Retribusi;
+use App\Pengangkutan;
 use Illuminate\Support\Facades\Hash;
 use Telegram;
 use Log;
@@ -14,7 +17,79 @@ class TestingController extends Controller
 {
     //
     public function test($id){
-        dd(Hash::make($id));
+        // dd(Hash::make($id));
+         \Midtrans\Config::$serverKey = 'SB-Mid-server-YBNALLKE6j3DlXtUl5eOBl7F';
+        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+        \Midtrans\Config::$isProduction = false;
+        // Set sanitization on (default)
+        \Midtrans\Config::$isSanitized = true;
+        // Set 3DS transaction for credit card to true
+        \Midtrans\Config::$is3ds = true;
+        $pembayaran = Pembayaran::where('id_pembayaran', $id)->whereHas('detail', function(builder $query){
+            $query->with('model')->orWhereHasMorph('model', ['App\Retribusi', 'App\Pengangkutan'], function(builder $querys){
+                $querys->where('model_type', "App\Retribusi" )->orWhere('model_type', "App\Pengangkutan");
+                // dd($querys);
+            });
+        })->first();
+        
+        if($pembayaran != null){
+            if($pembayaran->snap_token == null || (($pembayaran->snap_time - datetime.now()) > 1)){
+                $pelanggan = $pembayaran->pelanggan->kependudukan;
+                $name = explode(" ",$pelanggan->nama);
+                $firstname = $name[0];
+                $lastname = $name[count($name) - 1];
+                $phonenumber = $pelanggan->telepon;
+                $items = $pembayaran->detail->map->model;
+                
+                $params = array(
+                    'transaction_details' => array(
+                        'order_id' => $pembayaran->id_pembayaran,
+                        'gross_amount' => $pembayaran->nominal,
+                    ),
+                    'item_details' => array(
+                        
+                        
+                    ),
+                    'customer_details' => array(
+                        'first_name' => $firstname,
+                        'last_name' => $lastname,
+                        'phone' => $phonenumber,
+                    ),
+                );
+                
+                foreach($items as $it){
+                    if($it->id_properti != null){
+                        array_push($params['item_details'], array(
+                            "id" => "RET-".$it->id,
+                            "price" => $it->nominal,
+                            "quantity" => 1,
+                            "name" => "Retribusi ".$it->properti->nama_properti." ".$it->created_at
+                        ));    
+                    }else{
+                        array_push($params['item_details'], array(
+                            "id" => "REQ-".$it->id,
+                            "price" => $it->nominal,
+                            "quantity" => 1,
+                            "name" => "Request Pengangkutan ".$it->alamat
+                        ));
+                    }
+                    
+                }
+                
+                $snapToken = \Midtrans\Snap::getSnapToken($params);
+                dd($snapToken);
+                // return $snapToken;
+                return response()->json($snapToken, 200);    
+            }else{
+                return response()->json($pembayaran->snap_token, 200);
+            }
+        }else{
+            $status = "Transaksi pembayaran tidak ditemukan !";
+            return response()->json($status, 200);
+        }
+        
+        
+        
         // $properti = Properti::where('status', 'terverifikasi')->get();
         // dd($properti);
         // $this->info("test");

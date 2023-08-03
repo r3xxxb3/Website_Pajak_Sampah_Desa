@@ -39,12 +39,12 @@ class startCommand extends Command
        $pegawai = Pegawai::where('chat_id', $updates->message->chat->id)->first();
 
        if(isset($pegawai)){
-        $text = "Halo ".$name." ! \nBerikut ini daftar perintah yang dapat anda gunakan ! \n1. Cek Jadwal Pengangkutan Sampah /jadwal \n2. Cek Retribusi Pending /retribusi \n3. Cek Request Pengangkutan Sampah /pengangkutan \n4. Cek Pembayaran /pembayaran \n5. Buat Pengumuman /pengumuman";
+        $text = "Halo ".$name." ! \nBerikut ini daftar perintah yang dapat anda gunakan ! \n1. Cek Jadwal Pengangkutan Sampah \n/jadwal \n\n2. Cek Retribusi Pending \n/retribusi \n\n3. Cek Request Pengangkutan Sampah \n/pengangkutan \n\n4. Cek Pembayaran \n/pembayaran \n\n5. Buat Pengumuman \n/pengumuman";
         $telegramchat->pengguna_id = $pegawai->id;
         $telegramchat->pengguna_type = "App\\Pegawai";
        }elseif(isset($pelanggan)){
-        $text = "Halo ".$name." ! \nBerikut ini daftar perintah yang dapat anda gunakan ! \n1. Cek Jadwal Pengangkutan Sampah /jadwal \n2. Cek Retribusi Pending /retribusi \n3. Cek Request Pengangkutan Sampah \n4. Cek Status Pembayaran /pembayaran";
-        $telegramchat->pengguna_id = $pegawai->id;
+        $text = "Halo ".$name." ! \nBerikut ini daftar perintah yang dapat anda gunakan ! \n1. Cek Jadwal Pengangkutan Sampah \n/jadwal \n\n2. Cek Retribusi Pending \n/retribusi \n\n3. Cek Request Pengangkutan Sampah \n/pengangkutan \n\n4. Cek Status Pembayaran \n/pembayaran";
+        $telegramchat->pengguna_id = $pelanggan->id;
         $telegramchat->pengguna_type = "App\\Pelanggan";
        }else{
         $text = "Halo ".$name." !\n Anda belum terdaftar ke dalam sistem !\nUntuk melihat informasi pendaftaran gunakan perintah /daftar";

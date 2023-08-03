@@ -280,8 +280,13 @@
                 </ul>
               </div>
               <div class="modal-footer border-0 gap-3" style="padding: 2rem; padding-top: 0.75rem">
-                <a class="btn btn-default btn-no-fill" href="{{ route('login-page') }}" >Masuk</a>
-                <a class="btn btn-fill text-white" href="{{ route('register-page') }}" >Daftar</a>
+              @if(auth()->guard('web')->check())
+                <a class="btn btn-fill btn-no-fill" href="{{Route('user-dashboard')}}">Dashboard</a>
+                <a class="btn btn-default btn-no-fill" href="{{ route('logout') }}">Keluar</a>
+              @else
+                <a class="btn btn-default btn-no-fill" href="{{ route('login-page') }}">Masuk</a>
+                <a class="btn btn-fill text-white" href="{{ route('register-page') }}">Daftar</a>
+              @endif
               </div>
             </div>
           </div>
@@ -324,7 +329,7 @@
             @if(auth()->guard('web')->check())
 
             @else
-              <a href="{{route('register')}}" class="btn d-inline-flex mb-md-0 btn-try text-white">
+              <a href="{{route('register-page')}}" class="btn d-inline-flex mb-md-0 btn-try text-white">
                 Daftar Sekarang
               </a>
             @endif
@@ -343,8 +348,8 @@
           </div>
           <!-- Right Column -->
           <div class="right-column text-center d-flex justify-content-lg-end justify-content-center pe-0">
-            <img id="img-fluid" class="h-auto mw-100"
-              src="http://api.elements.buildwithangga.com/storage/files/2/assets/Header/Header4/Header-4-2.png"
+            <img id="img-fluid" class="h-auto mw-100 p-4 " style="border-radius : 30%"
+              src="http://myrottenproject.org/assets/img/landing/1.jpg"
               alt="" />
           </div>
         </div>
@@ -442,13 +447,13 @@
       <div class="d-flex flex-lg-row flex-column align-items-center">
         <!-- Left Column -->
         <div class="img-hero text-center justify-content-center d-flex">
-          <img id="hero" class="img-fluid"
-            src="http://api.elements.buildwithangga.com/storage/files/2/assets/Content/Content3/Content-3-1.png"
+          <img id="hero" class="img-fluid p-4" style="border-radius : 30%"
+            src="http://myrottenproject.org/assets/img/landing/2.jpg"
             alt="" />
         </div>
 
         <!-- Right Column -->
-        <div class="right-column d-flex flex-column align-items-lg-start align-items-center text-lg-start text-center">
+        <div class="right-column d-flex flex-column align-items-lg-start align-items-center text-lg-start text-center p-5">
           <h2 class="title-text">Jenis Sampah</h2>
           <ul style="padding: 0; margin: 0">
           <!-- Kustomisasi cms untuk user` -->
@@ -467,9 +472,11 @@
                   for several years. -->
                 </p>
             </li>
+                @if(($loop->index + 1) == 3)
+                    @break
+                @endif
             @endforeach
           </ul>
-          <button class="btn btn-learn text-white">Learn More</button>
         </div>
       </div>
     </div>

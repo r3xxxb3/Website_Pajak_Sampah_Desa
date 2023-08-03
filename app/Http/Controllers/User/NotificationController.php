@@ -66,11 +66,13 @@ class NotificationController extends Controller
         $notif->read_at = date('Y-m-d H:i:s');
         $notif->update();
         if($notif->data["type"] == "create"){
-            return redirect()->route('pembayaran-index');
+            return redirect()->route('pembayaran-edit', $notif->data["item_id"]);
         }elseif($notif->data["type"] == "update"){
-            return redirect()->route('pembayaran-index');
+            return redirect()->route('pembayaran-edit', $notif->data["item_id"]);
         }elseif($notif->data["type"] == "cancel"){
-            return redirect()->route('pembayaran-index');
+            return redirect()->route('pembayaran-edit', $notif->data["item_id"]);
+        }else{
+            return redirect()->route('pembayaran-edit', $notif->data["item_id"]);
         }
     }
 }

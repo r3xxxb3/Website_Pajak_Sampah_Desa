@@ -3,7 +3,7 @@
     <a href="{{ route('user-dashboard') }}"> <p>BUPDA</p> <p class="text-small">Retribusi Pengelolaan Sampah</p> </a>
   </div>
   <div class="sidebar-brand sidebar-brand-sm">
-    <a href="index.html">Lokasi Desa</a>
+    <a href="index.html">BUPDA</a>
   </div>
   <ul class="sidebar-menu">
       <li class="menu-header">Dashboard</li>

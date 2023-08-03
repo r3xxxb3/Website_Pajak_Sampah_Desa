@@ -120,6 +120,50 @@ $("#file").change(function() {
             }
         }).done(()=>{})
     });
+    
+    $('.impact').on('change', function(e){
+        e.preventDefault();
+        const jenis = $('#jenis').val();
+        const desa = $('#desa').val();
+        console.log(jenis);
+        // console.log(jenis == "" );
+        if(jenis == "" ){
+            $('#standar').val('');
+            $('#standar').find('option[value!=""]').remove().end();
+            $('#standar').attr('disabled', true);
+        }else{
+            $.ajax({
+                method : 'POST',
+                url : '/user/standar/search',
+                data : {
+                "_token" : "{{ csrf_token() }}",
+                jenis : jenis,
+                desa : desa,
+                },
+                beforeSend : function() {
+                            
+                },
+                success : (res) => {
+                    $('#standar').attr('disabled', false);
+                    $('#standar option').remove();
+                    $('#standar').append('<option value="">'+"Pilih Standar Retribusi"+'</option>').val("");
+                    $('#standar').val(null);
+                    if(res[0] == "success"){
+                        jQuery.each(res[1], function(i, val){
+                            if(val.id_desa_adat == desa){
+                                if(val.durasi != null){
+                                    $('#standar').append('<option value='+val.id+'>'+val.nominal_retribusi.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2})+" / "+val.durasi+" Bulan"+'</option>');
+                                }else{
+                                    $('#standar').append('<option value='+val.id+'>'+val.nominal_retribusi.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2})+" / Bulan"+'</option>');
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    });
+        
 </script>
 @endsection
 
@@ -203,21 +247,35 @@ $("#file").change(function() {
                         <div class='col mb-2'>
                             <label for="nama" class="font-weight-bold text-dark">Nama Properti<i class="text-danger text-sm text-bold">*</i></label>
                             <input type="text" class="form-control @error('jenis') is-invalid @enderror" id="nama" name="nama" placeholder="Masukan Nama Properti (cth: rumah tinggal,.. etc)" value="{{isset($properti->nama_properti) ? $properti->nama_properti : old('nama')}}" >
-                                @error('jenis')
+                                @error('nama')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
                         </div>
                         <div class="col mb-2">
-                            <label for="JENIS" class="font-weight-bold text-dark">Jenis Properti<i class="text-danger text-sm text-bold">*</i></label>
-                            <select class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="jenis">
+                            <label for="jenis" class="font-weight-bold text-dark">Jenis Properti<i class="text-danger text-sm text-bold">*</i></label>
+                            <select class="form-control @error('jenis') is-invalid @enderror impact" id="jenis" name="jenis">
                                 <option value="" selected>Pilih Jenis Properti</option>
                                     @foreach($jenis as $j)
                                         <option value="{{$j->id}}" {{old('jenis') == $j->id || $properti->id_jenis == $j->id  ? 'selected' : ''}}>{{$j->jenis_jasa}}</option>
                                     @endforeach
                             </select>
-                                @error('deskripsi')
+                                @error('jenis')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>    
+                                @enderror
+                        </div>
+                        <div class="col mb-2">
+                            <label for="standar" class="font-weight-bold text-dark">Standar Retribusi<i class="text-danger text-sm text-bold">*</i></label>
+                            <select class="form-control @error('standar') is-invalid @enderror " id="standar" name="standar" {{!$standar->isEmpty() ? '' : 'disabled'}}>
+                                <option value="" {{$properti->id_standar == null ? 'selected' : ''}}>Pilih Jenis Jasa Terlebih Dahulu !</option>
+                                @foreach($standar as $s)
+                                    <option value="{{$s->id}}" {{$properti->id_standar_retribusi == $s->id ? 'selected' : ''}}> {{"Rp ".number_format($s->nominal_retribusi ?? 0, 2,',','.')}} {{ $s->durasi != null ? "/ ".$s->durasi." Bulan" : "/ Bulan"}}</option>
+                                @endforeach
+                            </select>
+                                @error('standar')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>    
@@ -238,7 +296,7 @@ $("#file").change(function() {
                     <div class="row">
                         <div class='col mb-2'>
                                 <label for="desa" class="font-weight-bold text-dark">Desa Adat</label>
-                                <select class="form-control @error('desa') is-invalid @enderror" id="desa" name="desa" >
+                                <select class="form-control @error('desa') is-invalid @enderror impact" id="desa" name="desa" >
                                     <option value="">Pilih Desa Adat</option>
                                         @foreach($desaAdat as $d)
                                             <option value="{{$d->id}}" {{isset($properti->id_desa_adat) ? ($properti->id_desa_adat == $d->id ? 'selected' : '')  : '' }}>{{$d->desadat_nama}}</option>

@@ -13,6 +13,7 @@ use App\Pelanggan;
 use App\Pegawai;
 use App\Properti;
 use App\DesaAdat;
+use App\BanjarAdat;
 use App\DetailPembayaran;
 use App\Keranjang;
 
@@ -21,8 +22,20 @@ class PembayaranController extends Controller
 {
     //
     public function index(){
+        $banjarAdat = BanjarAdat::where('desa_adat_id', auth()->guard('admin')->user()->id_desa_adat)->get();
+        $pelanggan = Pelanggan::whereHas('kependudukan', function(Builder $query) use ($banjarAdat) {
+          $query->whereHas('mipil', function(Builder $query) use ($banjarAdat){
+            $query->whereIn('banjar_adat_id', $banjarAdat->map->id);
+          })->orWhereHas('ktamiu', function(Builder $query) use ($banjarAdat){
+            $query->whereIn('banjar_adat_id', $banjarAdat->map->id);
+          })->orWhereHas('tamiu', function(Builder $query) use ($banjarAdat){
+            $query->whereIn('banjar_adat_id', $banjarAdat->map->desa_adat_id);
+          });
+        })->get();
+        // dd($pelanggan);
+        
         $index = Pembayaran::with('detail')->whereHas('detail', function(builder $query){
-            $query->with('model')->whereHasMorph('model', ['App\Retribusi', 'App\Pengangkutan'], function(builder $querys){
+            $query->with('model')->orWhereHasMorph('model', ['App\Retribusi', 'App\Pengangkutan'], function(builder $querys){
                 $prop = Properti::where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->get();
                 $ret = Retribusi::whereIn('id_properti', $prop->map->id)->get();
                 $req = Pengangkutan::where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->get();
@@ -153,13 +166,11 @@ class PembayaranController extends Controller
     }
 
     public function edit($id){
-        $pembayaran = Pembayaran::where('id_pembayaran', $id)->with('detail')->whereHas('detail', function(Builder $query){
-            $query->with('model')->whereHasMorph('model', ["App\\Retribusi", "App\\Pengangkutan"]);
-         })->first();
+        $pembayaran = Pembayaran::where('id_pembayaran', $id)->with('detail')->first();
          $properti = Properti::where('id_pelanggan', $pembayaran->id_pelanggan)->get();
          $pengangkutan = Pengangkutan::where('id_pelanggan', $pembayaran->id_pelanggan)->get();
          $desa = DesaAdat::whereIn('id', $properti->map->id_desa_adat)->orWhere('id', $pengangkutan->map->id_desa_adat)->get();
-        //  dd($pembayaran->detail->map->model);
+        //  dd($pembayaran);
          if(isset($pembayaran)){
             return view('admin.pembayaran.edit',compact('pembayaran', 'desa'));
          }else{
@@ -167,7 +178,7 @@ class PembayaranController extends Controller
          }
     }
 
-    public function update(){
+    public function update(Request $request){
         
         $messages = [
             'required' => 'Kolom :attribute Wajib Diisi!',
@@ -183,7 +194,7 @@ class PembayaranController extends Controller
         
         if($request->media == "transfer"){
             $this->validate($request, [
-                'file' => 'required|max:5120',
+                // 'file' => 'required|max:5120',
                 'nominal' => 'required|numeric',
                 'media' => 'required',
                 'id' => 'required|array',
@@ -197,7 +208,7 @@ class PembayaranController extends Controller
         }
 
 
-        $pembayaran = Pembayaran::where('id_pembayaran', $id)->first();
+        $pembayaran = Pembayaran::where('id_pembayaran', $request->pembayaran)->first();
 
         if($request->file('file')){
             if(!is_null($pembayaran->bukti_bayar)){
@@ -218,7 +229,8 @@ class PembayaranController extends Controller
             $foto_upload = 'assets/img/bukti_bayar';
             $file->move($foto_upload,$images);
         }
-        $pembayaran->media = $request->media;
+        // dd($pembayaran);
+        $pembayaran->media = $request->media ? $request->media : '';
         $pembayaran->nominal = $request->nominal;
         $pembayaran->jenis = $request->type;
         $pelanggan = $pembayaran->pelanggan;
@@ -283,8 +295,16 @@ class PembayaranController extends Controller
 
     public function search(Request $request){
         // echo($request->pembayaran);
-        $pembayaran = Pembayaran::where('id_pembayaran', $request->pembayaran)->first();
-        // echo($pembayaran);
+        $pembayaran = Pembayaran::where('id_pembayaran', $request->pembayaran)->with('detail')->whereHas('detail', function(Builder $query){
+            $query->with('model')->whereHasMorph('model', ['App\Retribusi', 'App\Pengangkutan'], function(builder $querys){
+                $prop = Properti::where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->get();
+                $ret = Retribusi::whereIn('id_properti', $prop->map->id)->get();
+                $req = Pengangkutan::where('id_desa_adat', auth()->guard('admin')->user()->id_desa_adat)->get();
+                $querys->where('model_type', "App\Retribusi" )->whereIn('model_id', $ret->map->id)->orWhere('model_type', "App\Pengangkutan")->whereIn('model_id',$req->map->id);
+                // dd($querys);
+            });
+        })->first();
+        // dd($pembayaran->detail);
         $detail = $pembayaran->detail;
         // echo($detail->map->model->map->pelanggan->map->kependudukan);
         $model = $detail;
@@ -293,7 +313,8 @@ class PembayaranController extends Controller
             if($m->model_type == "App\\Retribusi"){
                 // dd($m->properti = $m->model->properti);
                 $m->pelanggan = $m->model->pelanggan->kependudukan->nama;
-                $m->properti = $m->model->properti->nama_properti;
+                $properti = Properti::withTrashed()->where('id', $m->model->id_properti)->first();
+                $m->properti = $properti->nama_properti;
                 $m->status = $m->pembayaran->status;
             }elseif($m->model_type == "App\\Pengangkutan"){
                 // dd($m->model->pengangkutan->alamat);
@@ -379,6 +400,7 @@ class PembayaranController extends Controller
         $detail = DetailPembayaran::where('model_id', $id[0])->where('model_type', "App\\".$id[1])->first();
         // dd($detail);
         if(isset($detail)){
+            $pembayaran = Pembayaran::where('id_pembayaran', $detail->id_pembayaran)->first();
             DetailPembayaran::where('model_id', $id[0])->where('model_type', "App\\".$id[1])->forceDelete();
             $info['stat'] = "success";
             $info['desc'] = "Item berhasil dihapus dari pembayaran !";

@@ -34,6 +34,15 @@ List Request Pengangkutan
             $('#prop').attr('src', "{{asset('assets/img/properti/blank.png')}}");
         }
     }
+    
+    function lihatBukti(lokasi){
+        // console.log(lokasi);
+        if(lokasi.proof_image != null){
+            $('#proof').attr('src', "{{asset('assets/img/request_p/bukti/')}}"+"/"+lokasi.proof_image);
+        }else{
+            $('#proof').attr('src', "{{asset('assets/img/properti/blank.png')}}");
+        }
+    }
 
     function setRequest(id){
             $('#idReq').val(id);
@@ -82,6 +91,23 @@ List Request Pengangkutan
                 $(".desc-stat").html('Request Pengangkutan Sampah telah dibatalkan');
             }
         });
+    });
+    
+    function readURLDetail(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function(e) {
+                $('#input_proof').attr('src', e.target.result);
+            }
+            
+            reader.readAsDataURL(input.files[0]); // convert to base64 string
+        }
+    }
+
+    $("#bukti").change(function() {
+        readURLDetail(this);
+        // console.log("true");
     });
 </script>
 @endsection
@@ -146,6 +172,7 @@ List Request Pengangkutan
                                     <th>Nominal </th>
                                     <th>Tanggal Request </th>
                                     <th>Lokasi</th>
+                                    <th>Bukti Pengangkutan</th>
                                     <th>Status</th>
                                     <th class="col-2 text-center">Action</th>
                                 </tr>
@@ -167,6 +194,9 @@ List Request Pengangkutan
                                     </td>
                                     <td style="vertical-align: middle; text-align: center;" >
                                         <a class= "btn btn-success text-white mb-2" data-toggle="modal" data-target="#modal-single" onClick="lihatLokasi({{$i}})"><i class="fas fa-eye"></i> Lihat Lokasi</a>
+                                    </td>
+                                    <td style="vertical-align: middle; text-align: center;" >
+                                        <a class= "btn btn-success text-white mb-2" data-toggle="modal" data-target="#modal-bukti" onClick="lihatBukti({{$i}})"><i class="fas fa-eye"></i> Lihat Bukti</a>
                                     </td>
                                     <td style="vertical-align: middle; text-align: center;">
                                         @if($i->status == "Pending")
@@ -220,6 +250,22 @@ List Request Pengangkutan
     </div>
 </div>
 
+<div class="modal fade" id="modal-bukti">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div id="myDIV" style="display: block">
+                        <div class="row justify-content-between mb-3">
+                            <div class="col">
+                                <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3 rounded mx-auto d-block" id="proof">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="modal-confirm">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -232,11 +278,25 @@ List Request Pengangkutan
                         </div>
                             <form id="konfirmasi" action="{{Route('admin-request-verif')}}" method="post" enctype="multipart/form-data">
                                 @csrf
+                                <div class="row mt-4 mb-4 border">
+                                    <div class="col">
+                                        <img src=""  height="300px" style="object-fit:cover" class="mb-3  rounded mx-auto d-block" id="input_proof">
+                                    </div>
+                                </div>
                                 <div class="row">
-                                    <div class="col mt-4 mb-2">
+                                    <div class="col mb-2">
+                                        <label for="bukti" class="font-weight-bold text-dark">Bukti Pengangkutan<i class="text-danger">*</i></label>
+                                        <input type="file" class="form-control @error('bukti') is-invalid @enderror disabled" id="bukti" name="bukti" placeholder="Berikan Bukti Pengangkutan !" required>
+                                        @error('bukti')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>    
+                                        @enderror
+                                    </div>
+                                    <div class="col mb-2">
                                         <input type="text" class="form-control @error('idReq') is-invalid @enderror" id="idReq" name="idReq" hidden>
-                                        <label for="nominal" class="font-weight-bold text-dark">Nominal Pengangkutan</label>
-                                        <input type="number" class="form-control @error('nominal') is-invalid @enderror disabled" id="nominal" name="nominal" placeholder="Tentukan Nominal !">
+                                        <label for="nominal" class="font-weight-bold text-dark">Nominal Pengangkutan<i class="text-danger">*</i></label>
+                                        <input type="number" class="form-control @error('nominal') is-invalid @enderror disabled" id="nominal" name="nominal" placeholder="Tentukan Nominal !" required>
                                         @error('nominal')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>

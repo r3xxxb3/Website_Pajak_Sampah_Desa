@@ -31,7 +31,7 @@ Manajemen Properti User
     $(document).ready( function () {
         $('#dataTable').DataTable({
             "oLanguage":{
-                "sSearch": "Cari:",
+                "sSearch": "",
                 "sZeroRecords": "Data tidak ditemukan",
                 "sSearchPlaceholder": "Cari properti...",
                 "infoEmpty": "Menampilkan 0 data",
@@ -154,13 +154,13 @@ function lihatProperti(properti) {
                             </td>
                             <td align="center">
                                 @if($properti->status == "terverifikasi")
-                                <a href="/user/properti/cancel/{{$properti->id}}" class="btn btn-danger btn-sm mb-1 col" ><i class="fas fa-ban"></i> Batal</a><br>
-                                <a href="/user/properti/edit/{{$properti->id}}" class="btn btn-warning btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
+                                    <a href="/user/properti/edit/{{$properti->id}}" class="btn btn-warning btn-sm col mb-1"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
+                                    <a href="/user/properti/cancel/{{$properti->id}}" class="btn btn-danger btn-sm  col" ><i class="fas fa-ban"></i> Batal</a><br>
                                 @elseif($properti->status == "pending")
-                                <a style="margin-right:7px" class="btn btn-danger btn-sm mb-1 col" href="/user/properti/delete/{{$properti->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
-                                <a href="/user/properti/edit/{{$properti->id}}" class="btn btn-warning btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
+                                    <a href="/user/properti/edit/{{$properti->id}}" class="btn btn-warning mb-1 btn-sm col"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
+                                    <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/user/properti/delete/{{$properti->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
                                 @elseif($properti->status == "batal")
-                                <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/user/properti/delete/{{$properti->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
+                                    <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/user/properti/delete/{{$properti->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
                                 @endif
                             </td>
                         </tr>

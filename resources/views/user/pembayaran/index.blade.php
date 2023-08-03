@@ -31,7 +31,7 @@ Histori pembayaran
     $(document).ready( function () {
         $('#dataTable').DataTable({
             "oLanguage":{
-                "sSearch": "Cari:",
+                "sSearch": "",
                 "sZeroRecords": "Data tidak ditemukan",
                 "sSearchPlaceholder": "Cari pembayaran...",
                 "infoEmpty": "Menampilkan 0 data",
@@ -59,10 +59,30 @@ Histori pembayaran
             $('#ket').attr('hidden', false);
         }
     }
+    
+    function sendDataInfo(info) {
+        var data = info;
+        console.log(info);
+        $.ajax({
+            method : 'POST',
+             url : '{{route("pembayaran-snap-save")}}',
+            data : {
+            "_token" : "{{ csrf_token() }}",
+            result : data,
+            },
+            beforeSend : function() {
+                     
+            },
+            success : (res) => {
+                location.reload();
+                // console.log(res);
+            }
+        });
+    }
 
     var table = $('#dataTableModal').DataTable({
             "oLanguage":{
-                "sSearch": "Cari:",
+                "sSearch": "",
                 "sZeroRecords": "Data tidak ditemukan",
                 "sSearchPlaceholder": "Cari detail",
                 "infoEmpty": "Menampilkan 0 data",
@@ -81,7 +101,48 @@ Histori pembayaran
         });
 
     $(document).ready( function(){
-        $('.detail').on('click', function(e){
+        $('table').on('click', '.pay', function(e){
+            e.preventDefault();
+            var id = event.target.id;
+            console.log(id);
+            
+            var idNum = id.split("-");
+            console.log(id[1]);
+            
+            var pembayaran = idNum[1];
+            $.ajax({
+                method : 'POST',
+                url : '{{route("pembayaran-generate")}}',
+                data : {
+                    "_token" : "{{ csrf_token() }}",
+                    pembayaran : pembayaran,
+                },
+                beforeSend : function(){
+                    
+                },
+                success : (res) => {
+                    window.snap.pay(res, {
+                        onSuccess: function(result){
+                            alert("Pembayaran Success dilakukan !");
+                            sendDataInfo(result);
+                        },
+                        onPending: function(result){
+                            alert("Menunggu Pembayaran !");
+                            sendDataInfo(result);
+                        },
+                        onError: function(result){
+                            alert("Pembayaran Gagal Dilakukan !"); 
+                            sendDataInfo(result);
+                        },
+                        onClose: function(){
+                            alert("Pembayaran tidak terselesaikan !"); 
+                        },
+                    });
+                }
+            });
+        });
+        
+        $('table').on('click', '.detail', function(e){
             e.preventDefault();
             var id = event.target.id;
             console.log(id);
@@ -89,7 +150,8 @@ Histori pembayaran
             var idNum = id.split("-");
             console.log(idNum[1]);
             
-            var pembayaran = idNum[1];$.ajax({
+            var pembayaran = idNum[1];
+            $.ajax({
                     method : 'POST',
                     url : '{{route("pembayaran-search")}}',
                     data : {
@@ -100,29 +162,42 @@ Histori pembayaran
                                 
                     },
                     success : (res) => {
-                        console.log(res);
+                        console.log(res == "not found");
                         table.clear();
-                        jQuery.each(res, function(i, val){
-                            var jenis = val.model_type.split('\\');
-                            console.log(jenis);
-                            if(val.model.status == "lunas"){
-                                table.row.add([
-                                    jenis[1],
-                                    val.properti+" ("+val.pelanggan+")",
-                                    val.model.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}),
-                                    val.tanggal,
-                                    '<span class="badge badge-success text-capitalize">'+val.model.status+'</span>'
-                                ]);
-                            }else{
-                                table.row.add([
-                                    jenis[1],
-                                    val.properti+" ("+val.pelanggan+")",
-                                    val.model.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}),
-                                    val.tanggal,
-                                    '<span class="badge badge-warning text-capitalize">'+"Pending"+'</span>'
-                                ]);
-                            }
-                        });
+                        if(res == "not found") {
+                            table.clear();
+                        } else {
+                            jQuery.each(res, function(i, val){
+                                var jenis = val.model_type.split('\\');
+                                console.log(jenis);
+                                if(val.model.status == "lunas"){
+                                    table.row.add([
+                                        jenis[1],
+                                        val.properti+" ("+val.pelanggan+")",
+                                        val.model.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}),
+                                        val.tanggal,
+                                        '<span class="badge badge-success text-capitalize">'+val.model.status+'</span>'
+                                    ]);
+                                }else if(val.pembayaran == "lunas" && val.model.status == "Selesai"){
+                                    table.row.add([
+                                        jenis[1],
+                                        val.properti+" ("+val.pelanggan+")",
+                                        val.model.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}),
+                                        val.tanggal,
+                                        '<span class="badge badge-success text-capitalize">'+"Lunas"+'</span>'
+                                    ]);
+                                }else{
+                                    table.row.add([
+                                        jenis[1],
+                                        val.properti+" ("+val.pelanggan+")",
+                                        val.model.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}),
+                                        val.tanggal,
+                                        '<span class="badge badge-warning text-capitalize">'+"Pending"+'</span>'
+                                    ]);
+                                }
+                            // console.log(val);
+                            });
+                        }
                         table.draw();
                     }
                 });
@@ -201,12 +276,12 @@ Histori pembayaran
                                     @if(isset($pembayaran->detail))
                                         @if(count($pembayaran->detail) > 0)
                                             @foreach($pembayaran->detail as $detail)
-                                                - {{isset($detail->model->properti) ? $detail->model->properti->nama_properti : "Pengangkutan Sampah (".$detail->model->alamat.")"}} <br>
+                                                - {{isset($detail->model->properti) ? $detail->model->properti->nama_properti : "Pengangkutan Sampah (".(isset($detail->model) ? $detail->model->alamat : $detail->model).")"}} <br>
                                             @endforeach
                                         @elseif(!$pembayaran->detail->isEmpty())
                                             - {{$pembayaran->detail->model->properti->nama_properti}} <br>
                                         @else
-                                            <h6>Error !</h6>
+                                            <h6>Item Pembayaran Tidak Ada !</h6>
                                         @endif
                                     @else
                                         Error pada Hubungan Retribusi dan Pembayaran !
@@ -238,8 +313,17 @@ Histori pembayaran
                                 </td>
                                 <td style="vertical-align: middle; text-align: left">
                                 @if($pembayaran->status == "pending")
+                                    @if(!$pembayaran->snap->isEmpty())
+                                        @if($pembayaran->snap->last()->transaction_status == "expire" || $pembayaran->snap->last()->transaction_status == "cancel" || $pembayaran->snap->last()->transaction_status == "failure" || $pembayaran->snap->last()->transaction_status == "deny")
+                                            <a class="btn btn-success btn-sm col text-white mb-1 pay" id="pay-{{$pembayaran->id_pembayaran}}"><i class="fa fa-credit-card"></i> Bayar Online</a>
+                                        @elseif($pembayaran->snap->last()->transaction_status == "pending")
+                                            <a class="btn btn-success btn-sm col text-white mb-1 pay" id="pay-{{$pembayaran->id_pembayaran}}"><i class="fa fa-eye"></i> Info Bayar Online</a>
+                                        @endif
+                                    @else
+                                        <a class="btn btn-success btn-sm col text-white mb-1 pay" id="pay-{{$pembayaran->id_pembayaran}}"><i class="fa fa-credit-card"></i> Bayar Online</a>
+                                    @endif
                                     <a class="btn btn-info btn-sm col text-white detail mb-1" id="detail-{{$pembayaran->id_pembayaran}}" data-toggle="modal" data-target="#modal-detail" ><i class="fas fa-eye"></i> Lihat Detail</a>
-                                    <a href="/user/pembayaran/edit/{{$pembayaran->id_pembayaran}}" class="btn btn-warning btn-sm col mb-1"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
+                                    <a href="/user/pembayaran/edit/{{$pembayaran->id_pembayaran}}" class="btn btn-warning btn-sm col mb-1"><i class="fas fa-pencil-alt"></i> Ubah</a>
                                     <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/user/pembayaran/delete/{{$pembayaran->id_pembayaran}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
                                 @elseif($pembayaran->status == "lunas")
                                     <a class="btn btn-info btn-sm col text-white detail" id="detail-{{$pembayaran->id_pembayaran}}" data-toggle="modal" data-target="#modal-detail" ><i class="fas fa-eye"></i> Lihat Detail</a>

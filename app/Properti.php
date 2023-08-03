@@ -30,4 +30,7 @@ class Properti extends Model
     public function banjarAdat(){
         return $this->belongsTo(BanjarAdat::class, 'id_banjar_adat', 'id');
     }
+    public function retribusi(){
+        return $this->hasMany(Retribusi::class, 'id_properti', 'id')->withTrashed();
+    }
 }

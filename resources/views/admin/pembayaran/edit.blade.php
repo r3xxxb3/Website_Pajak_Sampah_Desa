@@ -213,7 +213,7 @@ Pembayaran
                             let val = parseFloat((($(this).parents('tr').find("td:eq(2)").text()).substring(3, $(this).parents('tr').find("td:eq(2)").text().length-2)).replace(/\D/g,''));
                             let old = parseFloat((($(".total").text()).substring(11, $(".total").text().length-2)).replace(/\D/g,''));
                             let total = old - val;
-                            console.log(total);
+                            // console.log($(this).parents('tr').find("td:eq(2)").text());
                             $(".total").html("Total : "+total.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}));
                             // table.rows().every( function () {
                             //     var data = this.data();
@@ -230,7 +230,7 @@ Pembayaran
                             let val = parseFloat((($(this).parents('tr').find("td:eq(2)").text()).substring(3, $(this).parents('tr').find("td:eq(2)").text().length-2)).replace(/\D/g,''));
                             let old = parseFloat((($(".total").text()).substring(11, $(".total").text().length-2)).replace(/\D/g,''));
                             let total = old - val;
-                            console.log(total);
+                            // console.log($(this).parents('tr').find("td:eq(2)").text());
                             $(".total").html("Total : "+total.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}));
                             // table.rows().every( function (rowIndex, tableLoop, rowLoop) {
                             //     var data = this.data();
@@ -297,15 +297,17 @@ Pembayaran
                         var link = [];
                         var pk = [];
                         var loop = 0;
+                        var total = 0 ;
                         console.log(res);
                         table.clear()
                         jQuery.each(res, function(i, val){
                             jQuery.each(val, function(a, nilai){
+                                total += nilai.nominal;
                                 if(nilai.id_properti != null){
                                     table.row.add([
                                         nilai.properti.nama_properti,
                                         nilai.jasa,
-                                        nilai.nominal,
+                                        nilai.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}),
                                         nilai.tanggal,
                                         checkStatus(nilai.status),
                                         checkButton(<?php echo $pembayaran?>, nilai)
@@ -317,7 +319,7 @@ Pembayaran
                                     table.row.add([
                                         nilai.alamat,
                                         "Request Pengangkutan Sampah",
-                                        nilai.nominal,
+                                        nilai.nominal.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}),
                                         nilai.tanggal,
                                         checkStatus(nilai.status),
                                         checkButton(<?php echo $pembayaran?>, nilai)
@@ -329,6 +331,7 @@ Pembayaran
                                 }
                             });
                         });
+                        $(".total").html("Total : "+total.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2}));
                         $("#id").val(pk);
                         table.draw();
                         console.log(link);
@@ -536,7 +539,12 @@ Pembayaran
                         </div>
                         <div class="row mt-5">
                             <div class="col" style="vertical-align: middle; text-align: left;">
-                                <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Data Pembayaran Sudah Benar?')"><i class="fas fa-save"></i> Ubah</button>
+                                @if($pembayaran->status != 'lunas' || $pembayaran->status != 'batal')
+                                    <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Data Pembayaran Sudah Benar?')"><i class="fas fa-save"></i> Ubah</button>
+                                    <a class="btn btn-danger text-white" href="{{route('admin-pembayaran-index')}}"><i class="fas fa-arrow-left"></i> Kembali</a>
+                                @else
+                                    <a class="btn btn-danger text-white" href="{{route('admin-pembayaran-index')}}"><i class="fas fa-arrow-left"></i> Kembali</a>
+                                @endif
                                 <!-- <a class="btn btn-danger text-white"><i class="fas fa-times"></i> Batal</a> -->
                             </div>
                             <div class="col" style="vertical-align: middle; text-align: end;">

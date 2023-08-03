@@ -11,7 +11,7 @@ class KramaTamiu extends Model
     
 
     public function banjarAdat(){
-        return $this->belongsTo(BanjarAdat::class, 'id', 'banjar_adat_id');
+        return $this->belongsTo(BanjarAdat::class, 'banjar_adat_id', 'id');
     }
 
     public function desaAdat(){

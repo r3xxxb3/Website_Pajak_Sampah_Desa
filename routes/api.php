@@ -20,3 +20,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 route::get('/telegram/test', 'TelegramBotController@telegramTest');
 route::post('/telegram/webhook', 'TelegramBotController@webhook');
+
+route::post('/snap/info', 'SnapInfoController@DataAPI');

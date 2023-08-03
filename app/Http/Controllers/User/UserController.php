@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\JenisJasa;
 use Illuminate\Http\Request;
 use App\Properti;
+use App\StandarRetribusi;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Pelanggan;
@@ -60,6 +61,8 @@ class UserController extends Controller
     }
 
     public function propertiStore(Request $request){
+        // dd($request->standar);
+        
         $messages = [
             'required' => 'Kolom :attribute Wajib Diisi!',
             'unique' => 'Kolom :attribute Tidak Boleh Sama!',
@@ -71,6 +74,7 @@ class UserController extends Controller
             'nama' => 'required',
             'desa' => 'required',
             'alamat' => 'required',
+            'standar' => 'required',
             'file' => 'max:5120',
         ],$messages);
         
@@ -97,6 +101,7 @@ class UserController extends Controller
         $properti->status = "Pending";
         $properti->id_pelanggan = Auth::guard('web')->user()->id;
         $properti->jumlah_kamar = $request->kamar;
+        $properti->id_standar_retribusi = $request->standar;
         
         if($properti->save()){
             $pegawai = Pegawai::where('id_desa_adat', $request->desa)->get();
@@ -115,9 +120,11 @@ class UserController extends Controller
     public function propertiEdit($id){
         $jenis = Jenisjasa::all();
         $properti = Properti::where('id', $id)->first();
+        $standar = StandarRetribusi::where('id_jenis_jasa', $properti->id_jenis)->where('id_desa_adat', $properti->id_desa_adat)->get();
+        // dd($standar);
         $banjarAdat = BanjarAdat::all();
         $desaAdat = DesaAdat::all();
-        return view('user.properti.edit', compact('properti', 'jenis', 'desaAdat', 'banjarAdat'));
+        return view('user.properti.edit', compact('properti', 'jenis', 'desaAdat', 'banjarAdat', 'standar'));
     }
 
     public function propertiUpdate($id, Request $request){
@@ -132,6 +139,7 @@ class UserController extends Controller
             'nama' => 'required',
             'desa' => 'required',
             'alamat' => 'required',
+            'standar' => 'required',
             'file' => 'max:5120',
         ],$messages);
 
@@ -168,6 +176,7 @@ class UserController extends Controller
                 
                 $properti->id_pelanggan = Auth::guard('web')->user()->id;
                 $properti->jumlah_kamar = $request->kamar;
+                $properti->id_standar_retribusi = $request->standar;
 
                 if($properti->update()){
                     $pegawai = Pegawai::where('id_desa_adat', $request->desa)->get();
@@ -180,10 +189,11 @@ class UserController extends Controller
                 }
             }else{
                 $properti->id_pelanggan = Auth::guard('web')->user()->id;
+                $properti->id_standar_retribusi = $request->standar;
                 $properti->jumlah_kamar = $request->kamar;
 
                 if($properti->update()){
-                    return redirect()->route('properti-index')->with('success','Berhasil Mengubah Data Properti, Properti akan segera diproses !');    
+                    return redirect()->route('properti-index')->with('success','Berhasil Mengubah Data Properti !');    
                 }else{
                     return redirect()->route('properti-index')->with('error','Proses Penngubahan Properti Tidak Berhasil !');
                 }
@@ -213,13 +223,30 @@ class UserController extends Controller
                 $properti->delete();
                 return redirect()->route('properti-index')->with('success', 'Data Properti berhasil dihapus !');
             }elseif($properti->status == 'pending'){
-                return redirect()->route('properti-index')->with('error', 'Data Properti belum diperiksa Admin !');
+                $properti->delete();
+                return redirect()->route('properti-index')->with('success', 'Data Properti berhasil dihapus !');
             }elseif($properti->status == 'terverifikasi'){
                 return redirect()->route('properti-index')->with('error', 'Data Properti telah Terdaftar, Ajukan Pembatalan Properti Terlebih Dahulu !');
             }else{
                 $properti->delete();
                 return redirect()->route('properti-index')->with('success', 'Data Properti berhasil dihapus !');
             }
+        }
+    }
+    
+    public function standarSearch (Request $request) 
+    {
+        // dd($request);
+        $jenis = JenisJasa::where('id', $request->jenis)->first();
+        if (isset($jenis)){
+            $standar = StandarRetribusi::where('id_jenis_jasa', $request->jenis)->where('id_desa_adat', $request->desa)->get();
+            if(!$standar->isEmpty()){
+                return response()->json(["success",$standar], 200);
+            }else{
+                return response()->json(["error", "Standar Retribusi tidak ditemukan !, Hubungi Admin"], 200);
+            }
+        }else{
+            return response()->json(["error", "Jenis Jasa Tidak Ditemukan !"], 200);
         }
     }
 

@@ -119,14 +119,14 @@ Edit Jenis Jasa
               url: "/admin/masterdata/retribusi/"+id+"/active",
               type: "GET",
               success: function(result){
-                // $(".statVal").each(function(){
-                //     if(this.id == "status_"+id){
-                // //         continue;
-                //         // alert(this.id);
-                //     }else{
-                //         $(this).prop('checked', false);
-                //     }
-                // });
+                $(".statVal").each(function(){
+                    // if(this.id == "status_"+id){
+                //         continue;
+                        // alert(this.id);
+                    // }else{
+                    //     $(this).prop('checked', false);
+                    // }
+                });
               }
             });
         }else{
@@ -278,6 +278,8 @@ Edit Jenis Jasa
                     <thead>
                         <tr class="table-primary">
                             <th>Nominal</th>
+                            <th>Durasi</th>
+                            <th>Maksimum Transaksi Pending</th>
                             <th>Status Aktif</th>
                             <th class="col-2">Action</th>
                         </tr>
@@ -288,18 +290,22 @@ Edit Jenis Jasa
                             <td>
                                 {{"Rp."." ".number_format($retri->nominal_retribusi ?? 0,0, ',', '.')}}
                             </td>
-                            <div>
-                                <td style="width: fit-content;" class="text-center">
-                                    <label class="switch"  >
-                                        @if($retri->active == '1')
-                                            <input class="statVal" type="checkbox" id="status_{{$retri->id}}" onclick="statusBtn(<?php echo $retri->id ?>)" checked>
-                                        @else
-                                            <input class="statVal" type="checkbox" id="status_{{$retri->id}}" onclick="statusBtn(<?php echo $retri->id ?>)">
-                                        @endif
-                                        <span class="slider round"></span>
-                                    </label>
-                                </td>
-                            </div>
+                            <td>
+                                {{$retri->durasi != null ? $retri->durasi." Bulan" : "1 Bulan"}}
+                            </td>
+                            <td>
+                                {{$retri->max_pending != null ? $retri->max_pending." Transaksi Pending" : "Tidak Ada Maksimum"}}
+                            </td>
+                            <td style="width: fit-content;" class="text-center">
+                                <label class="switch"  >
+                                    @if($retri->active == '1')
+                                        <input class="statVal" type="checkbox" id="status_{{$retri->id}}" onclick="statusBtn(<?php echo $retri->id ?>)" checked>
+                                    @else
+                                        <input class="statVal" type="checkbox" id="status_{{$retri->id}}" onclick="statusBtn(<?php echo $retri->id ?>)">
+                                    @endif
+                                    <span class="slider round"></span>
+                                </label>
+                            </td>
                             <td align="center">
                                 <a  data-toggle="modal" data-target="#modal-{{$retri->id}}" class="btn btn-info btn-sm text-white col mb-2" ><i class="fas fa-pencil-alt"></i> Ubah</a>
                                 <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/masterdata/retribusi/delete/{{$retri->id}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
@@ -317,7 +323,7 @@ Edit Jenis Jasa
 
 
 <div class="modal fade" id="modal-add">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-body">
                 <div id="myDIV" style="display: block">
@@ -331,9 +337,27 @@ Edit Jenis Jasa
                             <div class="row mb-2">
                                 <input type="text" class="form-control @error('id') is-invalid @enderror" id="id" name="id" hidden>
                                 <div class='col mb-2'>
-                                    <label for="standar" class="font-weight-bold text-dark">Nominal Standar</label>
-                                    <input type="text" class="form-control @error('standar') is-invalid @enderror" id="standar" name="standar" placeholder="Masukan Nominal Standar Retribusi">
+                                    <label for="standar" class="font-weight-bold text-dark">Nominal Standar<i class="text-danger">*</i></label>
+                                    <input type="number" class="form-control @error('standar') is-invalid @enderror" id="standar" name="standar" placeholder="Masukan Nominal Standar Retribusi">
                                         @error('standar')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                </div>
+                                <div class='col mb-2'>
+                                    <label for="durasi" class="font-weight-bold text-dark">Durasi Standar (Bulan)</label>
+                                    <input type="number" class="form-control @error('durasi') is-invalid @enderror" id="durasi" name="durasi" placeholder="Masukan Durasi Standar Retribusi (Bulan)">
+                                        @error('durasi')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                </div>
+                                <div class='col mb-2'>
+                                    <label for="pending" class="font-weight-bold text-dark">Maksimum transaksi pending</label>
+                                    <input type="number" class="form-control @error('pending') is-invalid @enderror" id="pending" name="pending" placeholder="Masukan maksimum Retribusi pending (Total transaksi)">
+                                        @error('pending')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -342,7 +366,7 @@ Edit Jenis Jasa
                             </div>
                             <div class="row mb-2">
                                 <div class='col mb-2'>
-                                    <label for="mulai" class="font-weight-bold text-dark">Tanggal Berlaku</label>
+                                    <label for="mulai" class="font-weight-bold text-dark">Tanggal Berlaku<i class="text-danger">*</i></label>
                                     <input type="date" class="form-control @error('mulai') is-invalid @enderror" id="mulai" name="mulai" placeholder="Masukan Nominal Standar Retribusi">
                                         @error('mulai')
                                         <span class="invalid-feedback" role="alert">
@@ -375,7 +399,7 @@ Edit Jenis Jasa
 
 @foreach($index as $retri)
 <div class="modal fade" id="modal-{{$retri->id}}">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-body">
                 <div id="myDIV" style="display: block">
@@ -389,9 +413,27 @@ Edit Jenis Jasa
                             <div class="row mb-2">
                                 <input type="text" class="form-control @error('id') is-invalid @enderror" id="id" name="id" hidden>
                                 <div class='col mb-2'>
-                                    <label for="standar" class="font-weight-bold text-dark">Nominal Standar</label>
+                                    <label for="standar" class="font-weight-bold text-dark">Nominal Standar<i class="text-danger">*</i></label>
                                     <input type="text" class="form-control @error('standar') is-invalid @enderror" id="standar" name="standar" placeholder="Masukan Nominal Standar Retribusi" value="{{$retri->nominal_retribusi}}">
                                         @error('standar')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                </div>
+                                <div class='col mb-2'>
+                                    <label for="durasi" class="font-weight-bold text-dark">Durasi Standar (Bulan)</label>
+                                    <input type="number" class="form-control @error('standar') is-invalid @enderror" id="durasi" name="durasi" placeholder="Masukan Durasi Standar Retribusi (Bulan)" value="{{$retri->durasi}}">
+                                        @error('durasi')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                </div>
+                                <div class='col mb-2'>
+                                    <label for="pending" class="font-weight-bold text-dark">Maksimum transaksi pending</label>
+                                    <input type="number" class="form-control @error('pending') is-invalid @enderror" id="pending" name="pending" placeholder="Masukan maksimum Retribusi pending (Total transaksi)" value="{{$retri->max_pending}}">
+                                        @error('pending')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -400,7 +442,7 @@ Edit Jenis Jasa
                             </div>
                             <div class="row mb-2">
                                 <div class='col mb-2'>
-                                    <label for="mulai" class="font-weight-bold text-dark">Tanggal Berlaku</label>
+                                    <label for="mulai" class="font-weight-bold text-dark">Tanggal Berlaku<i class="text-danger">*</i></label>
                                     <input type="date" class="form-control @error('mulai') is-invalid @enderror" id="mulai" name="mulai" placeholder="Masukan Nominal Standar Retribusi" value="{{$retri->tanggal_berlaku}}">
                                         @error('mulai')
                                         <span class="invalid-feedback" role="alert">

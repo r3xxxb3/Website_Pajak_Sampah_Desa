@@ -127,7 +127,7 @@ class CustomerServiceController extends Controller
     public function kritikDelete($id){
         $kritik = KritikSaran::where('id', $id)->first();
         if(isset($kritik)){
-            if($kritik->softDelete()){
+            if($kritik->delete()){
                 return redirect()->route('custom-kritik-index')->with('success', "Berhasil menghapus data !");
             }else{
                 return redirect()->back()->with('error', "terdapat kesalahan saat proses penghapusan data !");

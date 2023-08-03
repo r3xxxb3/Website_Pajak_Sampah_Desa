@@ -35,7 +35,7 @@ class pembayaranCommand extends Command
     protected $description = 'command untuk memperlihatkan pembayaran pending';
 
     public function __construct(){
-        $this->url = "https://c291-114-5-36-99.ap.ngrok.io/";
+        $this->url = "https://myrottenproject.org/";
         $this->google = "https://www.google.com/maps/search/?api=1&query=";
     }
 
@@ -66,14 +66,14 @@ class pembayaranCommand extends Command
             if($pembayaran->isNotEmpty()){
                 foreach($pembayaran as $p){
                     $item = null;
-                        foreach($p->detail->model as $m){
-                            if($m->id_properti != null){
-                                $item .= "(Retribusi) ".$m->nama_properti." ("."Rp".number_format($m->nominal ?? 0,2,',','.').")\n";
+                        foreach($p->detail as $m){
+                            if($m->model_type == "App\Retribusi"){
+                                $item .= "(Retribusi) ".$m->model->nama_properti." ("."Rp".number_format($m->model->nominal ?? 0,2,',','.').")\n\n";
                             }else{
-                                $item .= "(Pengangkutan) ".$m->alamat." ("."Rp".number_format($m->nominal ?? 0,2,',','.').")\n";
+                                $item .= "(Pengangkutan) ".$m->model->alamat." ("."Rp".number_format($m->model->nominal ?? 0,2,',','.').")\n\n";
                             }
                         }
-                    $data = "Item \n\n".$item."\n"."Tanggal Pembayaran : ".$p->created_at->format('d M Y')."\nTotal Nominal : "."Rp".number_format($m->nominal ?? 0,2,',','.')."\n\nKeterangan\n\n".isset($p->keterangan) ? $p->keterangan : 'Tidak Ada Keterangan !';
+                    $data = "Item \n\n".$item."\n"."Tanggal Pembayaran : ".$p->created_at->format('d M Y')."\nTotal Nominal : "."Rp".number_format($p->nominal ?? 0,2,',','.')."\n\nKeterangan\n\n".(isset($p->keterangan) ? $p->keterangan : 'Tidak Ada Keterangan !');
                     $this->replyWithMessage([
                         'text' => $data,
                         'chat_id' => $chat_id
@@ -108,9 +108,9 @@ class pembayaranCommand extends Command
                     // dd($p->detail->map->model);
                     foreach($p->detail as $m){
                         if($m->model_type == "App\Retribusi"){
-                            $item .= "(Retribusi) ".$m->model->pelanggan->kependudukan->nama."\n".$m->model->nama_properti." ("."Rp".number_format($m->model->nominal ?? 0,2,',','.').")\n";
+                            $item .= "(Retribusi) ".$m->model->pelanggan->kependudukan->nama."\n".$m->model->nama_properti." ("."Rp".number_format($m->model->nominal ?? 0,2,',','.').")\n\n";
                         }else{
-                            $item .= "(Pengangkutan) ".$m->model->pelanggan->kependudukan->nama."\n".$m->model->alamat." ("."Rp".number_format($m->model->nominal ?? 0,2,',','.').")\n";
+                            $item .= "(Pengangkutan) ".$m->model->pelanggan->kependudukan->nama."\n".$m->model->alamat." ("."Rp".number_format($m->model->nominal ?? 0,2,',','.').")\n\n";
                         }
                     }
                     $data = "List Item \n\n".$item."\n".$wall."\nTanggal Pembayaran : ".$p->created_at->format('d M Y')."\nTotal Nominal : "."Rp".number_format($p->nominal ?? 0,2,',','.')."\n\nKeterangan\n\n".($p->keterangan != null ? $p->keterangan : 'Tidak Ada Keterangan !');

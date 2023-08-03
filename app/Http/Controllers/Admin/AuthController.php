@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Pegawai;
+use App\Kependudukan;
 
 
 class AuthController extends Controller
@@ -35,9 +36,15 @@ class AuthController extends Controller
             'password' => 'required|min:8'
         ]);
         $checkus = Pegawai::where('username', $request->username)->first();
+        $checkpen = Kependudukan::where('telepon', $request->username)->orWhere('nik', $request->username)->first();
+        if(isset($checkpen)){
+            $checkpelpeg = Pegawai::where('id_penduduk', $checkpen->id)->first();
+        }else{
+            $checkpelpeg = null;
+        }
         if(!is_null($checkus)){
             // dd(!session()->has('admin'));
-           if(auth()->guard('admin')->attempt($request->only(['username', 'password']))) {
+           if(auth()->guard('admin')->attempt($request->only(['username', 'password']), $request->remember)) {
                $request->session()->regenerate();
                $admin = Pegawai::where('username', $request->username)->first();
                // dd($admin);
@@ -49,7 +56,27 @@ class AuthController extends Controller
                // dd(Auth::guard('admin')->user()->nama); 
                return redirect()->route('admin-dashboard');
            }else{
-                dd($request->password);
+                // dd($request->password);
+               $this->incrementLoginAttempts($request);
+               return redirect()
+                   ->back()
+                   ->withInput()
+                   ->withErrors(["password" => "Data login Admin salah !"], 'login');
+           }
+        }elseif(isset($checkpen)){
+            if(auth()->guard('admin')->attempt(['username' => $checkpelpeg->username, 'password' => $request->password], $request->remember)) {
+               $request->session()->regenerate();
+               $admin = Pegawai::where('username', $request->username)->first();
+               // dd($admin);
+               // dd(Auth::guard('admin')->login($admin));
+               // $admin = $request->user('admin');
+               // dd($admin);
+               // dd(session());  
+               $this->clearLoginAttempts($request);
+               // dd(Auth::guard('admin')->user()->nama); 
+               return redirect()->route('admin-dashboard');
+           }else{
+                // dd($request->password);
                $this->incrementLoginAttempts($request);
                return redirect()
                    ->back()
@@ -60,7 +87,7 @@ class AuthController extends Controller
             return redirect()
                     ->back()
                     ->withInput()
-                    ->withErrors([ "username" => "Username Admin tidak ditemukan !"], 'login');
+                    ->withErrors([ "username" => "Admin tidak ditemukan !"], 'login');
         }
     }
 

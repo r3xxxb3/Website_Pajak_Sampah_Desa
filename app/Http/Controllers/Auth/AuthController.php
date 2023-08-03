@@ -39,12 +39,19 @@ class AuthController extends Controller
     public function login(Request $request){
         $this->validate($request, [
             'username' => 'required',
-            'password' => 'required|min:8'
+            'password' => 'required'
         ]);
         // dd(auth()->guard('web')->attempt($request->only(['no_telp', 'password'])));
         $checkus = Pelanggan::where('username', $request->username)->first();
+        $checkpen = Kependudukan::where('telepon', $request->username)->orWhere('nik', $request->username)->first();
+        // dd($checkpen);
+        if(isset($checkpen)){
+            $checkpel = Pelanggan::where('id_penduduk', $checkpen->id)->first();
+        }else{
+            $checkpel = null;
+        }
         if(isset($checkus)){
-            if(auth()->guard('web')->attempt($request->only(['username', 'password']))) {
+            if(auth()->guard('web')->attempt($request->only(['username', 'password']), $request->remember)) {
                 $request->session()->regenerate();
                 // $user = Pelanggan::where('no_telp', $request->no_telp)->first();
                 
@@ -52,7 +59,6 @@ class AuthController extends Controller
                 // dd($user);
                 // dd(session());  
                 $this->clearLoginAttempts($request);
-                // dd(Auth::guard('admin')->user()->nama); 
                 return redirect()->route('user-dashboard');
             }else{
                 $this->incrementLoginAttempts($request);
@@ -61,11 +67,24 @@ class AuthController extends Controller
                     ->withInput()
                     ->withErrors(["password" => "Data login pelanggan salah !"], 'login');
             }
+        }elseif(isset($checkpel)){
+            // dd(auth()->guard('web')->attempt(['username' => $checkpel->username, 'password' => $request->password], $request->remember));
+            if(auth()->guard('web')->attempt(['username' => $checkpel->username, 'password' => $request->password], $request->remember)) {
+               $request->session()->regenerate();
+               $this->clearLoginAttempts($request);
+               return redirect()->route('user-dashboard');
+           }else{
+               $this->incrementLoginAttempts($request);
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->withErrors(["password" => "Data login pelanggan salah !"], 'login');
+           }
         }else{
             return redirect()
                     ->back()
                     ->withInput()
-                    ->withErrors([ "username" => "Username pelanggan tidak ditemukan !"], 'login');
+                    ->withErrors([ "username" => "Pelanggan tidak ditemukan !"], 'login');
         }
     }
 
@@ -98,12 +117,18 @@ class AuthController extends Controller
         ],$messages);
 
         // dd($request);
-        $penduduk = Penduduk::where('nik', $request->nik)->first();
+        $penduduk = Kependudukan::where('nik', $request->nik)->first();
+        $cekpelanggan = Pelanggan::where('id_penduduk', $penduduk->id)->first();
+        
+        if(isset($cekpelanggan)){
+            return redirect()->back()->with('error', "Penduduk telah terdaftar sebagai pelanggan !");
+        }
+        
         if(isset($penduduk)){
             $pelanggan = new Pelanggan;
             $pelanggan->id_penduduk = $penduduk->id;
             $pelanggan->username = $request->username;
-            $pelanggan->password = Hash::make($request->no);
+            $pelanggan->password = Hash::make($request->password);
             $pelanggan->save();
             return redirect()->route('login-page')->with('success','Berhasil Mendaftarkan Data Pelanggan !');
         }else{
@@ -134,6 +159,7 @@ class AuthController extends Controller
             $data['nama'] = $cpelanggan->nama;
             $data['tanggal_lahir'] = $cpelanggan->tanggal_lahir ;
             $data['jenis_kelamin'] = $cpelanggan->jenis_kelamin ;
+            $data['tempat_lahir'] = $cpelanggan->tempat_lahir;
             $data['alamat'] = $cpelanggan->alamat ;
             $data['telepon'] = $cpelanggan->telepon ;
 

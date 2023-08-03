@@ -83,7 +83,7 @@ Edit Data Pelanggan
 </script>
 
 <script>
-    function catchProp(properti, jenis, desa, banjar){
+    function catchProp(properti, jenis, desa, banjar, standar){
         console.log(properti.alamat);
         // console.log(pelanggan);
         console.log(jenis);
@@ -121,10 +121,28 @@ Edit Data Pelanggan
             $('#banjar_edit').val(banjar);
         }
         $('#jenis_edit').val(properti.id_jenis);
+        $('#standar_edit option').remove();
+        
+        if(standar != null){
+            jQuery.each( standar ,function(i, val){
+                console.log(val.id_desa_adat == properti.id_desa_adat);
+                if(val.id_desa_adat == properti.id_desa_adat){
+                    if(val.durasi != null){
+                        $('#standar_edit').append('<option value='+val.id+'>'+val.nominal_retribusi.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2})+" / "+val.durasi+" Bulan"+'</option>');
+                    }else{
+                        $('#standar_edit').append('<option value='+val.id+'>'+val.nominal_retribusi.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2})+" / Bulan"+'</option>').val(val.id);
+                    }
+                    if(val.id == properti.id_standar_retribusi){
+                        $('#standar_edit').val(val.id);
+                    }
+                }
+            });
+        }
         
         $('#file_edit').change(function(){
             readURL(properti.file);
         });
+        
     }
 
     function readURL(input) {
@@ -140,7 +158,23 @@ Edit Data Pelanggan
     }
 
     $("#file_edit").change(function() {
-    readURL(this);
+        readURL(this);
+    });
+    
+    function readURLAdd(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function(e) {
+            $('#propAdd').attr('src', e.target.result);
+            }
+            
+            reader.readAsDataURL(input.files[0]); // convert to base64 string
+        }
+    }
+    
+    $("#file").change(function() {
+        readURLAdd(this);
     });
 
     $(document).ready( function () {
@@ -161,6 +195,93 @@ Edit Data Pelanggan
                 "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
             },
         });
+        
+        $('.impact_edit').on('change',  function(e){
+                e.preventDefault();
+                const jenis = $('#jenis_edit').val();
+                const desa = $('#desa_edit').val();
+                console.log(jenis);
+                // console.log(jenis == "" );
+                if(jenis == "" ){
+                    $('#standar_edit').val('');
+                    $('#standar_edit').find('option[value!=""]').remove().end();
+                    $('#standar_edit').attr('disabled', true);
+                }else{
+                    $.ajax({
+                        method : 'POST',
+                        url : '/admin/standar/search',
+                        data : {
+                        "_token" : "{{ csrf_token() }}",
+                        jenis : jenis,
+                        desa : desa,
+                        },
+                        beforeSend : function() {
+                                    
+                        },
+                        success : (res) => {
+                            $('#standar_edit').attr('disabled', false);
+                            $('#standar_edit option').remove();
+                            $('#standar_edit').append('<option value="">'+"Pilih Standar Retribusi"+'</option>').val("");
+                            $('#standar_edit').val(null);
+                            if(res[0] == "success"){
+                                jQuery.each(res[1], function(i, val){
+                                    if(val.id_desa_adat == desa){
+                                        if(val.durasi != null){
+                                            $('#standar_edit').append('<option value='+val.id+'>'+val.nominal_retribusi.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2})+" / "+val.durasi+" Bulan"+'</option>');
+                                        }else{
+                                            $('#standar_edit').append('<option value='+val.id+'>'+val.nominal_retribusi.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2})+" / Bulan"+'</option>');
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+            
+            $('.impact_add').on('change',  function(e){
+                e.preventDefault();
+                const jenis = $('#jenis_properti').val();
+                const desa = $('#desa').val();
+                console.log(jenis);
+                // console.log(jenis == "" );
+                if(jenis == "" ){
+                    $('#standar_properti').val('');
+                    $('#standar_properti').find('option[value!=""]').remove().end();
+                    $('#standar_properti').attr('disabled', true);
+                }else{
+                    $.ajax({
+                        method : 'POST',
+                        url : '/admin/standar/search',
+                        data : {
+                        "_token" : "{{ csrf_token() }}",
+                        jenis : jenis,
+                        desa : desa,
+                        },
+                        beforeSend : function() {
+                                    
+                        },
+                        success : (res) => {
+                            $('#standar_properti').attr('disabled', false);
+                            $('#standar_properti option').remove();
+                            $('#standar_properti').append('<option value="">'+"Pilih Standar Retribusi"+'</option>').val("");
+                            $('#standar_properti').val(null);
+                            if(res[0] == "success"){
+                                jQuery.each(res[1], function(i, val){
+                                    if(val.id_desa_adat == desa){
+                                        if(val.durasi != null){
+                                            $('#standar_properti').append('<option value='+val.id+'>'+val.nominal_retribusi.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2})+" / "+val.durasi+" Bulan"+'</option>');
+                                        }else{
+                                            $('#standar_properti').append('<option value='+val.id+'>'+val.nominal_retribusi.toLocaleString('id-ID',{style:'currency', currency:'IDR', maximumFractionDigits: 2})+" / Bulan"+'</option>');
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        
         var focus = <?php echo isset($focus) ? $focus : "null" ;?>;
         <?php $foc = isset($focus) ? $focus : "null" ?>
         if(focus != null){
@@ -174,7 +295,7 @@ Edit Data Pelanggan
 </script>
 
 <script>
-$('#desa_edit').on('change', function(e){
+    $('#desa_edit').on('change', function(e){
         e.preventDefault();
         const desa = $('#desa_edit').val();
         console.log(desa);
@@ -210,6 +331,47 @@ $('#desa_edit').on('change', function(e){
                     console.log(opt);
                     select.appendChild(opt);
                     $('#banjar_edit').attr('disabled');
+                }
+            }
+        }).done(()=>{})
+    });
+    
+    $('#desa').on('change', function(e){
+        e.preventDefault();
+        const desa = $('#desa').val();
+        console.log(desa);
+
+        $.ajax({
+            method : 'POST',
+            url : '/admin/banjar/search',
+            data : {
+            "_token" : "{{ csrf_token() }}",
+            desa : desa,
+            },
+            beforeSend : function() {
+                        
+            },
+            success : (res) => {
+                if(res.status == "success"){
+                    $('#banjar').removeAttr('disabled');
+                    $('#banjar option').remove();
+                    // console.log(res);
+                    select = document.getElementById('banjar');
+                    $.each(res.banjar, function(k, v){
+                        // console.log(v.nama_banjar_adat);
+                        var opt = document.createElement('option');
+                        opt.value = v.id;
+                        opt.innerHTML = v.nama_banjar_adat;
+                        select.appendChild(opt);
+                    })
+                }else{
+                    $('#banjar option').remove();
+                    select = document.getElementById('banjar');
+                    var opt = document.createElement('option');
+                    opt.innerHTML = res.status;
+                    console.log(opt);
+                    select.appendChild(opt);
+                    $('#banjar').attr('disabled');
                 }
             }
         }).done(()=>{})
@@ -442,7 +604,7 @@ $('#desa_edit').on('change', function(e){
                                 @endif
                             </td>
                             <td style="vertical-align: middle; text-align: center;">
-                                <a  data-toggle="modal" data-target="#modal-edit" class="btn btn-warning btn-sm text-white col mb-1" onClick="catchProp({{$properti}}, {{$properti->jasa}}, {{isset($properti->id_desa_adat) ? $properti->id_desa_adat : 'null'}}, {{isset($properti->id_banjar_adat) ? $properti->id_banjar_adat : 'null'}})"><i class="fas fa-pencil-alt"></i> Ubah</a>
+                                <a  data-toggle="modal" data-target="#modal-edit" class="btn btn-warning btn-sm text-white col mb-1" onClick="catchProp({{$properti}}, {{$properti->jasa}}, {{isset($properti->id_desa_adat) ? $properti->id_desa_adat : 'null'}}, {{isset($properti->id_banjar_adat) ? $properti->id_banjar_adat : 'null'}}, {{$properti->jasa->standar}})"><i class="fas fa-pencil-alt"></i> Ubah</a>
                                 <a style="margin-right:7px" class="btn btn-danger btn-sm col " href="{{Route('admin-properti-delete', $properti->id)}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
                             </td>
                         </tr>
@@ -494,7 +656,7 @@ $('#desa_edit').on('change', function(e){
                                 <div class="col">
                                     <label for="file" class="font-weight-bold text-dark">Upload Gambar Properti</label>
                                     <div class="col-12 d-flex justify-content-center">
-                                        <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3" >
+                                        <img src="{{asset('assets/img/properti/blank.png')}}"  height="300px" style="object-fit:cover" class="mb-3" id="propAdd">
                                     </div>
                                     <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" accept="image/png, image/jpeg, image/jpg" placeholder="Masukan file gambar properti" value="{{old('file')}}">
                                         @error('file')
@@ -506,24 +668,35 @@ $('#desa_edit').on('change', function(e){
                             </div>
                             <div class="row">
                                 <div class='col mb-2'>
-                                    <label for="nama" class="font-weight-bold text-dark">Nama Properti</label>
-                                    <input type="text" class="form-control @error('jenis') is-invalid @enderror" id="nama" name="nama" placeholder="Masukan Nama Properti (cth: rumah tinggal,.. etc)" value="{{old('nama')}}">
+                                    <label for="nama_properti" class="font-weight-bold text-dark">Nama Properti</label>
+                                    <input type="text" class="form-control @error('jenis') is-invalid @enderror" id="nama_properti" name="nama_properti" placeholder="Masukan Nama Properti (cth: rumah tinggal,.. etc)" value="{{old('nama_add')}}">
                                     <input type="text" class="form-control @error('pelanggan') is-invalid @enderror" id="pelanggan" name="pelanggan" placeholder="id" value="{{$pelanggan->id}}" hidden>
-                                        @error('nama')
+                                        @error('nama_properti')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                         @enderror
                                 </div>
                                 <div class="col mb-2">
-                                    <label for="jenis" class="font-weight-bold text-dark">Jenis Properti</label>
-                                    <select class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="jenis">
+                                    <label for="jenis_properti" class="font-weight-bold text-dark">Jenis Properti<i class="text-danger text-sm text-bold">*</i></label>
+                                    <select class="form-control @error('jenis') is-invalid @enderror impact_add" id="jenis_properti" name="jenis_properti">
                                         <option value="" >Pilih Jenis Properti</option>
                                             @foreach($jenis as $j)
                                                 <option value="{{$j->id}}" {{old('jenis') == $j->id ? 'selected' : ''}}>{{$j->jenis_jasa}}</option>
                                             @endforeach
                                     </select>
-                                        @error('jenis')
+                                        @error('jenis_properti')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>    
+                                        @enderror
+                                </div>
+                                <div class="col mb-2">
+                                    <label for="standar_properti" class="font-weight-bold text-dark">Standar Retribusi<i class="text-danger text-sm text-bold">*</i></label>
+                                    <select class="form-control @error('standar') is-invalid @enderror" id="standar_properti" name="standar_properti">
+                                        <option value="" selected>Pilih Jenis Jasa Terlebih Dahulu !</option>
+                                    </select>
+                                        @error('standar_properti')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>    
@@ -540,19 +713,40 @@ $('#desa_edit').on('change', function(e){
                                 </div>
                             </div>
                             <div class="row">
+                                <div class='col mb-2'>
+                                        <label for="desa" class="font-weight-bold text-dark">Desa Adat</label>
+                                        <select class="form-control @error('desa') is-invalid @enderror impact_add" id="desa" name="desa" >
+                                            <option value="">Pilih Desa Adat</option>
+                                                @foreach($desaAdat as $d)
+                                                    <option value="{{$d->id}}" >{{$d->desadat_nama}}</option>
+                                                @endforeach
+                                        </select>
+                                            @error('desa')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                    </div>
                                 <div class="col">
-                                    <label for="banjar" class="font-weight-bold text-dark">Banjar</label>
-                                    <input type="text" class="form-control @error('banjar') is-invalid @enderror" id="banjar" name="banjar" placeholder="Masukan Banjar Properti (opsional)" value="{{old('banjar')}}">
+                                    <label for="banjar" class="font-weight-bold text-dark">Banjar Adat</label>
+                                        <select class="form-control @error('banjar') is-invalid @enderror" id="banjar" name="banjar" >
+                                            <option value="" selected>Pilih Desa Adat terlebih dahulu !</option>
+                                                @foreach($banjarAdat as $b)
+                                                    <option value="{{$b->id}}">{{$b->nama_banjar_adat}}</option>
+                                                @endforeach
+                                        </select>
                                         @error('banjar')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>    
                                         @enderror
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="col">
-                                    <label for="alamat" class="font-weight-bold text-dark">Alamat Properti</label>
-                                    <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" placeholder="Masukan Alamat Properti" value="{{old('alamat')}}">
-                                        @error('alamat')
+                                    <label for="alamat_properti" class="font-weight-bold text-dark">Alamat Properti</label>
+                                    <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat_properti" name="alamat_properti" placeholder="Masukan Alamat Properti" value="{{old('alamat_properti')}}">
+                                        @error('alamat_properti')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>    
@@ -610,7 +804,7 @@ $('#desa_edit').on('change', function(e){
                                 <div class="col">
                                     <label for="file_edit" class="font-weight-bold text-dark">Upload Gambar Properti</label>
                                     <div class="col-12 d-flex justify-content-center">
-                                        <img src="{{asset('assets/img/properti/blank.png')}}" id="propic" height="300px" style="object-fit:cover" class="mb-3" id="prop">
+                                        <img src="{{asset('assets/img/properti/blank.png')}}" id="propic" height="300px" style="object-fit:cover" class="mb-3" >
                                     </div>
                                     <input type="file" class="form-control @error('file') is-invalid @enderror" id="file_edit" name="file_edit" accept="image/png, image/jpeg, image/jpg" placeholder="Masukan file gambar properti" value="{{old('file')}}">
                                         @error('file_edit')
@@ -623,7 +817,7 @@ $('#desa_edit').on('change', function(e){
                             <div class="row">
                                 <div class='col mb-2'>
                                     <label for="nama_edit" class="font-weight-bold text-dark">Nama Properti</label>
-                                    <input type="text" class="form-control @error('jenis') is-invalid @enderror" id="nama_edit" name="nama_edit" placeholder="Masukan Nama Properti (cth: rumah tinggal,.. etc)" value="" disabled>
+                                    <input type="text" class="form-control @error('jenis') is-invalid @enderror" id="nama_edit" name="nama_edit" placeholder="Masukan Nama Properti (cth: rumah tinggal,.. etc)" value="" >
                                         @error('nama_edit')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -631,14 +825,25 @@ $('#desa_edit').on('change', function(e){
                                         @enderror
                                 </div>
                                 <div class="col mb-2">
-                                    <label for="jenis_edit" class="font-weight-bold text-dark">Jenis Properti</label>
-                                    <select class="form-control @error('jenis') is-invalid @enderror" id="jenis_edit" name="jenis_edit">
+                                    <label for="jenis_edit" class="font-weight-bold text-dark">Jenis Properti<i class="text-danger text-sm text-bold">*</i></label>
+                                    <select class="form-control @error('jenis') is-invalid @enderror impact_edit" id="jenis_edit" name="jenis_edit">
                                         <option value="" selected>Pilih Jenis Properti</option>
                                             @foreach($jenis as $j)
                                                 <option value="{{$j->id}}" >{{$j->jenis_jasa}}</option>
                                             @endforeach
                                     </select>
                                         @error('jenis_edit')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>    
+                                        @enderror
+                                </div>
+                                <div class="col mb-2">
+                                    <label for="standar_edit" class="font-weight-bold text-dark">Standar Retribusi<i class="text-danger text-sm text-bold">*</i></label>
+                                    <select class="form-control @error('standar') is-invalid @enderror" id="standar_edit" name="standar_edit">
+                                        <option value="" selected>Pilih Jenis Jasa Terlebih Dahulu !</option>
+                                    </select>
+                                        @error('standar')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>    
@@ -659,7 +864,7 @@ $('#desa_edit').on('change', function(e){
                             <div class="row">
                                 <div class='col mb-2'>
                                         <label for="desa_edit" class="font-weight-bold text-dark">Desa Adat</label>
-                                        <select class="form-control @error('desa_edit') is-invalid @enderror" id="desa_edit" name="desa_edit" >
+                                        <select class="form-control @error('desa_edit') is-invalid @enderror impact_edit" id="desa_edit" name="desa_edit" >
                                             <option value="">Pilih Desa Adat</option>
                                                 @foreach($desaAdat as $d)
                                                     <option value="{{$d->id}}" >{{$d->desadat_nama}}</option>
@@ -670,7 +875,7 @@ $('#desa_edit').on('change', function(e){
                                                 <strong>{{ $message }}</strong>
                                             </span>
                                             @enderror
-                                    </div>
+                                </div>
                                 <div class="col">
                                     <label for="banjar_edit" class="font-weight-bold text-dark">Banjar Adat</label>
                                         <select class="form-control @error('banjar_edit') is-invalid @enderror" id="banjar_edit" name="banjar_edit" >

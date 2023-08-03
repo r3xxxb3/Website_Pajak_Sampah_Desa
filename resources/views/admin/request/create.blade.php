@@ -189,7 +189,7 @@ Create Request Pengangkutan
                     <div class="row mt-4">
                         <div class="col">
                             <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda Yakin Ingin Menambah Data?')"><i class="fas fa-save"></i> Simpan</button>
-                            <a href="{{route('request-index')}}" class="btn btn-danger"><i class="fas fa-times"></i> Cancel</a>
+                            <a href="{{route('admin-request-index')}}" class="btn btn-danger"><i class="fas fa-times"></i> Cancel</a>
                         </div>
                     </div>
                 </div>

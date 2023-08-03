@@ -24,6 +24,33 @@ Index Jadwal
                 "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
             },
         });
+    
+        var pegawai = $('#dataTablePegawai').DataTable({
+            "oLanguage":{
+                "sSearch": "Cari:",
+                "sZeroRecords": "Data tidak ditemukan",
+                "sSearchPlaceholder": "Cari pegawai...",
+                "infoEmpty": "Menampilkan 0 data",
+                "infoFiltered": "(dari _MAX_ data)",
+                "sLengthMenu": "Tampilkan _MENU_ data",
+            },
+            "language":{
+                "paginate": {
+                        "previous": 'Sebelumnya',
+                        "next": 'Berikutnya'
+                    },
+                "info": "Menampilkan _START_ s/d _END_ dari _MAX_ data",
+            },
+        });
+        
+        $('table').on('click', '.detail', function(e){
+           var elmntId = $(this).attr('id');
+           var jId = elmntId.split('-')[1];
+           
+           $.ajax({
+               
+           });
+        });
     });
 </script>
 @endsection
@@ -85,6 +112,7 @@ Index Jadwal
                         <th>Mulai</th>
                         <th>Selesai</th>
                         <th>Jenis Sampah</th>
+                        <th>List Pegawai</th>
                         <th >Action</th>
                     </tr>
                 </thead>
@@ -107,6 +135,9 @@ Index Jadwal
                             Semua Jenis Sampah
                         @endif
                         </td>
+                        <td style="vertical-align: middle;">
+                            <a class="btn btn-info btn-sm col mb-1 text-white detail" data-toggle="modal" data-target="#modal-pegawai" id="Jadwal-{{$jadwal->id_jadwal}}" ><i class="fas fa-eye"></i> Lihat Jadwal Pegawai</a><br>
+                        </td>
                         <td align="center" class="col-2">
                             <a href="/admin/masterdata/jadwal/edit/{{$jadwal->id_jadwal}}" class="btn btn-info btn-sm col mb-1"><i class="fas fa-pencil-alt"></i> Ubah</a><br>
                             <a style="margin-right:7px" class="btn btn-danger btn-sm col" href="/admin/masterdata/jadwal/delete/{{$jadwal->id_jadwal}}" onclick="return confirm('Apakah Anda Yakin ?')"><i class="fas fa-trash"></i> Hapus</a>
@@ -122,4 +153,24 @@ Index Jadwal
     <!-- /.container-fluid -->
   </div>
 </section>
+
+<div class="modal fade" id="modal-pegawai">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <table class="table table-bordered" id="dataTablePegawai" width="100%" cellspacing="0">
+                <thead>
+                    <tr class="table-primary">
+                        <th>Pegawai</th>
+                        <th>Telepon</th>
+                    </tr>
+                </thead>
+                <tbody>
+                
+                </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

@@ -13,10 +13,10 @@ class DetailPembayaran extends Model
     protected $table = "tb_detail_pembayaran";
 
     public function pembayaran(){
-        return $this->belongsTo(Pembayaran::class, 'id_pembayaran', 'id_pembayaran');
+        return $this->belongsTo(Pembayaran::class, 'id_pembayaran', 'id_pembayaran')->withTrashed();
     }
 
     public function model(){
-        return $this->morphTo();
+        return $this->morphTo()->withTrashed();
     }
 }

@@ -22,10 +22,14 @@ class Pembayaran extends Model
 
 
     public function detail(){
-        return $this->hasMany(DetailPembayaran::Class, 'id_pembayaran', 'id_pembayaran');
+        return $this->hasMany(DetailPembayaran::Class, 'id_pembayaran', 'id_pembayaran')->withTrashed();
     }
 
     public function pelanggan(){
-        return $this->belongsTo(Pelanggan::class, 'id_pelanggan', 'id');
+        return $this->belongsTo(Pelanggan::class, 'id_pelanggan', 'id')->withTrashed();
+    }
+    
+    public function snap(){
+        return $this->hasMany(SnapPayment::class, 'id_pembayaran', 'id_pembayaran')->withTrashed();
     }
 }

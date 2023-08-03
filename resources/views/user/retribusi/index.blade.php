@@ -43,7 +43,7 @@ Index Retribusi
     $(document).ready( function () {
         $('#dataTable').DataTable({
             "oLanguage":{
-                "sSearch": "Cari:",
+                "sSearch": "",
                 "sZeroRecords": "Data tidak ditemukan",
                 "sSearchPlaceholder": "Cari retribusi...",
                 "infoEmpty": "Menampilkan 0 data",
@@ -85,7 +85,7 @@ Index Retribusi
 
         var table = $('#dataTableKeranjang').DataTable({
             "oLanguage":{
-                "sSearch": "Cari:",
+                "sSearch": "",
                 "sZeroRecords": "Data tidak ditemukan",
                 "sSearchPlaceholder": "Cari item",
                 "infoEmpty": "Menampilkan 0 data",
@@ -363,7 +363,7 @@ Index Retribusi
                 </div>
                 @endif
                 <div class="table-responsive">
-                    <a class= "btn btn-warning text-white mb-2 lihat-keranjang" data-toggle="modal" data-target="#modal-keranjang"><i class="fas fa-eye"></i> Lihat Keranjang Retribusi</a>
+                    <a class= "btn btn-warning text-white mb-2 lihat-keranjang" data-toggle="modal" data-target="#modal-keranjang"><i class="fas fa-eye"></i> Lihat Keranjang </a>
                     <!-- <a class= "btn btn-info text-white mb-2" data-toggle="modal" data-target="#modal-cicil"><i class="fas fa-cash-register"></i> Cicil Tagihan Retribusi</a> -->
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>

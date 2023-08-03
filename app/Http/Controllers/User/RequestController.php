@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Pegawai;
 use App\Pengangkutan;
 use App\DesaAdat;
-use App\keranjang;
+use App\Keranjang;
 use App\DetailPembayaran;
 use App\Pembayaran;
 
@@ -161,6 +161,22 @@ class RequestController extends Controller
             return redirect()->route('request-index')->with('success', 'Berhasil membatalkan request pengangkutan !');  
         }else{
             return redirect()->back()->with('error', 'Proses pembatalan request pengangkutan tidak dapat dilakukan !');
+        }
+    }
+    
+    public function delete($id){
+        $requestP = Pengangkutan::where('id', $id)->first();
+        if($requestP->status == 'Batal'){
+            $requestP->delete();
+            // $pegawai = Pegawai::where('id_desa_adat', $requestP->id_desa_adat)->get();
+            // dd($properti->id_jenis);
+            // $properti->toArray();
+            // foreach($pegawai as $p){
+            //     $p->notify(new PengangkutanNotif($requestP, "cancel"));
+            // }
+            return redirect()->route('request-index')->with('success', 'Berhasil menghapus data request pengangkutan !');  
+        }else{
+            return redirect()->back()->with('error', 'Proses penghapusan request pengangkutan tidak dapat dilakukan !');
         }
     }
 

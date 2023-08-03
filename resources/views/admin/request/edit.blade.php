@@ -179,15 +179,15 @@ Edit Request Pengangkutan
                         </div>
                     </div>
                     <div class="row mt-2">
-                        <div class="col-2">
-                            <label for="desaAdat" class="font-weight-bold text-dark">Desa Adat</label>
-                            <select class="form-control" name="desaAdat" id="desaAdat" {{$requestP->status == "Selesai" || $requestP->status == "Terkonfirmasi" ? 'disabled' : ''}}>
-                                <option value="">Pilih Desa Adat Lokasi Pengangkutan !</option>
-                                @foreach($desaAdat as $d)
-                                    <option value="{{$d->id}}" {{isset($requestP->id_desa_adat) ? ($requestP->id_desa_adat == $d->id ? 'selected' : '') : ''}}>{{$d->desadat_nama}}</option>
+                        <div class="col-3">
+                            <label for="pelanggan" class="font-weight-bold text-dark">Pilih Pelanggan</label>
+                            <select class="form-control" name="pelanggan" id="pelanggan">
+                                <option value="">Pilih Pelanggan </option>
+                                @foreach($pelanggan as $p)
+                                    <option value="{{$p->id}}" {{isset($requestP->id_pelanggan) ? ($requestP->id_pelanggan == $p->id ? 'selected' : '') : ''}}>{{$p->kependudukan->nama}}</option>
                                 @endforeach
                             </select>                            
-                            @error('desaAdat')
+                            @error('pelanggan')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>    

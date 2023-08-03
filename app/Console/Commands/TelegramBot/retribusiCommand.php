@@ -64,12 +64,12 @@ class retribusiCommand extends Command
             if($retribusi->isNotEmpty()){
                 foreach($retribusi as $r){
                     // $url = str_replace(" ", "%20",$r->properti->file);
-                    // $image = "https://7eb5-114-5-111-25.ap.ngrok.io/assets/img/properti/".$url;
+                    // $image = "https://myrottenproject.org/assets/img/properti/".$url;
                     // dd(new InputFile($image, $r->properti->nama_properti));
-                    $data =  $r->properti->nama_properti.")\nTanggal Retribusi : ".$r->created_at->format('d M Y')."\nNominal : "."Rp".number_format($r->nominal ?? 0,2,',','.')."\n\nLokasi\n\n"."https://www.google.com/maps/search/?api=1&query=".$r->properti->lat.",".$r->properti->lng;
+                    $data = "(".$r->properti->nama_properti.")\nTanggal Retribusi : ".$r->created_at->format('d M Y')."\nNominal : "."Rp".number_format($r->nominal ?? 0,2,',','.')."\n\nLokasi\n\n"."https://www.google.com/maps/search/?api=1&query=".$r->properti->lat.",".$r->properti->lng;
                     // $this->replyWithPhoto([
                     //     'photo' => new InputFile($image, $r->properti->nama_properti),
-                    //     'caption' => $reply,
+                    //     'caption' => $data,
                     //     'chat_id' => $chat_id
                     // ]);
                     $this->replyWithMessage([
@@ -98,7 +98,7 @@ class retribusiCommand extends Command
             if($retribusi->isNotEmpty()){
                 foreach($retribusi as $r){
                     // $url = str_replace(" ", "%20",$r->properti->file);
-                    // $image = "https://7eb5-114-5-111-25.ap.ngrok.io/assets/img/properti/".$url;
+                    // $image = "https://myrottenproject.org/assets/img/properti/".$url;
                     // dd(new InputFile($image, $r->properti->nama_properti));
                     $data =  $r->properti->nama_properti." \n(".$r->pelanggan->kependudukan->nama.")\nTanggal Retribusi : ".$r->created_at->format('d M Y')."\nNominal : "."Rp".number_format($r->nominal ?? 0,2,',','.')."\n\nLokasi\n\n"."https://www.google.com/maps/search/?api=1&query=".$r->properti->lat.",".$r->properti->lng;
                     // $this->replyWithPhoto([

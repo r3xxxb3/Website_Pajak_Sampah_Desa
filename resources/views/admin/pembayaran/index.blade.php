@@ -61,7 +61,7 @@ Pembayaran
         });
 
     $(document).ready( function(){
-        $('.detail').on('click', function(e){
+        $('table').on('click', '.detail' ,function(e){
             e.preventDefault();
             var id = event.target.id;
             console.log(id);

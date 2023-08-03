@@ -81,6 +81,7 @@ Index Retribusi
             <div class="table-responsive">
                 <form action="/admin/retribusi/verif-many" method="post">
                     @csrf
+                    <a class= "btn btn-primary text-white mb-2"  href="{{Route('admin-retribusi-generate')}}"><i class="fas fa-plus"></i> Buat Retribusi Bulanan</a>
                     <a class= "btn btn-warning text-white mb-2"  href="{{Route('admin-retribusi-history')}}"><i class="fas fa-history"></i> Lihat Histori Retribusi</a>
                     <table class="table table-bordered " id="dataTable" width="100%" cellspacing="0">
                         <thead>

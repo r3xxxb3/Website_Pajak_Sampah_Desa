@@ -3,7 +3,7 @@
     <a href="{{ route('admin-dashboard') }}"> <p>BUPDA</p><p class="text-small" >Retribusi Pengelolaan Sampah</p></a>
   </div>
   <div class="sidebar-brand sidebar-brand-sm">
-    <!-- <a href="index.html">{{auth()->guard('admin')->user()->kependudukan->nama[1]}}</a> -->
+    BUPDA
   </div>
   <ul class="sidebar-menu">
     @if(auth()->guard('admin')->user()->role->role == "Admin")

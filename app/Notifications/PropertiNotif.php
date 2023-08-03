@@ -85,6 +85,13 @@ class PropertiNotif extends Notification
                     'item_id' => $this->properti->id,
                     'type' => $this->type,
                 ];
+            }elseif($this->type == "warning"){
+                return [
+                    'message' => auth()->guard('web')->user()->kependudukan->nama.", segera lakukan pembayaran untuk properti ".$this->properti->nama_properti." !",
+                    'user_id' => auth()->guard('web')->user()->id,
+                    'item_id' => $this->properti->id,
+                    'type' => $this->type,
+                ];
             }
         }else{
             if($this->type == "create"){
